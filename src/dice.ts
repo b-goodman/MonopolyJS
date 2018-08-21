@@ -12,6 +12,7 @@ class Die{
      * @param {*} sides The number of sides the Die has.
      * @memberof Die
      */
+    sides: number;
     constructor(sides){
         this.sides = sides;
     };
