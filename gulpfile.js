@@ -4,6 +4,7 @@ var source = require('vinyl-source-stream');
 var tsify = require('tsify');
 var sourcemaps = require('gulp-sourcemaps');
 var buffer = require('vinyl-buffer');
+var minify = require('gulp-minify');
 var paths = {
     pages: ['src/*.html']
 };
@@ -31,5 +32,6 @@ gulp.task('default', ['copyHtml'], function () {
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(sourcemaps.write('./'))
+    .pipe(minify())
     .pipe(gulp.dest('dist'));
 });

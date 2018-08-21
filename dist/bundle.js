@@ -17274,7 +17274,7 @@ exports.Dice = Dice;
 Object.defineProperty(exports, "__esModule", { value: true });
 var dice_1 = require("./dice");
 var dice = new dice_1.Dice([6, 6, 6]);
-console.log(dice.roll());
+console.log(dice);
 
 },{"./dice":3}]},{},[4])
 
