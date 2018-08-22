@@ -1,0 +1,274 @@
+[
+  {
+    "type": "CHEST",
+    "cardID": 0,
+    "cardContent": "Advance to GO",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 1,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 1,
+    "cardContent": "Advance to Trafalgar Square",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 25,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 2,
+    "cardContent": "Advance to Pall Mall",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 12,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 3,
+    "cardContent": "Advance to Nearest Utility",
+    "actionType": "TRANSITION_REL",
+    "actionPrimary": "NEXT",
+    "actionSecondary": "UTILITY"
+  },
+  {
+    "type": "CHEST",
+    "cardID": 4,
+    "cardContent": "Advance to Nearset Railroad",
+    "actionType": "TRANSITION_REL",
+    "actionPrimary": "NEXT",
+    "actionSecondary": "RAILROAD"
+  },
+  {
+    "type": "CHEST",
+    "cardID": 5,
+    "cardContent": "Advance to Nearset Railroad",
+    "actionType": "TRANSITION_REL",
+    "actionPrimary": "NEXT",
+    "actionSecondary": "RAILROAD"
+  },
+  {
+    "type": "CHEST",
+    "cardID": 6,
+    "cardContent": "Collect £50",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 50,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 7,
+    "cardContent": "Get out of Jail Free",
+    "actionType": "JAIL",
+    "actionPrimary": "OUT",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 8,
+    "cardContent": "Go Back 3 Spaces",
+    "actionType": "TRANSITION_REL",
+    "actionPrimary": "GO",
+    "actionSecondary": -3
+  },
+  {
+    "type": "CHEST",
+    "cardID": 9,
+    "cardContent": "Go to Jail",
+    "actionType": "JAIL",
+    "actionPrimary": "IN",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 10,
+    "cardContent": "Make Repairs",
+    "actionType": "DEBIT_REL",
+    "actionPrimary": "REPAIR",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 11,
+    "cardContent": "Pay £15",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 15,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 12,
+    "cardContent": "Go to King's Cross Station",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 36,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 13,
+    "cardContent": "Advance to Mayfair",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 40,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 14,
+    "cardContent": "Pay Each Player £50",
+    "actionType": "DEBIT_REL",
+    "actionPrimary": "PAY_EACH",
+    "actionSecondary": 50
+  },
+  {
+    "type": "CHEST",
+    "cardID": 15,
+    "cardContent": "Collect £150",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 150,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 16,
+    "cardContent": "Collect £100",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 150,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 0,
+    "cardContent": "Advance to GO",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 1,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 1,
+    "cardContent": "Collect £50",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 50,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 2,
+    "cardContent": "Pay £50",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 50,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 3,
+    "cardContent": "Collect £50",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 50,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 4,
+    "cardContent": "Get Out of Jail Free",
+    "actionType": "JAIL",
+    "actionPrimary": "OUT",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 5,
+    "cardContent": "Go to Jail",
+    "actionType": "JAIL",
+    "actionPrimary": "IN",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 6,
+    "cardContent": "Collect £50 From Each Player",
+    "actionType": "CREDIT_REL",
+    "actionPrimary": "FROM_EACH",
+    "actionSecondary": 50
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 7,
+    "cardContent": "Collect £100",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 100,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 8,
+    "cardContent": "Collect £20",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 20,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 9,
+    "cardContent": "Collect £10 From Each Player",
+    "actionType": "CREDIT_REL",
+    "actionPrimary": "FROM_EACH",
+    "actionSecondary": 10
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 10,
+    "cardContent": "Collect £100",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 100,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 11,
+    "cardContent": "Pay £100",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 100,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 12,
+    "cardContent": "Pay £150",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 150,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 13,
+    "cardContent": "Collect £25",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 25,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 14,
+    "cardContent": "Make Repairs",
+    "actionType": "DEBIT_REL",
+    "actionPrimary": "REPAIR",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 15,
+    "cardContent": "Collect £10",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 10,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 16,
+    "cardContent": "Collect £100",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 100,
+    "actionSecondary": null
+  }
+]

@@ -1,0 +1,21 @@
+[
+    {
+        "PASS_GO_BONUS_FIELD": 200,
+        "ENABLE_GO_LANDING_BONUS": false,
+        "ENABLE_FREE_PARKING_BONUS": false,
+        "ENABLE_BONUS_CAP": false,
+        "ENABLE_FINITE_RESOURCES": true,
+        "HOUSE_AMOUNT_FIELD": 32,
+        "HOTEL_AMOUNT_FIELD": 12,
+        "ENABLE_EVEN_BUILD": true,
+        "HOTEL_PREREQUISITE_FIELD": 4,
+        "IMPROVEMENT_DEPRECIATION_FIELD": 2,
+        "SET_COMPLETION_BONUS_FIELD": 2,
+        "ENABLE_MORTGAGE_INTEREST": true,
+        "MORTGAGE_INTEREST_RATE_FIELD": 10,
+        "ENABLE_SPEEDING": true,
+        "SPEED_LIMIT_FILED": 3,
+        "MAX_JAIL_TERM_FIELD": 3,
+        "BAIL_FEE_FIELD": 50
+    }
+]
