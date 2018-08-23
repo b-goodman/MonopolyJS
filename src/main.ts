@@ -6,4 +6,4 @@ let chanceCards = new ChanceCards();
 
 console.log(dice);
 
-console.log(ChanceCards.CHANCE_CARD_LIB);
+console.log(typeof chanceCards.drawCard().actionPrimary);
