@@ -17115,6 +17115,117 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var Card = /** @class */function () {
+    //Constructs default card
+    function Card(cardID, cardContent, actionType, actionPrimary, actionSecondary) {
+        this.cardID = cardID;
+        this.cardContent = cardContent;
+        this.actionType = actionType;
+        this.actionPrimary = actionPrimary;
+        this.actionSecondary = actionSecondary;
+    }
+    Card.prototype.getCardContent = function () {
+        return this;
+    };
+    return Card;
+}();
+exports.Card = Card;
+
+},{}],4:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = require("lodash");
+var cardData = require("./config/cardData.json");
+var Card_1 = require("./Card");
+var ChanceCards = /** @class */function () {
+    function ChanceCards() {
+        var _this = this;
+        //get chance type cards from data and populate CHANCE_CARD_LIB
+        var chanceCardData = cardData.filter(function (card) {
+            return card["type"] == "CHANCE";
+        });
+        chanceCardData.map(function (card) {
+            return _this.add(card["cardID"], card["cardContent"], card["actionType"], card["actionPrimary"], card["actionSecondary"]);
+        });
+        //init. CHANCE_CARD_DECK
+        this.shuffleDeck();
+    }
+    /**
+     * Create new Card and add to library
+     *
+     * @param cardID [String] Unique identifier for card
+     * @param cardContent [String] Text viewed by user when reading card
+     * @param actionType [String] Defines type of action card performs
+     * @param actionPrimary [String] Parameterises action of card
+     * @param actionSecondary [String] Provides further instructions of cards
+     * action (if applicable)
+     */
+    ChanceCards.prototype.add = function (cardID, cardContent, actionType, actionPrimary, actionSecondary) {
+        ChanceCards.CHANCE_CARD_LIB.push(new Card_1.Card(cardID, cardContent, actionType, actionPrimary, actionSecondary));
+    };
+    /**
+     * Initialises a new deque by shuffling List CARD_LIB and copying to Deque
+     * CARD_DECK
+     */
+    ChanceCards.prototype.shuffleDeck = function () {
+        ChanceCards.CHANCE_CARD_DECK = _.shuffle(ChanceCards.CHANCE_CARD_LIB);
+    };
+    //
+    /**
+     * Read the next card without removing it
+     *
+     * @return [Card] Next Card obj. in deque
+     */
+    ChanceCards.prototype.getNextCard = function () {
+        return ChanceCards.CHANCE_CARD_DECK.shift();
+    };
+    /**
+     * Reads current card (without removal) and returns text content
+     *
+     * @return [Card] Next Card obj. parsed as list (printable) in deque
+     */
+    ChanceCards.prototype.readNextCard = function () {
+        return _.head(ChanceCards.CHANCE_CARD_DECK);
+    };
+    /**
+     * Returns next card in deck with removal.
+     * Init. new deque and returns first card if last card was drawn prev.
+     *
+     * @return [Card] New random card from deck.
+     */
+    ChanceCards.prototype.drawCard = function () {
+        if (this.getNextCard() == undefined) {
+            this.shuffleDeck();
+        }
+        //Removal of "Get out of jail free cards" from deck
+        //on drawing card
+        var drawnCard = ChanceCards.CHANCE_CARD_DECK.shift();
+        //check if type JAIL with action OUT
+        if (drawnCard.actionType == "JAIL" && drawnCard.actionPrimary == "OUT") {
+            //if so, remove from CHANCE_CARD_LIB, add to JAIL_BONDS
+            ChanceCards.JAIL_BONDS.push(drawnCard);
+            ChanceCards.CHANCE_CARD_LIB.splice(_.findIndex(ChanceCards.CHANCE_CARD_LIB, function (card) {
+                return card == drawnCard;
+            }), 1);
+        }
+        return drawnCard;
+    };
+    ChanceCards.prototype.reinsertJailBond = function () {
+        //Polls form bail holding deque, appends result to current deck.
+        ChanceCards.CHANCE_CARD_DECK.push(_.head(ChanceCards.JAIL_BONDS));
+    };
+    ChanceCards.CHANCE_CARD_LIB = [];
+    ChanceCards.CHANCE_CARD_DECK = [];
+    ChanceCards.JAIL_BONDS = [];
+    return ChanceCards;
+}();
+exports.ChanceCards = ChanceCards;
+
+},{"./Card":3,"./config/cardData.json":6,"lodash":2}],5:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 var _ = require("lodash");
 require("lodash.combinations");
 /**
@@ -17268,14 +17379,292 @@ exports.Dice = Dice;
 //     dice.rollProb
 // )
 
-},{"lodash":2,"lodash.combinations":1}],4:[function(require,module,exports){
+},{"lodash":2,"lodash.combinations":1}],6:[function(require,module,exports){
+module.exports=[
+  {
+    "type": "CHEST",
+    "cardID": 0,
+    "cardContent": "Advance to GO",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 1,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 1,
+    "cardContent": "Advance to Trafalgar Square",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 25,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 2,
+    "cardContent": "Advance to Pall Mall",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 12,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 3,
+    "cardContent": "Advance to Nearest Utility",
+    "actionType": "TRANSITION_REL",
+    "actionPrimary": "NEXT",
+    "actionSecondary": "UTILITY"
+  },
+  {
+    "type": "CHEST",
+    "cardID": 4,
+    "cardContent": "Advance to Nearset Railroad",
+    "actionType": "TRANSITION_REL",
+    "actionPrimary": "NEXT",
+    "actionSecondary": "RAILROAD"
+  },
+  {
+    "type": "CHEST",
+    "cardID": 5,
+    "cardContent": "Advance to Nearset Railroad",
+    "actionType": "TRANSITION_REL",
+    "actionPrimary": "NEXT",
+    "actionSecondary": "RAILROAD"
+  },
+  {
+    "type": "CHEST",
+    "cardID": 6,
+    "cardContent": "Collect £50",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 50,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 7,
+    "cardContent": "Get out of Jail Free",
+    "actionType": "JAIL",
+    "actionPrimary": "OUT",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 8,
+    "cardContent": "Go Back 3 Spaces",
+    "actionType": "TRANSITION_REL",
+    "actionPrimary": "GO",
+    "actionSecondary": -3
+  },
+  {
+    "type": "CHEST",
+    "cardID": 9,
+    "cardContent": "Go to Jail",
+    "actionType": "JAIL",
+    "actionPrimary": "IN",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 10,
+    "cardContent": "Make Repairs",
+    "actionType": "DEBIT_REL",
+    "actionPrimary": "REPAIR",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 11,
+    "cardContent": "Pay £15",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 15,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 12,
+    "cardContent": "Go to King's Cross Station",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 36,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 13,
+    "cardContent": "Advance to Mayfair",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 40,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 14,
+    "cardContent": "Pay Each Player £50",
+    "actionType": "DEBIT_REL",
+    "actionPrimary": "PAY_EACH",
+    "actionSecondary": 50
+  },
+  {
+    "type": "CHEST",
+    "cardID": 15,
+    "cardContent": "Collect £150",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 150,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 16,
+    "cardContent": "Collect £100",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 150,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 0,
+    "cardContent": "Advance to GO",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 1,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 1,
+    "cardContent": "Collect £50",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 50,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 2,
+    "cardContent": "Pay £50",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 50,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 3,
+    "cardContent": "Collect £50",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 50,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 4,
+    "cardContent": "Get Out of Jail Free",
+    "actionType": "JAIL",
+    "actionPrimary": "OUT",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 5,
+    "cardContent": "Go to Jail",
+    "actionType": "JAIL",
+    "actionPrimary": "IN",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 6,
+    "cardContent": "Collect £50 From Each Player",
+    "actionType": "CREDIT_REL",
+    "actionPrimary": "FROM_EACH",
+    "actionSecondary": 50
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 7,
+    "cardContent": "Collect £100",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 100,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 8,
+    "cardContent": "Collect £20",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 20,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 9,
+    "cardContent": "Collect £10 From Each Player",
+    "actionType": "CREDIT_REL",
+    "actionPrimary": "FROM_EACH",
+    "actionSecondary": 10
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 10,
+    "cardContent": "Collect £100",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 100,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 11,
+    "cardContent": "Pay £100",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 100,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 12,
+    "cardContent": "Pay £150",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 150,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 13,
+    "cardContent": "Collect £25",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 25,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 14,
+    "cardContent": "Make Repairs",
+    "actionType": "DEBIT_REL",
+    "actionPrimary": "REPAIR",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 15,
+    "cardContent": "Collect £10",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 10,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 16,
+    "cardContent": "Collect £100",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 100,
+    "actionSecondary": null
+  }
+]
+},{}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var dice_1 = require("./dice");
-var dice = new dice_1.Dice([6, 6, 6]);
+var Dice_1 = require("./Dice");
+var ChanceCards_1 = require("./ChanceCards");
+var dice = new Dice_1.Dice([6, 6, 6]);
+var chanceCards = new ChanceCards_1.ChanceCards();
 console.log(dice);
+console.log(ChanceCards_1.ChanceCards.CHANCE_CARD_LIB);
 
-},{"./dice":3}]},{},[4])
+},{"./ChanceCards":4,"./Dice":5}]},{},[7])
 
 //# sourceMappingURL=bundle.js.map

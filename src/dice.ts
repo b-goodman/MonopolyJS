@@ -54,7 +54,7 @@ export class Dice{
 
         //The sum of all face values of all dice once rolled
         this.value = null;
-
+        
         //Array of dice face values once rolled
         this.faces = null;
 
