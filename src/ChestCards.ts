@@ -4,17 +4,17 @@ import { Card } from "./Card";
 import { ActionType } from "./enums";
 import { ActionPrimary } from "./enums";
 
-export class ChanceCards {
+export class ChestCards {
 
-    public static CHANCE_CARD_LIB: Array<Card>  = [];
-    private static CHANCE_CARD_DECK: Array<Card> = [];
+    public static CHEST_CARD_LIB: Array<Card>  = [];
+    private static CHANCE_CARD_LIB: Array<Card> = [];
     private static JAIL_BONDS: Array<Card> = [];
 
     constructor(cardData: any){
-        //get chance type cards from data and populate CHANCE_CARD_LIB
-        let chanceCardData = (<any>cardData).filter(function(card){ return card["type"] == "CHANCE" });
-        chanceCardData.map( card => this.add(card["cardID"], card["cardContent"], card["actionType"], card["actionPrimary"], card["actionSecondary"]));
-        //init. CHANCE_CARD_DECK
+        //get chance type cards from data and populate CHEST_CARD_LIB
+        let chestCardData = (<any>cardData).filter(function(card){ return card["type"] == "CHANCE" });
+        chestCardData.map( card => this.add(card["cardID"], card["cardContent"], card["actionType"], card["actionPrimary"], card["actionSecondary"]));
+        //init. CHANCE_CARD_LIB
         this.shuffleDeck();
     }
 
@@ -37,7 +37,7 @@ export class ChanceCards {
             actionPrimary: ActionPrimary,
             actionSecondary: any
     ) {
-        ChanceCards.CHANCE_CARD_LIB.push(new Card(cardID, cardContent, actionType, actionPrimary, actionSecondary));
+        ChestCards.CHEST_CARD_LIB.push(new Card(cardID, cardContent, actionType, actionPrimary, actionSecondary));
     }
 
     /**
@@ -45,7 +45,7 @@ export class ChanceCards {
      * CARD_DECK
      */
     public shuffleDeck() {
-        ChanceCards.CHANCE_CARD_DECK = _.shuffle(ChanceCards.CHANCE_CARD_LIB);
+        ChestCards.CHANCE_CARD_LIB = _.shuffle(ChestCards.CHEST_CARD_LIB);
     }
 
     //
@@ -55,7 +55,7 @@ export class ChanceCards {
      * @return [Card] Next Card obj. in deque
      */
     public getNextCard(): Card {
-        return ChanceCards.CHANCE_CARD_DECK.shift();
+        return ChestCards.CHANCE_CARD_LIB.shift();
     }
 
     /**
@@ -64,7 +64,7 @@ export class ChanceCards {
      * @return [Card] Next Card obj. parsed as list (printable) in deque
      */
     public readNextCard(): Card {
-        return _.head(ChanceCards.CHANCE_CARD_DECK);
+        return _.head(ChestCards.CHANCE_CARD_LIB);
     }
 
     /**
@@ -79,19 +79,19 @@ export class ChanceCards {
         }
         //Removal of "Get out of jail free cards" from deck
         //on drawing card
-        let drawnCard: Card = ChanceCards.CHANCE_CARD_DECK.shift();
+        let drawnCard: Card = ChestCards.CHANCE_CARD_LIB.shift();
         //check if type JAIL with action OUT
         if (drawnCard.actionType == "JAIL" && drawnCard.actionPrimary == "OUT") {
-            //if so, remove from CHANCE_CARD_LIB, add to JAIL_BONDS
-            ChanceCards.JAIL_BONDS.push(drawnCard);
-            ChanceCards.CHANCE_CARD_LIB.splice(_.findIndex(ChanceCards.CHANCE_CARD_LIB, function(card){ return card == drawnCard }),1);
+            //if so, remove from CHEST_CARD_LIB, add to JAIL_BONDS
+            ChestCards.JAIL_BONDS.push(drawnCard);
+            ChestCards.CHEST_CARD_LIB.splice(_.findIndex(ChestCards.CHEST_CARD_LIB, function(card){ return card == drawnCard }),1);
         }
         return drawnCard;
     }
 
     public reinsertJailBond() {
         //Polls form bail holding deque, appends result to current deck.
-        ChanceCards.CHANCE_CARD_DECK.push(_.head(ChanceCards.JAIL_BONDS));
+        ChestCards.CHANCE_CARD_LIB.push(_.head(ChestCards.JAIL_BONDS));
     }
 
 }
