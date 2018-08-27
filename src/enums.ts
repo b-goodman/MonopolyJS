@@ -68,3 +68,14 @@ export enum ActionPrimary {
     REPAIR = "REPAIR",
     GO = "GO"
 };
+
+export enum Token {
+    WHEELBARROW="WHEELBARROW",
+    BATTLESHIP="BATTLESHIP",
+    RACECAR="RACECAR",
+    THIMBLE="THIMBLE",
+    SHOE="SHOE",
+    DOG="DOG",
+    TOPHAT="TOPHAT",
+    CAT="CAT"
+}
