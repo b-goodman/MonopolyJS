@@ -1,3 +1,4 @@
+import { Rules } from './Rules';
 import { SpecialCell } from './Cell';
 import { CellType } from './enums';
 
@@ -14,7 +15,12 @@ export interface RailroadCell {
     mortgageValue: number,
     rent: Array<number>,
     actionPrimary?: string,
-    actionSecondary?: string
+    actionSecondary?: string,
+    groupID?: string,
+    houseValue?: number,
+    hotelValue?: number,
+    oneUtilityMult?: number,
+    twoUtilityMult?: number
   }
 
 export interface SpecialCell {
@@ -26,10 +32,48 @@ export interface SpecialCell {
     actionSecondary: any,
     baseValue?: number,
     mortgageValue?: number,
-    rent?: Array<number>
+    rent?: Array<number>,
+    groupID?: string,
+    houseValue?: number,
+    hotelValue?: number,
+    oneUtilityMult?: number,
+    twoUtilityMult?: number
 }
 
-export class Cell implements SpecialCell {
+export interface PropertyCell{
+    type: CellType,
+    location: number,
+    name: string,
+    color: string,
+    groupID: string,
+    baseValue: number,
+    mortgageValue: number,
+    rent: Array<number>,
+    houseValue: number,
+    hotelValue: number,
+    actionPrimary?: string,
+    actionSecondary?: string,
+    oneUtilityMult?: number,
+    twoUtilityMult?: number
+  }
+  
+  export interface UtilityCell{
+    type: CellType,
+    location: number,
+    name: string,
+    color: string,
+    baseValue: number,
+    mortgageValue: number,
+    oneUtilityMult: number,
+    twoUtilityMult: number,
+    groupID?: string,
+    actionPrimary?: string,
+    actionSecondary?: string,
+    houseValue?: number,
+    hotelValue?: number,
+    rent?: Array<number>
+  }
+export class Cell implements SpecialCell, PropertyCell, RailroadCell {
 
     public type: CellType;
     public location: number;
@@ -50,12 +94,7 @@ export class Cell implements SpecialCell {
 
     public houseValue: number = null;
     public hotelValue: number = null;
-    public rentBase: number = null;
-    public rent1H: number = null;
-    public rent2H: number = null;
-    public rent3H: number = null;
-    public rent4H: number = null;
-    public rentHotel: number = null;
+    public rent: Array<number> = [];
     public houseCount: number = null;
     public hotelCount: number = null;
 
@@ -65,77 +104,44 @@ export class Cell implements SpecialCell {
     public actionPrimary: string = null;
     public actionSecondary: string = null;
 
-    public railroadRentConditions: Array<number> | null  = null;
-
-    constructor( 
-        // type: CellType,
-        // location: number,
-        // name: string,
-        // color: string,
-
-        // groupID?: string,
-        // baseValue?: number,
-        // mortgageValue?: number,
-        // houseValue?: number,
-        // hotelValue?: number,
-        // rentBase?: number,
-        // rent1H?: number,
-        // rent2H?: number,
-        // rent3H?: number,
-        // rent4H?: number,
-        // rentHotel?: number,
-
-        // rent1R?: number,
-        // rent2R?: number,
-        // rent3R?: number,
-        // rent4R?: number,
-
-        // oneUtilityMult?: number,
-        // twoUtilityMult?: number,
-        // actionPrimary?: string,
-        // actionSecondary?: string
-        cell:SpecialCell|RailroadCell
- 
-    ) {
+    constructor( cell: PropertyCell | SpecialCell | RailroadCell | UtilityCell) {
+       
         this.name = cell.name;
         this.location = cell.location;
         this.type = cell.type;
         this.color = cell.color;
 
-        // if(this.type == "PROPERTY"){
-        //     this.baseValue = baseValue;
-        //     this.isOwnable = true;
-        //     this.improvemntState = 0;
-        //     this.houseValue = houseValue;
-        //     this.hotelValue = hotelValue;
-        //     this.rentBase = rentBase;
-        //     this.rent1H = rent1H;
-        //     this.rent2H = rent2H;
-        //     this.rent3H = rent3H;
-        //     this.rent4H = rent4H;
-        //     this.rentHotel = rentHotel;
-        //     this.houseCount = 0;
-        //     this.hotelCount = 0;
-        //     this.mortgageValue = mortgageValue;
-        //     this.mortgageState = false;
-        // };
+        if(this.type == "PROPERTY"){
+            this.groupID = cell.groupID;
+            Cell.PROPERTY_ID_BY_NAME[cell.name] = 's';
+            this.isOwnable = true;
+            this.baseValue = cell.baseValue;
+            this.mortgageValue = cell.mortgageValue;
+            this.rent = cell.rent;
+            this.houseValue = cell.houseValue;
+            this. hotelValue = cell. hotelValue
+        }
 
         if(this.type == "RAILROAD"){
+            this.groupID = 'r';
+            Cell.PROPERTY_ID_BY_NAME[cell.name] = 'r';
             this.baseValue = cell.baseValue;
             this.isOwnable = true;
             this.mortgageValue = cell.mortgageValue;
             this.mortgageState = false;
-            this.railroadRentConditions = cell.rent;
+            this.rent = cell.rent;
         };
 
-        // if(this.type == "UTILITY"){
-        //     this.baseValue = baseValue;
-        //     this.isOwnable = true;
-        //     this.mortgageValue = mortgageValue;
-        //     this.mortgageState = false;
-        //     this.oneUtilityMult = oneUtilityMult;
-        //     this.twoUtilityMult = twoUtilityMult;
-        // };
+        if(this.type == "UTILITY"){
+            this.groupID = 'u';
+            Cell.PROPERTY_ID_BY_NAME[cell.name] = 'u';
+            this.baseValue = cell.baseValue;
+            this.isOwnable = true;
+            this.mortgageValue = cell.mortgageValue;
+            this.mortgageState = false;
+            this.oneUtilityMult = cell.oneUtilityMult;
+            this.twoUtilityMult = cell.twoUtilityMult;
+        };
 
         if(this.type == "SPECIAL"){
             this.groupID = 's';
@@ -149,72 +155,11 @@ export class Cell implements SpecialCell {
             this.isOwnable = false;
         }
         
-        }
-
-        // newSpecialCell(cell:SpecialCell):Cell{
-        //     return new Cell(cell.type,cell.locaion, cell.name, cell.color, groupID?: string,
-        //         baseValue?: number,
-        //         mortgageValue?: number,
-        //         houseValue?: number,
-        //         hotelValue?: number,
-        //         rentBase?: number,
-        //         rent1H?: number,
-        //         rent2H?: number,
-        //         rent3H?: number,
-        //         rent4H?: number,
-        //         rentHotel?: number,
-        
-        //         rent1R?: number,
-        //         rent2R?: number,
-        //         rent3R?: number,
-        //         rent4R?: number,
-        
-        //         oneUtilityMult?: number,
-        //         twoUtilityMult?: number,
-        //         actionPrimary?: string,
-        //         actionSecondary?: string);
-        // }
     }
-    
 
-
-   
-
-   
-
-  
 
 // //All cells:
-//     /**
-//      * Gets name of Cell
-//      *
-//      * @return name of this cell
-//      */
-//     public String getName() {
-//         return name;
-//     }
-
-//     public int getLocation() {
-//         return location;
-//     }
-
-//     /**
-//      * Gets color of Cell.
-//      *
-//      * @return color of this cell
-//      */
-//     public String getColor() {
-//         return color;
-//     }
-
-//     /**
-//      * States if this Cell can be owned by a player.
-//      *
-//      * @return True if Cell can be owned by a player, False otherwise
-//      */
-//     public boolean getOwnable() {
-//         return isOwnable;
-//     }
+   
 
 //     public int getBaseValue() {
 //         return baseValue;
@@ -252,118 +197,68 @@ export class Cell implements SpecialCell {
 //         return hotelValue;
 //     }
 
-//     /**
-//      * Gets type of Cell. Type describes nature and enables different possible
-//      * method behaviours.
-//      *
-//      * @return String describing type of cell ("property", "railroad",
-//      * "utility", "jail", "special")
-//      */
-//     public CellType getCellType() {
-//         return cellType;
-//     }
 
-// //Special Cells:
-//     public String getActionType() {
-//         return actionType;
-//     }
-
-//     public String getActionParamater() {
-//         return actionParamater;
-//     }
 
 // //Ownable cells:
-// //    public static Map getTotalOwnership() {
-// //        return PLAYER_OWNERSHIP;
-// //    }
-//     /**
-//      * Defines the ownership of this Cell. Sets the Cells ownership field to its
-//      * new value and adds/overwrites static PLAYER_OWNERSHIP field with Cells
-//      * name mapped to player ID
-//      *
-//      * @param newOwnerID the unique identifier for the owning player
-//      */
-//     public void setOwnership(Integer newOwnerID) {
-//         currentOwner = newOwnerID;
-//         PLAYER_OWNERSHIP.put(name, newOwnerID);
-//         Cells.PLAYER_OWNERSHIP.put(this, newOwnerID);
-//     }
 
-//     /**
-//      * Returns the unique ID of the player who owns this Cell.
-//      *
-//      * @return owning player ID, null if this Cell is not owned
-//      */
-//     public Integer getOwnership() {
-//         return currentOwner;
-//     }
+    /**
+     * Defines the ownership of this Cell. Sets the Cells ownership field to its
+     * new value and adds/overwrites static PLAYER_OWNERSHIP field with Cells
+     * name mapped to player ID
+     *
+     * @param newOwnerID the unique identifier for the owning player
+     */
+    public setOwnership(newOwnerID: number) {
+        this.currentOwner = newOwnerID;
+        Cell.PLAYER_OWNERSHIP[this.name] = newOwnerID;
+        //Cells.PLAYER_OWNERSHIP.put(this, newOwnerID);
+    }
 
-//     /**
-//      * States if the Cell is currently mortgaged
-//      *
-//      * @return True if this Cell is mortgaged (mortgageState = true), False
-//      * otherwise
-//      */
-//     public boolean isMortgaged() {
-//         return mortgageState;
-//     }
 
-//     /**
-//      * Designates Cell as being (un)mortgaged. Does not implement higher rules
-//      * of game
-//      *
-//      * @param set true if property is to be mortgaged, false if property is
-//      * being un-mortgaged
-//      */
-//     public void setMortgageState(boolean set) {
-//         mortgageState = set;
-//     }
-
-//     public int getMortgageValue() {
-//         return mortgageValue;
-//     }
-
-//     /**
-//      * Checks if Cell can be (un)mortgaged
-//      *
-//      * @param action The mortgage action to be checked for. Either "mortgage" or
-//      * "unmortgage".
-//      * @return True if stated action type is valid under current rules and
-//      * property state. False otherwise
-//      */
-//     public boolean isMortgageActionValid(String action) {
-//         boolean returnStatement = false;
-//         switch (action) {
-//             //check if cell can be mortgaged
-//             case "mortgage":
-//                 //check if cell is ownable; if not then cannot be mortgaged
-//                 if (!getOwnable()) {
-//                     System.out.println("\tThis type of cell (" + getCellType() + ") is not ownable and so cannot be mortgaged");
-//                 } else if (isMortgaged()) {
-//                     //Property type is ownable
-//                     //check if property is already mortgaged; if so then cannot be mortgaged
-//                     System.out.println("\tThis property is already mortgaged");
-//                 } else if (houseCount > 0 || hotelCount == 1) {
-//                     //Property is ownable and is not currently mortgaged.
-//                     //Check if property is improved; if so then cannot be mortgaged
-//                     System.out.println("\tImproved properties cannot be mortgaged");
-//                 } else {
-//                     //Property is ownable, unmortgaged and unimproved and thus may be mortgaged
-//                     returnStatement = true;
-//                 }
-//                 break;
-//             case "unmortgage":
-//                 //Check if cell is already un-mortgaged
-//                 if (!isMortgaged()) {
-//                     //If property is not mortgaged then it cannot be unmortgaged.
-//                     System.out.println("\tThis property is not mortgaged");
-//                 } else if ((Rules.isMortgageInterestEnabled() && Players.get(currentOwner).getCash() < mortgageValue + (mortgageValue / Rules.getMortgageInterestRate())) || (!Rules.isMortgageInterestEnabled() && Players.get(currentOwner).getCash() < mortgageValue)) {
-//                     System.out.println("\tInsufficient funds avaliable to unmortgage this property");
-//                 }
-//                 break;
-//         }
-//         return returnStatement;
-//     }
+    /**
+     * Checks if Cell can be (un)mortgaged
+     *
+     * @param action The mortgage action to be checked for. Either "mortgage" or
+     * "unmortgage".
+     * @return True if stated action type is valid under current rules and
+     * property state. False otherwise
+     */
+    public isMortgageActionValid(action: string): boolean {
+        let returnStatement: boolean = false;
+        switch (action) {
+            //check if cell can be mortgaged
+            case "mortgage":
+                //check if cell is ownable; if not then cannot be mortgaged
+                if (!this.isOwnable) {
+                    console.log("\tThis type of cell (" + this.type + ") is not ownable and so cannot be mortgaged");
+                } else if (this.mortgageState) {
+                    //Property type is ownable
+                    //check if property is already mortgaged; if so then cannot be mortgaged
+                    console.log("\tThis property is already mortgaged");
+                } else if (this.houseCount > 0 || this.hotelCount == 1) {
+                    //Property is ownable and is not currently mortgaged.
+                    //Check if property is improved; if so then cannot be mortgaged
+                    console.log("\tImproved properties cannot be mortgaged");
+                } else {
+                    //Property is ownable, unmortgaged and unimproved and thus may be mortgaged
+                    returnStatement = true;
+                }
+                break;
+            case "unmortgage":
+                //Check if cell is already un-mortgaged
+                if (!this.isOwnable) {
+                    //If property is not mortgaged then it cannot be unmortgaged.
+                    console.log("\tThis property is not mortgaged");
+                } else if ( 
+                    ( Rules.PROPERTY_MORTGAGE_INTEREST_RATE_ENABLED && Players.get(currentOwner).getCash() < this.mortgageValue + (this.mortgageValue / Rules.PROPERTY_MORTGAGE_INTEREST_RATE_VALUE) 
+                    || (!Rules.PROPERTY_MORTGAGE_INTEREST_RATE_ENABLED && Players.get(currentOwner).getCash() < this.mortgageValue)) 
+                ){
+                    console.log("\tInsufficient funds avaliable to unmortgage this property");
+                }
+                break;
+        }
+        return returnStatement;
+    }
 
 //     /**
 //      * Mortgages Cell with additional checks
@@ -371,7 +266,7 @@ export class Cell implements SpecialCell {
 //     public void mortgageProperty() {
 //         if (isMortgageActionValid("mortgage")) {
 //             setMortgageState(true);
-//             System.out.println("\t" + Players.get(currentOwner).getName() + " mortgages " + name + " for " + mortgageValue);
+//             console.log("\t" + Players.get(currentOwner).getName() + " mortgages " + name + " for " + mortgageValue);
 //             Players.get(currentOwner).playerCashRecieve(-1, mortgageValue);
 
 //         }
@@ -384,7 +279,7 @@ export class Cell implements SpecialCell {
 //         if (isMortgageActionValid("unmortgage")) {
 //             int unmortgageValue = (Rules.isMortgageInterestEnabled()) ? mortgageValue + (mortgageValue / Rules.getMortgageInterestRate()) : mortgageValue;
 //             setMortgageState(false);
-//             System.out.println("\t" + Players.get(currentOwner).getName() + " unmortgages " + name + " for " + unmortgageValue);
+//             console.log("\t" + Players.get(currentOwner).getName() + " unmortgages " + name + " for " + unmortgageValue);
 //             Players.get(currentOwner).playerCashPay(-1, unmortgageValue);
 //         }
 //     }
@@ -492,7 +387,7 @@ export class Cell implements SpecialCell {
 //     public int getRent() {
 //         int returnCase = 0;
 //         if (isMortgaged()) {
-//             System.out.println("\tRent cannot be collected on mortgaged properties");
+//             console.log("\tRent cannot be collected on mortgaged properties");
 //         } else {
 //             switch (getCellType()) {
 //                 case PROPERTY:
@@ -680,28 +575,28 @@ export class Cell implements SpecialCell {
 //         //Check if player owns complete set
 //         if (!isSetComplete()) {
 //             //Return message is set uncomplete
-//             System.out.println("\tCannot improve properties belonging to incomplete sets");
+//             console.log("\tCannot improve properties belonging to incomplete sets");
 //             //check if property is of correct type
 //         } else if (getCellType() != CellType.PROPERTY) {
-//             System.out.println("\tThis cell type (" + getCellType() + ") cannot be improved");
+//             console.log("\tThis cell type (" + getCellType() + ") cannot be improved");
 //             //check if property is mortgaged
 //         } else if (isMortgaged()) {
 //             // if is mortgaged, throw exception
-//             System.out.println("\tCannot improve mortgaged property");
+//             console.log("\tCannot improve mortgaged property");
 //             //otherwise, proceed to check if property improvment limits are reached
 //         } else if (hotelCount == 1) {
 //             if (Rules.isImprovementResourcesFinite() && Rules.getImprovementAmountHotel() == 0) {
-//                 System.out.println("\tCannot improve property beyond 1 Hotel (and there are also no hotels avaliable)");
+//                 console.log("\tCannot improve property beyond 1 Hotel (and there are also no hotels avaliable)");
 //             } else {
-//                 System.out.println("\tCannot improve property beyond 1 Hotel");
+//                 console.log("\tCannot improve property beyond 1 Hotel");
 //             }
 //         } else if (Rules.isImprovementResourcesFinite() && Rules.getImprovementAmountHouse() == 0 && hotelCount == 0 && houseCount < Rules.getPropertyHotelReq()) {
-//             System.out.println("\tP  roperty eligible for improvement but there are no houses avaliable to purchace");
+//             console.log("\tP  roperty eligible for improvement but there are no houses avaliable to purchace");
 //         } else if (Rules.isImprovementResourcesFinite() && Rules.getImprovementAmountHotel() == 0 && hotelCount == 0 && houseCount == Rules.getPropertyHotelReq()) {
-//             System.out.println("\tProperty eligible for improvement but there are no hotels avaliable to purchace");
+//             console.log("\tProperty eligible for improvement but there are no hotels avaliable to purchace");
 //             //check player has enough cash
 //         } else if (Players.get(getOwnership()).getCash() < improvementNetCost) {
-//             System.out.println("\t" + Players.get(getOwnership()).getName() + " cannot afford this improvement (cost: " + improvementNetCost + " - cash: " + Players.get(getOwnership()).getCash() + ")");
+//             console.log("\t" + Players.get(getOwnership()).getName() + " cannot afford this improvement (cost: " + improvementNetCost + " - cash: " + Players.get(getOwnership()).getCash() + ")");
 //         } else {
 //             isValid = true;
 //         }
@@ -729,7 +624,7 @@ export class Cell implements SpecialCell {
 //             }
 //             Players.get(currentOwner).playerCashPay(-1, houseValue);
 
-//             System.out.println("\t" + Players.get(currentOwner).getName() + " builds a house on " + name + " - New Rent: " + getRent() + " - Houses left: " + Rules.getImprovementAmountHouse());
+//             console.log("\t" + Players.get(currentOwner).getName() + " builds a house on " + name + " - New Rent: " + getRent() + " - Houses left: " + Rules.getImprovementAmountHouse());
 //             //improvemntState++;
 //         } else if (addImprovementsValid() && houseCount == Rules.getPropertyHotelReq()) {
 //             houseCount = 0;
@@ -737,7 +632,7 @@ export class Cell implements SpecialCell {
 //             hotelCount = 1;
 //             Rules.setImprovementAmountHotel(Rules.getImprovementAmountHotel() - 1);
 //             Players.get(currentOwner).playerCashPay(-1, hotelValue);
-//             System.out.println("\t" + Players.get(currentOwner).getName() + " builds a hotel on " + name + " - New Rent: " + getRent());
+//             console.log("\t" + Players.get(currentOwner).getName() + " builds a hotel on " + name + " - New Rent: " + getRent());
 
 //             //improvemntState++;
 //         }
@@ -755,7 +650,7 @@ export class Cell implements SpecialCell {
 //         //is property unimproved
 //         if ((houseCount == 0 && hotelCount == 0)) {
 //             //return message
-//             System.out.println("\tCannot remove improvements from unimproved property");
+//             console.log("\tCannot remove improvements from unimproved property");
 //             //else, property has some level of improvement
 //         } else if (Rules.isImprovementResourcesFinite()) {
 //             //check rules for finite resources - else if resources are infinite then removal will be valid
@@ -764,7 +659,7 @@ export class Cell implements SpecialCell {
 //                 //determine how many houses are needed.  Is even build enabled?
 //                 if ((Rules.isPropertyEvenBuildEnabled() && (getOwningPlayerGroupFrequency() * Rules.getPropertyHotelReq() > Rules.getImprovementAmountHouse())) || (!Rules.isPropertyEvenBuildEnabled() && Rules.getPropertyHotelReq() > Rules.getImprovementAmountHouse())) {
 //                     //removal must be even across all property group members - get the size of membership and multiply by hotelReq
-//                     System.out.println("\tInsufficient amount of houses avaliable to downgrade from hotel");
+//                     console.log("\tInsufficient amount of houses avaliable to downgrade from hotel");
 //                 }
 //             }
 //         } else {
@@ -803,4 +698,5 @@ export class Cell implements SpecialCell {
     //     }
     // }
 
+    }
 

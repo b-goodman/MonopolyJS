@@ -17139,31 +17139,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 ;
 ;
 var Cell = /** @class */function () {
-    function Cell(
-    // type: CellType,
-    // location: number,
-    // name: string,
-    // color: string,
-    // groupID?: string,
-    // baseValue?: number,
-    // mortgageValue?: number,
-    // houseValue?: number,
-    // hotelValue?: number,
-    // rentBase?: number,
-    // rent1H?: number,
-    // rent2H?: number,
-    // rent3H?: number,
-    // rent4H?: number,
-    // rentHotel?: number,
-    // rent1R?: number,
-    // rent2R?: number,
-    // rent3R?: number,
-    // rent4R?: number,
-    // oneUtilityMult?: number,
-    // twoUtilityMult?: number,
-    // actionPrimary?: string,
-    // actionSecondary?: string
-    cell) {
+    function Cell(cell) {
         this.isOwnable = null;
         this.groupID = null;
         this.currentOwner = null;
@@ -17173,46 +17149,34 @@ var Cell = /** @class */function () {
         this.improvemntState = null;
         this.houseValue = null;
         this.hotelValue = null;
-        this.rentBase = null;
-        this.rent1H = null;
-        this.rent2H = null;
-        this.rent3H = null;
-        this.rent4H = null;
-        this.rentHotel = null;
+        this.rent = [];
         this.houseCount = null;
         this.hotelCount = null;
         this.oneUtilityMult = null;
         this.twoUtilityMult = null;
         this.actionPrimary = null;
         this.actionSecondary = null;
-        this.railroadRentConditions = null;
         this.name = cell.name;
         this.location = cell.location;
         this.type = cell.type;
         this.color = cell.color;
-        // if(this.type == "PROPERTY"){
-        //     this.baseValue = baseValue;
-        //     this.isOwnable = true;
-        //     this.improvemntState = 0;
-        //     this.houseValue = houseValue;
-        //     this.hotelValue = hotelValue;
-        //     this.rentBase = rentBase;
-        //     this.rent1H = rent1H;
-        //     this.rent2H = rent2H;
-        //     this.rent3H = rent3H;
-        //     this.rent4H = rent4H;
-        //     this.rentHotel = rentHotel;
-        //     this.houseCount = 0;
-        //     this.hotelCount = 0;
-        //     this.mortgageValue = mortgageValue;
-        //     this.mortgageState = false;
-        // };
+        if (this.type == "PROPERTY") {
+            this.groupID = cell.groupID;
+            Cell.PROPERTY_ID_BY_NAME[cell.name] = 's';
+            this.baseValue = cell.baseValue;
+            this.mortgageValue = cell.mortgageValue;
+            this.rent = cell.rent;
+            this.houseValue = cell.houseValue;
+            this.hotelValue = cell.hotelValue;
+        }
         if (this.type == "RAILROAD") {
+            this.groupID = 'r';
+            Cell.PROPERTY_ID_BY_NAME[cell.name] = 'r';
             this.baseValue = cell.baseValue;
             this.isOwnable = true;
             this.mortgageValue = cell.mortgageValue;
             this.mortgageState = false;
-            this.railroadRentConditions = cell.rent;
+            this.rent = cell.rent;
         }
         ;
         // if(this.type == "UTILITY"){
@@ -18813,6 +18777,18 @@ function initCardDecks(cardData) {
 // let cell:SpecialCell: {type: <CellType>"SPECIAL", location:39, name:"Super Tax", color:"Gray", actionPrimary:"debitAbs", actionSecondary:100};
 console.log(new Cell_1.Cell({ type: "SPECIAL", location: 39, name: "Super Tax", color: "Gray", actionPrimary: "debitAbs", actionSecondary: 100 }));
 console.log(new Cell_1.Cell({ type: "RAILROAD", location: 36, name: "King's Cross Station", color: "Gray", baseValue: 200, mortgageValue: 100, rent: [25, 50, 100, 200] }));
+console.log(new Cell_1.Cell({
+    type: "PROPERTY",
+    location: 38,
+    name: "Park Lane",
+    color: "Blue",
+    groupID: "H",
+    baseValue: 350,
+    mortgageValue: 175,
+    houseValue: 200,
+    hotelValue: 200,
+    rent: [35, 175, 500, 1100, 1300, 1500]
+}));
 
 },{"./Cell":4,"./ChanceCards":5,"./ChestCards":6,"./Dice":7,"./Rules":8}]},{},[9])
 
