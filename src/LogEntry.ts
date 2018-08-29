@@ -1,11 +1,17 @@
+import { Dice } from './Dice';
+import { Players } from './Players';
+import { Card } from './Card';
+import { ActionPrimary, EventType } from './enums';
 import { Player } from './Player';
 import { Cell } from "./Cell";
+import { Cells } from "./Cells";
+
 
 interface INumberTMap<T> { [key: number]: T; };
 interface NumberCellMap extends INumberTMap<Cell> {};
 interface NumberPlayerMap extends INumberTMap<Player> {};
 
-public class GameEvent {
+class GameEvent {
 
     //record game state
     private const LOCATIONS: NumberCellMap = {};
@@ -13,26 +19,26 @@ public class GameEvent {
     private const DICE_VALUES: Array<number> = [];
     private const position: number;
     private const PLAYER_ID: number;
-    private const EventType KEYWORD;
-    private int[] actionParameters;
-    private final String PLAYER_NAME;
-    private String description = null;
-    private final int logCount;
-    private final List card;
-    private int cash;
+    private const EventType: string;
+    private actionParameters: Array<number> = [];
+    private const PLAYER_NAME: string;
+    private description: string = null;
+    private const logCount: number;
+    private const card: Card;
+    private cash: number;
 
     //constructor
-    public Event(Integer playerID, EventType keyword, int... actionParameters) {
+    constructor(playerID: number, keyword: string, actionParameters: Array<number>) {
         //record game state
-        this.LOCATIONS = Cells.getCells();
-        this.PLAYERS = Players.getPlayers();
-        this.DICE_VALUES = Dice.getFaceValues();
+        this.LOCATIONS = Cells.LOCATIONS;
+        this.PLAYERS = Players.PLAYERS;
+        this.DICE_VALUES = Dice.faces;
         this.PLAYER_ID = playerID;
-        this.KEYWORD = keyword;
+        this.EventType = keyword;
         this.actionParameters = actionParameters;
-        this.PLAYER_NAME = PLAYERS.get(playerID).getName();
-        this.position = PLAYERS.get(playerID).getPosition();
-        if (keyword == START) {
+        this.PLAYER_NAME = Players.get(playerID).name;
+        this.position = Players.get(playerID).position;
+        if (keyword == "START") {
             GameLog.incLogCounter();
         }
         this.logCount = GameLog.getLogCounter();
@@ -41,41 +47,7 @@ public class GameEvent {
 
     }
 
-    public Event(Integer playerID, EventType keyword) {
-        //record game state
-        this.LOCATIONS = Cells.getCells();
-        this.PLAYERS = Players.getPlayers();
-        this.DICE_VALUES = Dice.getFaceValues();
-        this.PLAYER_ID = playerID;
-        this.KEYWORD = keyword;
-        this.PLAYER_NAME = PLAYERS.get(playerID).getName();
-        this.position = PLAYERS.get(playerID).getPosition();
-        if (keyword == START) {
-            GameLog.incLogCounter();
-        }
-        this.logCount = GameLog.getLogCounter();
-        this.card = (PLAYERS.get(playerID).readCurrentCard());
-        this.cash = (PLAYERS.get(playerID).getCash());
-
-    }
-
-    public Event(Integer playerID, EventType keyword, String description) {
-        //record game state - not working
-        this.LOCATIONS = Cells.getCells();
-        this.PLAYERS = Players.getPlayers();
-        this.DICE_VALUES = Dice.getFaceValues();
-        this.PLAYER_ID = playerID;
-        this.KEYWORD = keyword;
-        this.PLAYER_NAME = PLAYERS.get(playerID).getName();
-        this.position = PLAYERS.get(playerID).getPosition();
-        this.description = description;
-        if (keyword == START) {
-            GameLog.incLogCounter();
-        }
-        this.logCount = GameLog.getLogCounter();
-        this.card = (PLAYERS.get(playerID).readCurrentCard());
-        this.cash = (PLAYERS.get(playerID).getCash());
-    }
+    
 
     //methods
     //verbose parse
@@ -207,42 +179,44 @@ public class GameEvent {
 //        PLAYER_OWNERSHIP = Cells.getPlayerOwnership();
 //        LOCATIONS = Cells.getLocations();
 //    }
-public void logEvent(EventType keyword, int... actionParameters) {
-    LOG_EVENTS.add(new Event(playerID, keyword, actionParameters));
-}
+// public void logEvent(EventType keyword, int... actionParameters) {
+//     LOG_EVENTS.add(new Event(playerID, keyword, actionParameters));
+// }
 
-public void logEvent(EventType keyword) {
-    //Event event = new Event(playerID, keyword);
-    LOG_EVENTS.add(new Event(playerID, keyword));
-}
+// public void logEvent(EventType keyword) {
+//     //Event event = new Event(playerID, keyword);
+//     LOG_EVENTS.add(new Event(playerID, keyword));
+// }
 
-public void logEvent(EventType keyword, String description) {
-    //Event event = new Event(playerID, keyword, description);
-    LOG_EVENTS.add(new Event(playerID, keyword, description));
-}
+// public void logEvent(EventType keyword, String description) {
+//     //Event event = new Event(playerID, keyword, description);
+//     LOG_EVENTS.add(new Event(playerID, keyword, description));
+// }
 
-public void clearTurnLog() {
-    LOG_EVENTS.clear();
-}
+// public void clearTurnLog() {
+//     LOG_EVENTS.clear();
+// }
 
-public void submitTurnLog() {
-    GameLog.logPlayerTurn(this);
-}
+// public void submitTurnLog() {
+//     GameLog.logPlayerTurn(this);
+// }
 
-public List<Event> getLogEvents() {
-    return LOG_EVENTS;
-}
+// public List<Event> getLogEvents() {
+//     return LOG_EVENTS;
+// }
 
-public List<String> parseLogEntry() {
-    List<String> returnList = new ArrayList<>();
-    for (Object logElement : LOG_EVENTS) {
-        returnList.add(((Event) logElement).parse());
-    }
-    return returnList;
-}
+// public List<String> parseLogEntry() {
+//     List<String> returnList = new ArrayList<>();
+//     for (Object logElement : LOG_EVENTS) {
+//         returnList.add(((Event) logElement).parse());
+//     }
+//     return returnList;
+// }
 
 
-public class LogEntry {
+
+
+export class LogEntry {
 
     //game state
     private LOG_EVENTS: Array<Event> = [];

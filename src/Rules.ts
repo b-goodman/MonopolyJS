@@ -3,6 +3,17 @@ import { NumericDictionary } from "lodash";
 export class Rules {
     // ========================== DEFAULT RULES ============================
 
+    // -------------------- INIT -----------------------------
+    /**
+     * Starting cash for new player
+     *
+     * @private
+     * @static
+     * @type {number}
+     * @memberof Rules
+     */
+    private static _INITIAL_PLAYER_CASH: number = 2500;
+
     // --------------------- GO --------------------------
     /**
      * Cash value given to the player after passing 'GO'.
@@ -169,6 +180,15 @@ export class Rules {
 
 
     //=========================================== METHODS ============================================
+
+    public static get INITIAL_PLAYER_CASH(): number {
+        return Rules._INITIAL_PLAYER_CASH;
+    }
+
+    public static set INITIAL_PLAYER_CASH(cash: number) {
+        Rules._INITIAL_PLAYER_CASH = cash;
+    }
+
     // ------------------------ JAIL --------------------------------------
    /**
     * Cash player must pay to leave jail via 'Bail' route.

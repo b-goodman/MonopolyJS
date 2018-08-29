@@ -42,39 +42,39 @@ export class Dice{
      * @param {*} sidesArray Each element in the array constructs a die with amount of sides equal to the array value.
      * @memberof Dice
      */
-    dice: Array<Die>;
-    value: number;
-    faces: Array<number>;
-    allEqual: boolean;
-    rollProb: Object;
+    private static _dice: Array<Die> = [];
+    private static _value: number;
+    private static _faces: Array<number>;
+    private static _allEqual: boolean;
+    private static _rollProb: Object;
     constructor(sidesArray:Array<number>){
         //Create and hold instances of Die.
-        this.dice = [];
-        sidesArray.map(sides=>this.dice.push(new Die(sides)));
+        sidesArray.map(sides=>Dice._dice.push(new Die(sides)));
 
         //The sum of all face values of all dice once rolled
-        this.value = null;
+        Dice._value = null;
         
         //Array of dice face values once rolled
-        this.faces = null;
+        Dice._faces = null;
 
         //true if all face values are equal, false otherwise
-        this.allEqual = null;
+        Dice._allEqual = null;
 
         //object mapping possible value of each roll (key) to it's probability (value)
-        this.rollProb = null;
+        Dice._rollProb = null;
 
         
-        var input = this.dice.map(die=>die.sides);
+        var input = Dice._dice.map(die=>die.sides);
         var rolloverCounter = 0;
         let rolloverValues: Array<number> = _.times(input.length, _.constant(0));  
         let output: Array<string> = [];
         let outCast: Array<Array<number>> = [];
         let outReduce: Array<number> = [];
+       
         /**
          * Helper function for calculating roll probabilities.
          *
-         * @param {*} index
+         * @param index
          */
         function rollover(index) {
             if (index > 0 && (rolloverCounter % Math.pow(input[index], ((input.length - 1) - index))) == 0) {
@@ -86,6 +86,7 @@ export class Dice{
                 rolloverValues[index]++;
             }
         };
+
         /**
          * Helper function for calculating roll probabilities.
          *
@@ -113,10 +114,10 @@ export class Dice{
         outCast = output.map(elem=>JSON.parse("[" + elem + "]"));
         outReduce = outCast.map( values => values.reduce( (a,b) => a+b ) );
         var freq = _.countBy(outReduce);
-        this.rollProb = _.zipObject( Object.keys(freq), (<any>Object).values(freq).map(prob => 100 * (prob/ (<any>Object).values(freq).reduce( (a,b)=>a+b ))) );
+        Dice._rollProb = _.zipObject( Object.keys(freq), (<any>Object).values(freq).map(prob => 100 * (prob/ (<any>Object).values(freq).reduce( (a,b)=>a+b ))) );
 
         //init. Dice
-        this.roll();
+        Dice.roll();
 
     };
 
@@ -126,17 +127,22 @@ export class Dice{
      * @returns Randomly generated integer equal to the sum of the face values of all rolled dice.
      * @memberof Dice
      */
-    roll(){
-        this.faces = this.dice.map(die=>die.rollDie());
-        this.value = this.faces.reduce((a,b)=>a+b);
-        if(this.dice.length > 1){
-            this.allEqual = this.faces.every(face=>face === this.faces[0]);
+    public static get faces():Array<number>{
+        return Dice._faces;
+    }
+
+    public static roll(){
+        Dice._faces = Dice._dice.map(die=>die.rollDie());
+        Dice._value = Dice._faces.reduce((a,b)=>a+b);
+        if(Dice._dice.length > 1){
+            Dice._allEqual = Dice._faces.every(face=>face === Dice._faces[0]);
         }else{
-            this.allEqual = false;
+            Dice._allEqual = false;
         };
-        return this.value;
+        return Dice._value;
     }
 }
+
 
 
 // var dice = new Dice([6,6,3]);

@@ -1,66 +1,49 @@
-import { Token } from "./enums";
+import { Token, CellType } from "./enums";
 import { Card } from "./Card";
-import { LogEntry } from "./LogEntry";
-
+// import { LogEntry } from "./LogEntry";
+import { Rules } from "./Rules";
+import { Cells } from "./Cells";
+import { Cell } from "./Cell";
 export class Player {
 
     //Player ID
-    private playerID: number;
+    private _playerID: number;
 
     //Players name
-    private name: string;
+    private _name: string;
 
     //Design of player's token
-    private token: Token;
+    private _token: Token;
 
     //Player's position by gameboard location index
-    private position: number;
+    private _position: number;
 
     //Player's avaliable cash
-    private cash: number;
+    private _cash: number;
 
     //Ammount of "get out of jail free" cards avaliable to player
-    private jailBondsAvaliableChance: number;
-    private jailBondsAvaliableChest: number;
+    private _jailBondsAvaliableChance: number;
+    private _jailBondsAvaliableChest: number;
 
-    private exitingJail:boolean;
+    private _exitingJail:boolean;
 
     //Is player in jail?
-    private inJail: boolean;
+    private _inJail: boolean;
 
     //ammont of consequtive doubles rolled in sinlge turn
-    private speedingCount: number;
+    private _speedingCount: number;
     //number of turns spent in jail
 
-    private jailTimeSpent: number;
+    private _jailTimeSpent: number;
 
     //players currently drawn card
-    private currentCard: Card;
+    private _currentCard: Card;
 
     //log of players current turn
-    private logEntry: LogEntry;
+    // private _logEntry: LogEntry;
 
     /**
-     * Constructor for default player. Cash, starting position and bonds
-     * avaliable all set to default.
-     *
-     * @param playerID Unique integer to identify player and locate in static
-     * PLAYERS map.
-     * @param name String to identify players to user
-     * @param token Token enum to visually locate player on game board
-     */
-    public Player(Integer playerID, String name, Token token) {
-        this.playerID = playerID;
-        this.name = name;
-        this.token = token;
-        this.position = 1;
-        this.cash = 1500;
-        this.jailBondsAvaliableChance = 0;
-        this.jailBondsAvaliableChest = 0;
-    }
-
-    /**
-     * Constructor for custom player. User may specify players starting cash,
+     * Constructor for player. User may specify players starting cash,
      * position and amount of jail bonds avaliable.
      *
      * @param playerID Unique integer to identify player and locate in static
@@ -73,14 +56,12 @@ export class Player {
      * @param jailBondsAvaliable The amount of jail bonds avaliable to the
      * player. 0 by default.
      */
-    public Player(Integer playerID, String name, Token token, int position, int cash, int jailBondsAvaliable) {
-        this.playerID = playerID;
-        this.name = name;
-        this.token = token;
-        this.position = position;
-        this.cash = cash;
-        //this.jailBondsAvaliableChance = jailBondsAvaliableChance;
-        //this.jailBondsAvaliableChest = jailBondsAvaliableChest;
+    constructor(playerID: number, name: string, token: Token) {
+        this._playerID = playerID;
+        this._name = name;
+        this._token = token;
+        this._position = 1;
+        this._cash = Rules.INITIAL_PLAYER_CASH;
     }
 
 //Get player's -
@@ -89,8 +70,8 @@ export class Player {
      *
      * @return int - players ID
      */
-    public Integer getPlayerID() {
-        return playerID;
+    public get ID(): number {
+        return this._playerID;
     }
 
     /**
@@ -98,8 +79,8 @@ export class Player {
      *
      * @return String - player's name
      */
-    public String getName() {
-        return name;
+    public get name(): string {
+        return this._name;
     }
 
     /**
@@ -107,8 +88,8 @@ export class Player {
      *
      * @return enum - player's token
      */
-    public Token getToken() {
-        return token;
+    public get token(): Token {
+        return this._token;
     }
 
     /**
@@ -117,24 +98,24 @@ export class Player {
      *
      * @return LOCATIONS key / board position
      */
-    public int getPosition() {
-        return position;
+    public get position(): number {
+        return this._position;
     }
 
-    public void setPlayerID(Integer newID) {
-        playerID = newID;
+    public set ID(newID: number) {
+        this._playerID = newID;
     }
 
-    public void setPlayerName(String newName) {
-        name = newName;
+    public set name(newName: string) {
+        this._name = newName;
     }
 
-    public void setPlayerToken(Token newToken) {
-        token = newToken;
+    public set token(newToken: Token) {
+        this._token = newToken;
     }
 
-    public void setPlayerStartingCash(int newCash) {
-        cash = newCash;
+    public set cash(newCash: number) {
+        this._cash = newCash;
     }
 
     /**
@@ -142,16 +123,20 @@ export class Player {
      *
      * @return [string] Cell type currently occupied by player.
      */
-    public CellType getPositionType() {
-        return Cells.get(getPosition()).getCellType();
+    public getCurrentCell(): Cell{
+        return Cells.get(this._position);
     }
 
-    public String getActionType() {
-        return Cells.get(getPosition()).getActionType();
+    public getPositionType(): CellType {
+        return this.getCurrentCell().type;
     }
 
-    public String getActionParamater() {
-        return Cells.get(getPosition()).getActionParamater();
+    public getActionType() {
+        return this.getCurrentCell().actionPrimary
+    }
+
+    public getActionParamater() {
+        return this.getCurrentCell().actionSecondary
     }
 
     /**
@@ -159,8 +144,8 @@ export class Player {
      *
      * @return
      */
-    public String getPositionName() {
-        return Cells.get(getPosition()).getName();
+    public getPositionName(): string {
+        return this.getCurrentCell().name;
     }
 
     /**
@@ -170,17 +155,8 @@ export class Player {
      * board.
      * @return [String] Name of cell
      */
-    public String getPositionName(int cellPosition) {
-        return Cells.get(cellPosition).getName();
-    }
-
-    /**
-     * Returns the integer value of cash avaliable to the player
-     *
-     * @return
-     */
-    public int getCash() {
-        return cash;
+    public getCellName(cellPosition: number): string {
+        return Cells.get(cellPosition).name;
     }
 
     /**
@@ -188,8 +164,8 @@ export class Player {
      *
      * @return
      */
-    public int getBonds() {
-        return jailBondsAvaliableChance + jailBondsAvaliableChest;
+    public getBonds(): number {
+        return this._jailBondsAvaliableChance + this._jailBondsAvaliableChest;
     }
 
     /**
@@ -197,8 +173,8 @@ export class Player {
      *
      * @return True if player is in jail, False otherwise.
      */
-    public boolean isInJail() {
-        return inJail;
+    public isInJail(): boolean {
+        return this._inJail;
     }
 
     /**
@@ -261,18 +237,6 @@ export class Player {
         position = newPosition;
     }
 
-    /**
-     * Overrides players cash amount with new value
-     *
-     * @param newCashAmmount New value of players cash
-     */
-    public void setCash(int newCashAmmount) {
-        cash = newCashAmmount;
-    }
-
-    public void setName(String newName) {
-        name = newName;
-    }
 
     /**
      *
