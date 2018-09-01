@@ -1,3 +1,6 @@
+import * as _ from "lodash";
+import { Players } from './Players';
+import { Player } from './Player';
 import { Cells } from './Cells';
 import { Rules } from './Rules';
 import { SpecialCell } from './Cell';
@@ -210,8 +213,10 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
      * @param newOwnerID the unique identifier for the owning player
      */
     public setOwnership(newOwnerID: number) {
+        var self: any = this;
         this.currentOwner = newOwnerID;
         Cell.PLAYER_OWNERSHIP[this.name] = newOwnerID;
+        Cells.CELL_OWNERSHIP[self] = newOwnerID;
     }
 
 
@@ -250,8 +255,8 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
                     //If property is not mortgaged then it cannot be unmortgaged.
                     console.log("\tThis property is not mortgaged");
                 } else if ( 
-                    ( Rules.PROPERTY_MORTGAGE_INTEREST_RATE_ENABLED && Players.get(currentOwner).getCash() < this.mortgageValue + (this.mortgageValue / Rules.PROPERTY_MORTGAGE_INTEREST_RATE_VALUE) 
-                    || (!Rules.PROPERTY_MORTGAGE_INTEREST_RATE_ENABLED && Players.get(currentOwner).getCash() < this.mortgageValue)) 
+                    ( Rules.PROPERTY_MORTGAGE_INTEREST_RATE_ENABLED && Players.get(this.currentOwner).cash < this.mortgageValue + (this.mortgageValue / Rules.PROPERTY_MORTGAGE_INTEREST_RATE_VALUE) 
+                    || (!Rules.PROPERTY_MORTGAGE_INTEREST_RATE_ENABLED && Players.get(this.currentOwner).cash < this.mortgageValue)) 
                 ){
                     console.log("\tInsufficient funds avaliable to unmortgage this property");
                 }
@@ -266,8 +271,8 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
     public mortgageProperty() {
         if (this.isMortgageActionValid("mortgage")) {
             this.mortgageState = true;
-            console.log("\t" + Players.get(this.currentOwner).getName() + " mortgages " + this.name + " for " + this.mortgageValue);
-            Players.get(this.currentOwner).playerCashRecieve(-1, this.mortgageValue);
+            console.log("\t" + Players.get(this.currentOwner).name + " mortgages " + this.name + " for " + this.mortgageValue);
+            Players.get(this.currentOwner).playerCashReceive(-1, this.mortgageValue);
 
         }
     }
@@ -279,7 +284,7 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
         if (this.isMortgageActionValid("unmortgage")) {
             let unmortgageValue: number = (Rules.PROPERTY_MORTGAGE_INTEREST_RATE_ENABLED) ? this.mortgageValue + (this.mortgageValue / Rules.PROPERTY_MORTGAGE_INTEREST_RATE_VALUE) : this.mortgageValue;
             this.mortgageState = false;
-            console.log("\t" + Players.get(this.currentOwner).getName() + " unmortgages " + this.name + " for " + unmortgageValue);
+            console.log("\t" + Players.get(this.currentOwner).name + " unmortgages " + this.name + " for " + unmortgageValue);
             Players.get(this.currentOwner).playerCashPay(-1, unmortgageValue);
         }
     }
@@ -372,49 +377,26 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
             switch (this.type) {
                 case "PROPERTY":
                     if (this.hotelCount == 1) {
-                        returnCase = this.rentHotel;
+                        returnCase = _.last(this.rent);
                     } else if (this.houseCount == 0) {
                         //if property is member of a complete set and all set members are unmortgaged and are unimproved,
                         if (isSetComplete() && memberGroupMortgageCount() > 0) {
-                            returnCase = this.rentBase * Rules.GROUP_COMPLETION_RENT_BONUS_VALUE;
+                            returnCase = _.first(this.rent) * Rules.GROUP_COMPLETION_RENT_BONUS_VALUE;
                         } else {
-                            returnCase = this.rentBase;
+                            returnCase = _.first(this.rent);
                         }
                     } else {
-                        switch (houseCount) {
-                            case 1:
-                                returnCase = this.rent1H;
-                                break;
-                            case 2:
-                                returnCase = this.rent2H;
-                                break;
-                            case 3:
-                                returnCase = this.rent3H;
-                                break;
-                            case 4:
-                                returnCase = this.rent4H;
-                                break;
-                        }
+                        returnCase = this.rent[this.houseCount];
                     }
                     break;
                 case "RAILROAD":
-                   switch (getOwningPlayerGroupFrequency()) {
-                       case 1:
-                           returnCase = this.rentBase;
-                           break;
-                       case 2:
-                           returnCase = this.rent2R;
-                           break;
-                       case 3:
-                           returnCase = this.rent3R;
-                           break;
-                       case 4:
-                           returnCase = this.rent4R;
-                           break;
-                   }
-                    returnCase = railroadRentConditions.get(getOwningPlayerGroupFrequency() - memberGroupMortgageCount());
 
-                    break;
+                    let validAmount: number = (getOwningPlayerGroupFrequency() - memberGroupMortgageCount())-1;
+                    if(validAmount>=0){
+                    returnCase = this.rent[validAmount];
+                    }else{
+                    returnCase = 0;
+                    }
 
                 case "UTILITY":
                     switch (getOwningPlayerGroupFrequency()) {
@@ -558,8 +540,8 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
         } else if (Rules.IMPROVEMENT_RESOURCES_FINITE && Rules.IMPROVEMENT_AMOUNT_HOTEL == 0 && this.hotelCount == 0 && this.houseCount == Rules.PROPERTY_HOTEL_REQ) {
             console.log("\tProperty eligible for improvement but there are no hotels avaliable to purchace");
             //check player has enough cash
-        } else if (Players.get(getOwnership()).getCash() < improvementNetCost) {
-            console.log("\t" + Players.get(getOwnership()).getName() + " cannot afford this improvement (cost: " + improvementNetCost + " - cash: " + Players.get(getOwnership()).getCash() + ")");
+        } else if (Players.get(getOwnership()).cash < improvementNetCost) {
+            console.log("\t" + Players.get(getOwnership()).name + " cannot afford this improvement (cost: " + improvementNetCost + " - cash: " + Players.get(getOwnership()).getCash() + ")");
         } else {
             isValid = true;
         }
@@ -579,7 +561,7 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
             }
             Players.get(this.currentOwner).playerCashPay(-1, this.houseValue);
 
-            console.log("\t" + Players.get(this.currentOwner).getName() + " builds a house on " + name + " - New Rent: " + this.getCurrentRent() + " - Houses left: " + Rules.IMPROVEMENT_AMOUNT_HOUSE);
+            console.log("\t" + Players.get(this.currentOwner).name + " builds a house on " + name + " - New Rent: " + this.getCurrentRent() + " - Houses left: " + Rules.IMPROVEMENT_AMOUNT_HOUSE);
             //improvemntState++;
         } else if (this.addImprovementsValid() && this.houseCount == Rules.PROPERTY_HOTEL_REQ) {
             this.houseCount = 0;
@@ -587,7 +569,7 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
             this.hotelCount = 1;
             Rules.IMPROVEMENT_AMOUNT_HOTEL--;
             Players.get(this.currentOwner).playerCashPay(-1, this.hotelValue);
-            console.log("\t" + Players.get(this.currentOwner).getName() + " builds a hotel on " + name + " - New Rent: " + this.getCurrentRent());
+            console.log("\t" + Players.get(this.currentOwner).name + " builds a hotel on " + name + " - New Rent: " + this.getCurrentRent());
 
             this.improvemntState++;
         }
@@ -636,7 +618,7 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
                 //add house to bank
                 Rules.IMPROVEMENT_AMOUNT_HOUSE--;
                 //credit owning players acount with resale value (initial sale value divided by penalty amount (default: 2) )
-                Players.get(this.currentOwner).playerCashRecieve(-1, (this.houseValue / Rules.IMPROVEMENT_RESALE_PENALTY));
+                Players.get(this.currentOwner).playerCashReceive(-1, (this.houseValue / Rules.IMPROVEMENT_RESALE_PENALTY));
                 //Otherwise, remove a hotel.
             } else {
                 //deduct from cells hotel count
@@ -648,7 +630,7 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
                 //add 1 hotel back into game
                 Rules.IMPROVEMENT_AMOUNT_HOTEL++;
                 //credit players account with resale value
-                Players.get(this.currentOwner).playerCashRecieve(-1, (this.hotelValue / Rules.IMPROVEMENT_RESALE_PENALTY));
+                Players.get(this.currentOwner).playerCashReceive(-1, (this.hotelValue / Rules.IMPROVEMENT_RESALE_PENALTY));
             }
         }
     }

@@ -9,7 +9,7 @@ export class Players {
     /**
      * Maps unique player ID (K, Integer) to player (V, Player)
      */
-    public const static PLAYERS:NumberPlayerMap = {};
+    private const static _PLAYERS:NumberPlayerMap = {};
 
     /**
      * Creates a new instance of the default Player class and stores it within
@@ -25,7 +25,7 @@ export class Players {
     ) {
         let currentPlayersLen: number = Players.amount();
         let playerIndex: number = currentPlayersLen + 1;
-        Players.PLAYERS[playerIndex] = new Player(playerIndex, name, token);
+        Players._PLAYERS[playerIndex] = new Player(playerIndex, name, token);
     }
 
 
@@ -36,20 +36,15 @@ export class Players {
      * @return
      */
     public static get(playerID: number): Player {
-        return Players.PLAYERS[playerID];
+        return Players._PLAYERS[playerID];
     }
 
     public static amount(): number {
-        return (<any>Object).keys(Players.PLAYERS).length();
+        return (<any>Object).keys(Players._PLAYERS).length();
     }
 
-    public static Map<Integer, Player> getPlayers() {
-        //problem - saves Player objects - continually update
-        //Map<Integer, Player> returnMap = new HashMap<>(PLAYERS);
-        //Map<Integer, Player> returnMap;
-
-        //Map<Integer, Player> returnMap = Collections.unmodifiableMap(PLAYERS);
-        return PLAYERS;
+    public static get PLAYERS() {
+        return Players._PLAYERS;
     }
 
     public static Set<Token> getAvaliableTokens() {

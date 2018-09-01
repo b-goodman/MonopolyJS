@@ -141,14 +141,12 @@ export class Dice{
         };
         return Dice._value;
     }
+
+    public static get allEqual(): boolean{
+        return Dice._allEqual;
+    }
+
+    public static get rollProb(): Object {
+        return Dice._rollProb;
+    }
 }
-
-
-
-// var dice = new Dice([6,6,3]);
-
-// console.log(
-//     dice.rollProb
-// )
-
-

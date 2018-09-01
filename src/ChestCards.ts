@@ -1,5 +1,4 @@
 import * as _ from "lodash";
-// import * as cardData from './config/cardData.json';
 import { Card } from "./Card";
 import { ActionType } from "./enums";
 import { ActionPrimary } from "./enums";

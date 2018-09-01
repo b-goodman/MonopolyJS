@@ -1,13 +1,16 @@
+import * as _ from "lodash";
+import { Players } from './Players';
 import { Token, CellType } from "./enums";
 import { Card } from "./Card";
 // import { LogEntry } from "./LogEntry";
 import { Rules } from "./Rules";
 import { Cells } from "./Cells";
 import { Cell } from "./Cell";
+import { Dice } from "./Dice";
 export class Player {
 
     //Player ID
-    private _playerID: number;
+    private _ID: number;
 
     //Players name
     private _name: string;
@@ -15,8 +18,8 @@ export class Player {
     //Design of player's token
     private _token: Token;
 
-    //Player's position by gameboard location index
-    private _position: number;
+    //Player's _position by gameboard location index
+    private __position: number;
 
     //Player's avaliable cash
     private _cash: number;
@@ -44,23 +47,23 @@ export class Player {
 
     /**
      * Constructor for player. User may specify players starting cash,
-     * position and amount of jail bonds avaliable.
+     * _position and amount of jail bonds avaliable.
      *
      * @param playerID Unique integer to identify player and locate in static
      * PLAYERS map.
      * @param name String to identify players to user
      * @param token Token enum to visually locate player on game board
-     * @param position The starting location for the player. Position 1 by
+     * @param _position The starting location for the player. _position 1 by
      * default.
      * @param cash The starting cash amount for the player. 1500 by default
      * @param jailBondsAvaliable The amount of jail bonds avaliable to the
      * player. 0 by default.
      */
     constructor(playerID: number, name: string, token: Token) {
-        this._playerID = playerID;
+        this._ID = playerID;
         this._name = name;
         this._token = token;
-        this._position = 1;
+        this.__position = 1;
         this._cash = Rules.INITIAL_PLAYER_CASH;
     }
 
@@ -71,7 +74,7 @@ export class Player {
      * @return int - players ID
      */
     public get ID(): number {
-        return this._playerID;
+        return this._ID;
     }
 
     /**
@@ -93,17 +96,17 @@ export class Player {
     }
 
     /**
-     * Returns the position of the player in terms of its location on the game
+     * Returns the _position of the player in terms of its location on the game
      * board/index of LOCATIONS
      *
-     * @return LOCATIONS key / board position
+     * @return LOCATIONS key / board _position
      */
-    public get position(): number {
-        return this._position;
+    public get _position(): number {
+        return this.__position;
     }
 
     public set ID(newID: number) {
-        this._playerID = newID;
+        this._ID = newID;
     }
 
     public set name(newName: string) {
@@ -124,10 +127,10 @@ export class Player {
      * @return [string] Cell type currently occupied by player.
      */
     public getCurrentCell(): Cell{
-        return Cells.get(this._position);
+        return Cells.get(this.__position);
     }
 
-    public getPositionType(): CellType {
+    public get_positionType(): CellType {
         return this.getCurrentCell().type;
     }
 
@@ -140,23 +143,23 @@ export class Player {
     }
 
     /**
-     * Gets name of current position cell
+     * Gets name of current _position cell
      *
      * @return
      */
-    public getPositionName(): string {
+    public get_positionName(): string {
         return this.getCurrentCell().name;
     }
 
     /**
      * Gets name of specified cell
      *
-     * @param cellPosition [int] specification for cell. Cells position on
+     * @param cell_position [int] specification for cell. Cells _position on
      * board.
      * @return [String] Name of cell
      */
-    public getCellName(cellPosition: number): string {
-        return Cells.get(cellPosition).name;
+    public getCellName(cell_position: number): string {
+        return Cells.get(cell_position).name;
     }
 
     /**
@@ -164,7 +167,7 @@ export class Player {
      *
      * @return
      */
-    public getBonds(): number {
+    public getBondsAvaliable(): number {
         return this._jailBondsAvaliableChance + this._jailBondsAvaliableChest;
     }
 
@@ -173,8 +176,12 @@ export class Player {
      *
      * @return True if player is in jail, False otherwise.
      */
-    public isInJail(): boolean {
+    public get inJail(): boolean {
         return this._inJail;
+    }
+
+    public set inJail(newJailState: boolean){
+        this._inJail = newJailState;
     }
 
     /**
@@ -182,8 +189,8 @@ export class Player {
      *
      * @return [int] number of turns spent in current 'in jail' event.
      */
-    public int getJailTimeSpent() {
-        return jailTimeSpent;
+    public get jailTimeSpent(): number {
+        return this._jailTimeSpent;
     }
 
     /**
@@ -192,8 +199,8 @@ export class Player {
      *
      * @return [int] amount of doubles rolled on this current turn.
      */
-    public int getSpeedingCount() {
-        return speedingCount;
+    public get speedingCount(): number {
+        return this._speedingCount;
     }
 
     /**
@@ -201,8 +208,8 @@ export class Player {
      *
      * @return [List] Card last drawn by player.
      */
-    public List getCurrentCard() {
-        return currentCard;
+    public get currentCard(): Card {
+        return this._currentCard;
     }
 
 //Set players:
@@ -224,58 +231,44 @@ export class Player {
 //        jailTimeSpent = time;
 //    }
     /**
-     * Set new position for player on game board
+     * Set new _position for player on game board
      *
-     * @param newPosition Location on game board given as index of Cells
-     * position in LOCATIONS
+     * @param new_position Location on game board given as index of Cells
+     * _position in LOCATIONS
      */
-    public void setPosition(int newPosition) {
-//        if (newPosition < position && newPosition != 0) {
-//            System.out.println("\t" + name + " passes GO - Collect " + Rules.getPassGoCredit());
-//            playerCashRecieve(0, Rules.getPassGoCredit());
-//        }
-        position = newPosition;
-    }
+    public set _position(new_position: number) {
+        this.__position = new_position;
+    };
 
 
     /**
      *
-     * @param payingPlayerID [0,1,2...] for players use -1 for bank
+     * @param payingPlayerID [0,1,2...] for players.  use -1 for bank
      * @param cashAmount
      */
-    public void playerCashRecieve(Integer payingPlayerID, int cashAmount) {
+    public playerCashReceive(payingPlayerID: number, cashAmount: number) {
         if (payingPlayerID >= 0) {
-            Player payingPlayer = Players.get(payingPlayerID);
-            addCash(cashAmount);
-            payingPlayer.addCash(-cashAmount);
-            logEntry.logEvent(RECEIVE, cashAmount, payingPlayerID);
+            let payingPlayer: Player = Players.get(payingPlayerID);
+            this._cash += cashAmount;
+            payingPlayer.cash -= cashAmount;
+            // logEntry.logEvent(RECEIVE, cashAmount, payingPlayerID);
         } else {
-            addCash(cashAmount);
-            logEntry.logEvent(RECEIVE, cashAmount, payingPlayerID);
+            this._cash += cashAmount;
+            // logEntry.logEvent(RECEIVE, cashAmount, payingPlayerID);
         }
-    }
+    };
 
-    public void playerCashPay(Integer recievingPlayerID, int cashAmount) {
+    public playerCashPay(recievingPlayerID: number, cashAmount: number) {
         if (recievingPlayerID >= 0) {
-            Player recievingPlayer = Players.get(recievingPlayerID);
-            addCash(-cashAmount);
-            recievingPlayer.addCash(cashAmount);
-            logEntry.logEvent(PAY, cashAmount, recievingPlayerID);
+            let recievingPlayer: Player = Players.get(recievingPlayerID);
+            this._cash -= cashAmount;
+            recievingPlayer.cash += cashAmount;
+            // logEntry.logEvent(PAY, cashAmount, recievingPlayerID);
         } else {
-            addCash(-cashAmount);
-            logEntry.logEvent(PAY, cashAmount, recievingPlayerID);
+            this._cash -= cashAmount;
+            // logEntry.logEvent(PAY, cashAmount, recievingPlayerID);
         }
-    }
-
-    /**
-     * Add(take) an amount of cash to(from) player via an increment(decrement)
-     *
-     * @param addAmmount Positive(negative) values will add to(remove from)
-     * players account
-     */
-    public void addCash(int addAmmount) {
-        cash += addAmmount;
-    }
+    };
 
 //    /**
 //     * Add(take) a "Get out of jail free card" to(from) the player
@@ -290,52 +283,54 @@ export class Player {
      * Sets player as owner of specified Cell at location on game board
      *
      * @param propertyBoardLocation The location of the property in terms of its
-     * position on the game board/index in LOCATIONS
+     * _position on the game board/index in LOCATIONS
      */
-    public void setOwnership(Integer propertyBoardLocation) {
-        (Cells.get(propertyBoardLocation)).setOwnership(playerID);
-    }
+    public setOwnership(propertyBoardLocation: number) {
+        let cell: Cell = (Cells.get(propertyBoardLocation));
+        cell.setOwnership(this._ID);
+        Cells.CELL_OWNERSHIP[<any>cell] = this._ID;
+    };
 
     //look through Cells.getPlayerOwnership()
     //return all cells with value == this.playerID
-    public List<Cell> getOwnership() {
-        List<Cell> playerOwnershipList = new ArrayList<>();
-        Cells.getPlayerOwnership().keySet().stream().filter((propertyName) -> ((int) Cells.getPlayerOwnership().get(propertyName) == playerID)).forEach((propertyName) -> {
-            playerOwnershipList.add((Cell) propertyName);
-        });
-        return playerOwnershipList;
-    }
+    public getOwnership(): Array<Cell> {
+        let result = _.pickBy(Cells.CELL_OWNERSHIP, function(value: number, key) {
+            return _.startsWith(<any>value, this._ID);
+          });
 
-    public List getCompleteSets() {
-        List<Cell> completeProperties = new ArrayList<>();
-        Iterator<Cell> test = getOwnership().iterator();
-        while (test.hasNext()) {
-            Cell cand = test.next();
-            if (cand.isSetComplete()) {
-                completeProperties.add(cand);
-            }
-        }
-        return completeProperties;
-    }
+        return (<any>Object).values(result);
+    };
 
-    public List<Cell> getPropertyGroupMembers(char groupID) {
-        List<Cell> groupMembers = new ArrayList<>();
-        for (int i = 1; i <= Cells.locationsAmount(); i++) {
-            if (Cells.get(i).getPropertyGroupID() == groupID) {
-                groupMembers.add(Cells.get(i));
-            }
-        }
-        return groupMembers;
-    }
+    // public getCompleteSets() {
+    //     let completeProperties: Array<Cell> = [];
+    //     Iterator<Cell> test = getOwnership().iterator();
+    //     while (test.hasNext()) {
+    //         Cell cand = test.next();
+    //         if (cand.isSetComplete()) {
+    //             completeProperties.add(cand);
+    //         }
+    //     }
+    //     return completeProperties;
+    // }
 
-    public Set<Character> getCompleteSetID() {
-        List<Character> propertyIDs = new ArrayList<>();
-        for (Object q : getCompleteSets()) {
-            Cell temp = (Cell) q;
-            propertyIDs.add(temp.getPropertyGroupID());
-        }
-        return new HashSet<>(propertyIDs);
-    }
+    // public List<Cell> getPropertyGroupMembers(char groupID) {
+    //     List<Cell> groupMembers = new ArrayList<>();
+    //     for (int i = 1; i <= Cells.locationsAmount(); i++) {
+    //         if (Cells.get(i).getPropertyGroupID() == groupID) {
+    //             groupMembers.add(Cells.get(i));
+    //         }
+    //     }
+    //     return groupMembers;
+    // }
+
+    // public Set<Character> getCompleteSetID() {
+    //     List<Character> propertyIDs = new ArrayList<>();
+    //     for (Object q : getCompleteSets()) {
+    //         Cell temp = (Cell) q;
+    //         propertyIDs.add(temp.getPropertyGroupID());
+    //     }
+    //     return new HashSet<>(propertyIDs);
+    // }
 
 //    public void addPropertyImprovementByGroup(char groupID) {
 //        List q = getPropertyGroupMembers(groupID);
@@ -343,55 +338,56 @@ export class Player {
 //            ((Cell) q.get(i)).addImprovement();
 //        }
 //    }
-    public void addPropertyImprovementByGroup(char groupID) {
-        for (Cell groupMember : getPropertyGroupMembers(groupID)) {
-            groupMember.addImprovement();
-            logEntry.logEvent(HOUSE_ADD, groupMember.getLocation(), groupMember.getRent(), Rules.getImprovementAmountHouse());
-        }
+
+/**
+ * Adds an improvement to each property with groupID
+ */
+    public addPropertyImprovementByGroup(groupID: string) {
+        let ownedCells = this.getOwnership();
+        let ownedGroupCells: Array<Cell> = ownedCells.filter(cell => cell.groupID == groupID)
+        ownedGroupCells.map( cell => cell.addImprovement());
     }
 
-    public double getOwnedPropertyImprovementValue() {
-        double returnImprovementValue;
-        double sum = 0.0;
-        for (Cell ownedCell : getOwnership()) {
-            if (ownedCell.getHotelCount() == 0) {
-                if (ownedCell.getHouseCount() == 0) {
+// ---------------------------------------------
+//calculating player worth
+
+    public getOwnedPropertyImprovementValue(): number {
+        let propertyImprovementValues: Array<any> = this.getOwnership().map( cell => function(cell) {
+            if (cell.getHotelCount() == 0) {
+                if (cell.getHouseCount() == 0) {
                     //property has no improvements
-                    returnImprovementValue = 0.0;
+                    return 0;
                 } else {
                     //property has no hotels but >0 houses
-                    returnImprovementValue = (ownedCell.getHouseCount() * ownedCell.getHouseValue()) * ((double) 1 / Rules.getPropertyResalePenaltyValue());
+                    return (cell.hotelCount * cell.houseValue * ( 1 / Rules.IMPROVEMENT_RESALE_PENALTY));
                 }
             } else {
                 //property has >0 hotel
-                returnImprovementValue = ((Rules.getPropertyHotelReq() * ownedCell.getHouseValue()) + ownedCell.getHotelValue()) * ((double) 1 / Rules.getPropertyResalePenaltyValue());
+                return ((Rules.PROPERTY_HOTEL_REQ * cell.houseValue) + cell.hotelValue) * ( 1 / Rules.IMPROVEMENT_RESALE_PENALTY);
             }
-            sum += returnImprovementValue;
-        }
-        return sum;
+        });
+        return propertyImprovementValues.reduce( (a,b) => a+b );
+    };
+
+    public getOwnedPropertyBaseValue(): number {
+        return this.getOwnership().map( cell => cell.mortgageValue ).reduce( (a,b) => a+b );
     }
 
-    public double getOwnedPropertyBaseValue() {
-        double sum = 0;
-        for (Cell ownedCell : getOwnership()) {
-            sum += ownedCell.getMortgageValue();
-        }
-        return sum;
+    public getOwnedPropertyNetValue(): number {
+        return this.getOwnedPropertyBaseValue() + this.getOwnedPropertyImprovementValue();
     }
 
-    public double getOwnedPropertyNetValue() {
-        return getOwnedPropertyBaseValue() + getOwnedPropertyImprovementValue();
+    public getPlayerNetWorth(): number {
+        return this.cash + this.getOwnedPropertyNetValue();
     }
 
-    public double getPlayerNetWorth() {
-        return cash + getOwnedPropertyNetValue();
-    }
+//-------------------------------------------------------
 
-    public void mortgageProperty(Integer propertyID) {
+    public mortgageProperty(propertyID: number) {
         Cells.get(propertyID).mortgageProperty();
     }
 
-    public void unMortgageProperty(Integer propertyID) {
+    public unMortgageProperty(propertyID: number) {
         Cells.get(propertyID).unmortgageProperty();
     }
 
@@ -401,35 +397,35 @@ export class Player {
      * @param cellLocation Location of cell on game board
      * @return [String] type of cell ("property","railroad","utility"...)
      */
-    public CellType getCellType(int cellLocation) {
-        return Cells.LOCATIONS.get(cellLocation).getCellType();
+    public getCellType(cellLocation: number): CellType {
+        return Cells.LOCATIONS[cellLocation].type;
     }
 
     /**
      * Sends the player to jail by setting the players inJail state to True and
-     * positions the player to 0.
+     * _positions the player to 0.
      */
-    public void gotoJail() {
-        logEntry.logEvent(JUMP, 0);
-        inJail = true;
-        position = 0;
+    public gotoJail() {
+        // this.logEntry.logEvent(JUMP, 0);
+        this._inJail = true;
+        this._position = 0;
     }
 
     /**
-     * Exits the player from jail; sets inJail state as False, repositions the
+     * Exits the player from jail; sets inJail state as False, re_positions the
      * player back onto the game board and resets the jail time counter.
      */
-    public void leaveJail() {
-        inJail = false;
-        position = 11;
-        jailTimeSpent = 0;
-        exitingJail = true;
-        logEntry.logEvent(NOTIFICATION, "player exits jail");
+    public leaveJail() {
+        this._inJail = false;
+        this._position = Cells.jailExitLocation;
+        this._jailTimeSpent = 0;
+        this._exitingJail = true;
+        // logEntry.logEvent(NOTIFICATION, "player exits jail");
 
     }
 
-    public boolean isPlayerExitingJail() {
-        return exitingJail;
+    public exitingJail(): boolean {
+        return this._exitingJail;
     }
 
     //end set
@@ -439,31 +435,31 @@ export class Player {
      * @param target [String] Type of cell to search for
      * @return [int] Board location of target cell
      */
-    public int findNextCellType(CellType target) {
-        int i = getPosition();
-        CellType search = getCellType(i);
-        while (!search.equals(target)) {
+    public findNextCellType(target: CellType): number {
+        var i: number = this._position;
+        let search: CellType = this.getCellType(i);
+        while (search != target) {
             i++;
             while (i > 40) {
-                i -= 40;
+                i -= Object.keys(Cells.LOCATIONS).length -1;
             }
-            search = getCellType(i);
+            search = this.getCellType(i);
         }
         return i;
-    }
+    };
 
-    public int findNextCellType(String target) {
-        int i = getPosition();
-        CellType search = getCellType(i);
-        while (!search.equals(CellType.valueOf(target))) {
-            i++;
-            while (i > 40) {
-                i -= 40;
-            }
-            search = getCellType(i);
-        }
-        return i;
-    }
+    // public int findNextCellType(String target) {
+    //     int i = get_position();
+    //     CellType search = getCellType(i);
+    //     while (!search.equals(CellType.valueOf(target))) {
+    //         i++;
+    //         while (i > 40) {
+    //             i -= 40;
+    //         }
+    //         search = getCellType(i);
+    //     }
+    //     return i;
+    // }
 
     public int cashSignificance(int debitValue) {
         int returnValue = 0;
@@ -659,7 +655,7 @@ export class Player {
     }
 
     public void midTurn() {
-        if (getPositionType() == SPECIAL) {
+        if (get_positionType() == SPECIAL) {
             String type = getActionType();
             String para = getActionParamater();
             switch (type) {
@@ -716,18 +712,18 @@ export class Player {
                     break;
             }
         } else {
-            Cell occupiedCell = Cells.get((Integer) getPosition());
+            Cell occupiedCell = Cells.get((Integer) get_position());
             //can cell be owned? if so..
             if (occupiedCell.getOwnable()) {
                 //is it currently unowned? If so, purchace property
                 if (occupiedCell.getOwnership() == null) {
                     cash -= occupiedCell.getBaseValue();
                     occupiedCell.setOwnership(getPlayerID());
-                    logEntry.logEvent(PURCHACE, position, occupiedCell.getBaseValue());
+                    logEntry.logEvent(PURCHACE, _position, occupiedCell.getBaseValue());
                     //If it is owned but by the current player, then do nothing
                 } else if (Objects.equals(occupiedCell.getOwnership(), getPlayerID())) {
                     //It is owned and by another player, then pay rent
-                } else if (getPositionType() == UTILITY) {
+                } else if (get_positionType() == UTILITY) {
                     playerCashPay(occupiedCell.getOwnership(), occupiedCell.getRent(Dice.getRollSum()));
                 } else {
                     playerCashPay(occupiedCell.getOwnership(), occupiedCell.getRent());
@@ -751,39 +747,39 @@ export class Player {
     }
 
     /**
-     * Move player +- N steps. Rolls over if position exceeds 40.
+     * Move player +- N steps. Rolls over if _position exceeds 40.
      *
      * @param steps [int] Amount of steps player takes. If negative, player will
      * move backwards.
      */
     public void advanceToken(int steps) {
         //advance token
-        position += steps;
+        _position += steps;
         // get relative (to GO) postion - subtract 40 if abs. positon >40 (i.e., player circumvents the board by passing go)
-        if (position > Cells.locationsAmount()) {
+        if (_position > Cells.locationsAmount()) {
             //Player has circumvented the board
-            position -= Cells.locationsAmount();
+            _position -= Cells.locationsAmount();
             //has the player passed or landed on GO
-            if (position != 1) {
+            if (_position != 1) {
                 //The player has passed GO
                 logEntry.logEvent(NOTIFICATION, " passes GO");
                 playerCashRecieve(-1, Rules.getPassGoCredit());
             }
-        } else if (position < 1) {
-            position += Cells.locationsAmount();
+        } else if (_position < 1) {
+            _position += Cells.locationsAmount();
         }
-        int positionInfoCost = Cells.get(position).getBaseValue();
-        Integer positionInfoOwnership = Cells.get(position).getOwnership();
-        int positionInfocurrentRent = (getPositionType() == UTILITY) ? (Cells.get(position)).getRent(Dice.getRollSum()) : Cells.get(position).getRent();
+        int positionInfoCost = Cells.get(_position).getBaseValue();
+        Integer _positionInfoOwnership = Cells.get(_position).getOwnership();
+        int _positionInfocurrentRent = (get_positionType() == UTILITY) ? (Cells.get(_position)).getRent(Dice.getRollSum()) : Cells.get(_position).getRent();
 
-        if (Cells.get(position).getOwnable()) {
-            if (positionInfoOwnership != null) {
-                logEntry.logEvent(ADVANCE, steps, position, Players.get(positionInfoOwnership).getPlayerID(), positionInfocurrentRent);
+        if (Cells.get(_position).getOwnable()) {
+            if (_positionInfoOwnership != null) {
+                logEntry.logEvent(ADVANCE, steps, _position, Players.get(_positionInfoOwnership).getPlayerID(), _positionInfocurrentRent);
             } else {
-                logEntry.logEvent(ADVANCE, steps, position, positionInfoCost);
+                logEntry.logEvent(ADVANCE, steps, _position, _positionInfoCost);
             }
         } else {
-            logEntry.logEvent(ADVANCE, steps, position);
+            logEntry.logEvent(ADVANCE, steps, _position);
         }
 
     }
@@ -821,7 +817,7 @@ export class Player {
         switch (cardType) {
             // cases of players transition to fixed, absolute location
             case "TRANSITION_ABS":
-                position = Integer.parseInt(cardAction1);
+                _position = Integer.parseInt(cardAction1);
                 logEntry.logEvent(JUMP, Integer.parseInt(cardAction1));
                 midTurn();
                 return;
@@ -830,11 +826,11 @@ export class Player {
                 switch (cardAction1) {
                     // player advance to next property type (rail, util)
                     case "NEXT":
-                        position = findNextCellType(cardAction2);
+                        _position = findNextCellType(cardAction2);
                         logEntry.logEvent(JUMP_NEXT, findNextCellType(cardAction2));
                         midTurn();
                         return;
-                    // player advance N spaces from current position
+                    // player advance N spaces from current _position
                     case "GO":
                         advanceToken(Integer.parseInt(cardAction2));
                         midTurn();
