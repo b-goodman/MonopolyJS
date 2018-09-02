@@ -62,16 +62,5 @@ export class Cells {
         return this._jailExitLocation;
     }
 
-
-    // //TODO - test set build, post to proprty group edit box
-    // public static Set<Character> getPropertyGroups() {
-    //     //for all cells, get type.  if type PROPERTY, get property group, add to set, return
-    //     for (Cell cell : LOCATIONS.values()) {
-    //         if (cell.getCellType() == PROPERTY) {
-    //             PROPERTY_GROUP_SET.add(cell.getPropertyGroupID());
-    //         }
-    //     }
-    //     return PROPERTY_GROUP_SET;
-    // }
 }
  

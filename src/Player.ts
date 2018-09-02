@@ -448,22 +448,9 @@ export class Player {
         return i;
     };
 
-    // public int findNextCellType(String target) {
-    //     int i = get_position();
-    //     CellType search = getCellType(i);
-    //     while (!search.equals(CellType.valueOf(target))) {
-    //         i++;
-    //         while (i > 40) {
-    //             i -= 40;
-    //         }
-    //         search = getCellType(i);
-    //     }
-    //     return i;
-    // }
-
-    public int cashSignificance(int debitValue) {
-        int returnValue = 0;
-        int sig = (debitValue / cash) * 100;
+    public cashSignificance(debitValue:number): number {
+        let returnValue: number = 0;
+        let sig: number = (debitValue / this._cash) * 100;
         if (sig >= 10 && sig < 20) {
             returnValue = 1;
         } else if (sig >= 20 && sig < 40) {
@@ -474,22 +461,21 @@ export class Player {
         return returnValue;
     }
 
-    public int cellBenefit(Cell testLocation) {
-        int benefit = 0;
+    public cellBenefit(testLocation: Cell): number {
+        let benefit: number = 0;
         //check if cell is ownable
-        if (testLocation.getOwnable()) {
+        if (testLocation.isOwnable) {
             //check if owned
-            if (testLocation.getOwnership() == null) {
+            if (testLocation.isOwnable == null) {
                 //is unowned
                 benefit += 2;
                 //does player already own part of set
-                int freq = 0;
-                char testID = testLocation.getPropertyGroupID();
-                for (Cell cell : getOwnership()) {
-                    if (cell.getPropertyGroupID() == testID) {
-                        freq++;
-                    }
-                }
+                let freq: number = 0;
+                let testID: string = testLocation.groupID;
+
+                this.getOwnership().filter( cell => cell.groupID == testID)
+
+                
                 //if so, inc. benefit
                 if (freq > 0) {
                     benefit++;

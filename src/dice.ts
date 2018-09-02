@@ -131,6 +131,10 @@ export class Dice{
         return Dice._faces;
     }
 
+    public static get value(): number{
+        return Dice._value;
+    }
+
     public static roll(){
         Dice._faces = Dice._dice.map(die=>die.rollDie());
         Dice._value = Dice._faces.reduce((a,b)=>a+b);

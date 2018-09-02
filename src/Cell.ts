@@ -5,6 +5,7 @@ import { Cells } from './Cells';
 import { Rules } from './Rules';
 import { SpecialCell } from './Cell';
 import { CellType } from './enums';
+import { Dice } from "./Dice";
 
 interface IStringTMap<T> { [key: string]: T; };
 interface IStringNumberMap extends IStringTMap<number> {};
@@ -22,9 +23,7 @@ export interface RailroadCell {
     actionSecondary?: any,
     groupID?: string,
     houseValue?: number,
-    hotelValue?: number,
-    oneUtilityMult?: number,
-    twoUtilityMult?: number
+    hotelValue?: number
   }
 
 export interface SpecialCell {
@@ -39,9 +38,7 @@ export interface SpecialCell {
     rent?: Array<number>,
     groupID?: string,
     houseValue?: number,
-    hotelValue?: number,
-    oneUtilityMult?: number,
-    twoUtilityMult?: number
+    hotelValue?: number
 }
 
 export interface PropertyCell{
@@ -56,9 +53,7 @@ export interface PropertyCell{
     houseValue: number,
     hotelValue: number,
     actionPrimary?: any,
-    actionSecondary?: any,
-    oneUtilityMult?: number,
-    twoUtilityMult?: number
+    actionSecondary?: any
   }
   
   export interface UtilityCell{
@@ -68,14 +63,12 @@ export interface PropertyCell{
     color: string,
     baseValue: number,
     mortgageValue: number,
-    oneUtilityMult: number,
-    twoUtilityMult: number,
     groupID?: string,
     actionPrimary?: string,
     actionSecondary?: string,
     houseValue?: number,
     hotelValue?: number,
-    rent?: Array<number>
+    rent: Array<number>
   }
 export class Cell implements SpecialCell, PropertyCell, RailroadCell {
 
@@ -101,9 +94,6 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
     public rent: Array<number> = [];
     public houseCount: number = null;
     public hotelCount: number = null;
-
-    public oneUtilityMult: number = null;
-    public twoUtilityMult: number = null;
 
     public actionPrimary: any = null;
     public actionSecondary: any = null;
@@ -143,8 +133,7 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
             this.isOwnable = true;
             this.mortgageValue = cell.mortgageValue;
             this.mortgageState = false;
-            this.oneUtilityMult = cell.oneUtilityMult;
-            this.twoUtilityMult = cell.twoUtilityMult;
+            this.rent = cell.rent;
         };
 
         if(this.type == "SPECIAL"){
@@ -215,7 +204,7 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
     public setOwnership(newOwnerID: number) {
         var self: any = this;
         this.currentOwner = newOwnerID;
-        Cell.PLAYER_OWNERSHIP[this.name] = newOwnerID;
+        //Cell.PLAYER_OWNERSHIP[this.name] = newOwnerID;
         Cells.CELL_OWNERSHIP[self] = newOwnerID;
     }
 
@@ -296,14 +285,13 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
      * @return List of all properties (including this one) owned by the player
      * who owns this property
      */
-    // public getOwningPlayerOwnership() {
-    //     // ArrayList<String> returnList;
-    //     // returnList = new ArrayList<>();
-    //     Cell.PLAYER_OWNERSHIP.filter( (Cell.PLAYER_OWNERSHIP.get(o).equals(this.currentOwner))).forEach((String o) -> {
-    //         returnList.add((String) o);
-    //     });
-    //     return returnList;
-    // }
+    public getOwningPlayerOwnership(): Array<Cell> {
+        // ArrayList<String> returnList;
+        // returnList = new ArrayList<>();
+        return Players.PLAYERS[this.currentOwner].getOwnership()
+    }
+
+ 
 
     /**
      * Returns list of group IDs of properties owned by player who owns this
@@ -312,26 +300,20 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
      * @return list of group IDs of properties owned by player who owns this
      * Cell
      */
-    // public getOwningPlayerGroupID() {
-    //     let returnList;
-    //     // returnList = new ArrayList<>();
-    //     for (let i = 0; i < getOwningPlayerOwnership().size(); i++) {
-    //         returnList.add(getPropertyIDbyName().get((String) getOwningPlayerOwnership().get(i)));
-    //     }
-    //     return returnList;
-    // }
-//     //get number of properties owned by player which have same group IDs
+    public getOwningPlayerGroupID(): Array<string> {
+        return this.getOwningPlayerOwnership().map( cell => cell.groupID )
+    }
 
-//     /**
-//      * Returns the amount of properties in this Cells group owned by the player
-//      * who owns this Cell
-//      *
-//      * @return Returns the amount of properties in this Cells group owned by the
-//      * player who owns this Cell
-//      */
-//     public int getOwningPlayerGroupFrequency() {
-//         return Collections.frequency(getOwningPlayerGroupID(), getPropertyGroupID());
-//     }
+    /**
+     * Returns the amount of properties in this Cells group owned by the player
+     * who owns this Cell
+     *
+     * @return Returns the amount of properties in this Cells group owned by the
+     * player who owns this Cell
+     */
+    public getOwningPlayerGroupFrequency(): number {
+        return this.getOwningPlayerGroupID()[this.groupID];
+    }
 
 //     /**
 //      * Returns the number of properties in the group that this Cell is a member
@@ -340,47 +322,36 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
 //      * @return Returns the number of properties in the group that this Cell is a
 //      * member of
 //      */
-//     public int getGroupFrequency() {
-//         return Collections.frequency(getPropertyIDbyName().values(), getPropertyGroupID());
-//     }
+    public getGroupFrequency(): number {
+       return Cells.PROPERTY_GROUP_SET[this.groupID].length;
+    }
 
-    // public getPropertyGroupMembers() {
+    public getPropertyGroupMembers(): Array<Cell> {
+        return Array<Cell>((<any>Object).Values(Cells.PROPERTY_GROUP_SET[this.groupID]));
+    }
 
-    //     for (int i = 1; i <= Cells.locationsAmount(); i++) {
-    //         if (Cells.get(i).getPropertyGroupID() == groupID) {
-    //             groupMembers.add(Cells.get(i));
-    //         }
-    //     }
-    //     return groupMembers;
-    // }
-
-    // public memberGroupMortgageCount(): number {
-    //     let returnValue:number = 0;
-    //     for (Object check : getPropertyGroupMembers()) {
-    //         if (((Cell) check).isMortgaged()) {
-    //             returnValue++;
-    //         }
-    //     }
-    //     return returnValue;
-    // }
+    public memberGroupMortgageCount(): number {
+        return this.getPropertyGroupMembers().filter( cell => cell.mortgageState == true ).length;
+    }
 
     /**
      * Returns current rent for this Cell (property or railroad)
      *
      * @return current rent value
      */
-    public getCurrentRent(diceValue?:number): number {
+    public getCurrentRent(): number {
         let returnCase: number = 0;
         if (this.mortgageState) {
             console.log("\tRent cannot be collected on mortgaged properties");
         } else {
             switch (this.type) {
+
                 case "PROPERTY":
                     if (this.hotelCount == 1) {
                         returnCase = _.last(this.rent);
                     } else if (this.houseCount == 0) {
                         //if property is member of a complete set and all set members are unmortgaged and are unimproved,
-                        if (isSetComplete() && memberGroupMortgageCount() > 0) {
+                        if (this.isSetComplete() && this.memberGroupMortgageCount() == 0) {
                             returnCase = _.first(this.rent) * Rules.GROUP_COMPLETION_RENT_BONUS_VALUE;
                         } else {
                             returnCase = _.first(this.rent);
@@ -389,25 +360,19 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
                         returnCase = this.rent[this.houseCount];
                     }
                     break;
-                case "RAILROAD":
 
-                    let validAmount: number = (getOwningPlayerGroupFrequency() - memberGroupMortgageCount())-1;
-                    if(validAmount>=0){
-                    returnCase = this.rent[validAmount];
-                    }else{
-                    returnCase = 0;
-                    }
+                case "RAILROAD":
+                    let railroadsOwned: number = this.getOwningPlayerGroupFrequency();
+                    if( railroadsOwned > 0){
+                        returnCase = this.rent[railroadsOwned - 1];
+                    };
+                    break;
 
                 case "UTILITY":
-                    switch (getOwningPlayerGroupFrequency()) {
-                        case 1:
-                            returnCase = (this.oneUtilityMult * diceValue);
-                            break;
-                        case 2:
-                            returnCase = (this.twoUtilityMult * diceValue);
-                            break;
-                    }
-                break;
+                let utilitiesOwned: number = this.getOwningPlayerGroupFrequency();
+                if(utilitiesOwned > 0)
+                    returnCase = this.rent[utilitiesOwned-1] * Dice.value;
+                    break;
             }
         }
         return returnCase;
@@ -418,75 +383,31 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
      * Returns specific rent value based on Cell type (property, railroad,
      * utility) and condition (1 house, 2 houses,...,1 rail, 2 rails... etc )
      *
-     * @param field rent condition ("rentBase","rent1H",.., )
+     * @param improvementLevel rent condition rentBase = 0, 1 house = 1 etc.
      * @return
      */
-    public queryCellRent(field) {
+    public queryCellRent(improvementLevel?: number) {
         let returnCase: number = 0;
         switch (this.type) {
             case "PROPERTY":
-                switch (field) {
-                    case "Base":
-                        if (isSetComplete()) {
-                            returnCase = 2 * this.rentBase;
-                            break;
-                        } else {
-                            returnCase = this.rentBase;
-                            break;
-                        }
-                    //break;
-                    case "1H":
-                        returnCase = this.rent1H;
-                        break;
-                    //break;
-                    case "2H":
-                        returnCase = this.rent2H;
-                        break;
-                    //break;
-                    case "3H":
-                        returnCase = this.rent3H;
-                        break;
-                    //break;
-                    case "4H":
-                        returnCase = this.rent4H;
-                        break;
-                    //	break;
-                    case "Hotel":
-                        returnCase = this.rentHotel;
-                    //	break;
-                }
-                break;
-            case "RAILROAD":
-                switch (field) {
-                    case "Base":
-                        returnCase = this.rentBase;
-                        break;
-                    //break;
-                    case "2R":
-                        returnCase = this.rent2R;
-                        break;
-                    //break;
-                    case "3R":
-                        returnCase = this.rent3R;
-                        break;
-                    //break;
-                    case "4R":
-                        returnCase = this.rent4R;
-                        break;
-                    //break;
-                }
-                break;
-            case "UTILITY":
-                switch (getOwningPlayerGroupFrequency()) {
-                    case 1:
-                        returnCase = this.oneUtilityMult;
-                        break;
-                    //break;
-                    case 2:
-                        returnCase = this.twoUtilityMult;
-                        break;
-                    //break;
-                }
+            
+            if(improvementLevel == 0){
+                if (this.isSetComplete()) {
+                    returnCase = _.first(this.rent) * Rules.GROUP_COMPLETION_RENT_BONUS_VALUE;
+                } else {
+                    returnCase = this.rent[0];
+                    };
+            }else{
+                returnCase = this.rent[improvementLevel];
+            };
+            break;
+
+            case "RAILROAD" || "UTILITY":
+                if(improvementLevel-1 < this.rent.length){
+                    returnCase = this.rent[improvementLevel-1]
+                }else{
+                    returnCase = _.last(this.rent);
+                };
                 break;
         }
         return returnCase;
@@ -500,8 +421,8 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
      *
      * @return True if property is part of complete set, false otherwise
      */
-    public boolean isSetComplete() {
-        return (getOwningPlayerGroupFrequency() == getGroupFrequency());
+    public isSetComplete(): boolean {
+        return (this.getOwningPlayerGroupFrequency() == this.getGroupFrequency());
     }
 
     /**
@@ -540,8 +461,8 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
         } else if (Rules.IMPROVEMENT_RESOURCES_FINITE && Rules.IMPROVEMENT_AMOUNT_HOTEL == 0 && this.hotelCount == 0 && this.houseCount == Rules.PROPERTY_HOTEL_REQ) {
             console.log("\tProperty eligible for improvement but there are no hotels avaliable to purchace");
             //check player has enough cash
-        } else if (Players.get(getOwnership()).cash < improvementNetCost) {
-            console.log("\t" + Players.get(getOwnership()).name + " cannot afford this improvement (cost: " + improvementNetCost + " - cash: " + Players.get(getOwnership()).getCash() + ")");
+        } else if (Players.get(this.currentOwner).cash < improvementNetCost) {
+            console.log("\t" + Players.get(this.currentOwner).name + " cannot afford this improvement (cost: " + improvementNetCost + " - cash: " + Players.get(this.currentOwner).cash + ")");
         } else {
             isValid = true;
         }

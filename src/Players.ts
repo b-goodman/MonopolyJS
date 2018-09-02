@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 import { Player } from './Player';
 import { Token } from "./enums";
 
@@ -9,7 +10,7 @@ export class Players {
     /**
      * Maps unique player ID (K, Integer) to player (V, Player)
      */
-    private const static _PLAYERS:NumberPlayerMap = {};
+    private static _PLAYERS:NumberPlayerMap = {};
 
     /**
      * Creates a new instance of the default Player class and stores it within
@@ -40,24 +41,20 @@ export class Players {
     }
 
     public static amount(): number {
-        return (<any>Object).keys(Players._PLAYERS).length();
+        return (<any>Object).keys(Players._PLAYERS).length;
     }
 
     public static get PLAYERS() {
         return Players._PLAYERS;
     }
 
-    public static Set<Token> getAvaliableTokens() {
-        //get remaining tokens
-        Set<Token> unavaliableTokens = new HashSet<>();
-        for (Player player : Players.getPlayers().values()) {
-            unavaliableTokens.add(player.getToken());
-        }
-        Set<Token> allTokens = new HashSet<>(Arrays.asList(Token.values()));
+    public getAvaliableTokens(): Array<string> {
+        //get reserved tokens
+        let reservedTokens: string[] = (<any>Object).Values(Players.PLAYERS).map( player => player.token());
+        let allTokens: string[] = Object.keys(Token);
+              
+       return (_.difference( allTokens, reservedTokens));
 
-        allTokens.removeAll(unavaliableTokens);
-
-        return allTokens;
     }
 
 }

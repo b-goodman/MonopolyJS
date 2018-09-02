@@ -130,8 +130,7 @@
     "color": "Gray",
     "baseValue": 150,
     "mortgageValue": 75,
-    "oneUtilityMult": 4,
-    "twoUtilityMult": 10
+    "rent": [4,10]
   },
   {
     "type": "UTILITY",
@@ -140,8 +139,7 @@
     "color": "Gray",
     "baseValue": 150,
     "mortgageValue": 75,
-    "oneUtilityMult": 4,
-    "twoUtilityMult": 10
+    "rent": [4,10]
   },
 {
     "type": "PROPERTY",
