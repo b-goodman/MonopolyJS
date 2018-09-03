@@ -22,16 +22,9 @@ export class Cells {
 
     constructor() {
         //"In Jail" is always at position 0
-        //let jailCell:SpecialCell =  {type: CellType.SPECIAL, location:0, name:"In Jail", color:"Gray", actionPrimary:null, actionSecondary:null};
-        //Cells.LOCATIONS[0] = new Cell( jailCell );
-
         Cells.add( {type: CellType.SPECIAL, location:0, name:"In Jail", color:"Gray", actionPrimary:null, actionSecondary:null} ,0 );
 
        // "GO" is always at position 1
-        // let goLandingValue: number = (Rules.GO_LANDING_BONUS_ENABLED ? Rules.GO_LANDING_BONUS_VALUE + Rules.PASS_GO_CREDIT : Rules.PASS_GO_CREDIT);
-        // let goCell:SpecialCell =  {type: CellType.SPECIAL, location:1, name:"GO", color:"Gray", actionPrimary:"creditAbs", actionSecondary:goLandingValue};
-        // Cells.LOCATIONS[1] = new Cell( goCell );
-
         let goLandingValue: number = (Rules.GO_LANDING_BONUS_ENABLED ? Rules.GO_LANDING_BONUS_VALUE + Rules.PASS_GO_CREDIT : Rules.PASS_GO_CREDIT);
         Cells.add({type: CellType.SPECIAL, location:1, name:"GO", color:"Gray", actionPrimary:"creditAbs", actionSecondary:goLandingValue}, 1);
 
@@ -43,6 +36,9 @@ export class Cells {
         };
         let cell: Cell = new Cell( cellParams );
         Cells.LOCATIONS[location] = cell;
+        if( Cells.PROPERTY_GROUP_SET[cell.groupID] == undefined ){
+            Cells.PROPERTY_GROUP_SET[cell.groupID] = [];
+        };
         Cells.PROPERTY_GROUP_SET[cell.groupID].push(cell);
     }
 

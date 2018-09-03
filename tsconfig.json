@@ -13,9 +13,11 @@
     "exclude": [
         "node_modules"
     ],
-    "paths": {
-        "cardData": ["/src/config"]
-    },
+    // "paths": {
+    //     "cardData": ["/src/config"]
+    // },
     "types": [ "node", "mocha", "chai" ],
-    "resolveJsonModule": true
+
+    "resolveJsonModule": true,
+    "esModuleInterop": true
 }

@@ -1,7 +1,691 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+module.exports=[
+  {
+    "type": "CHEST",
+    "cardID": 0,
+    "cardContent": "Advance to GO",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 1,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 1,
+    "cardContent": "Advance to Trafalgar Square",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 25,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 2,
+    "cardContent": "Advance to Pall Mall",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 12,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 3,
+    "cardContent": "Advance to Nearest Utility",
+    "actionType": "TRANSITION_REL",
+    "actionPrimary": "NEXT",
+    "actionSecondary": "UTILITY"
+  },
+  {
+    "type": "CHEST",
+    "cardID": 4,
+    "cardContent": "Advance to Nearset Railroad",
+    "actionType": "TRANSITION_REL",
+    "actionPrimary": "NEXT",
+    "actionSecondary": "RAILROAD"
+  },
+  {
+    "type": "CHEST",
+    "cardID": 5,
+    "cardContent": "Advance to Nearset Railroad",
+    "actionType": "TRANSITION_REL",
+    "actionPrimary": "NEXT",
+    "actionSecondary": "RAILROAD"
+  },
+  {
+    "type": "CHEST",
+    "cardID": 6,
+    "cardContent": "Collect £50",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 50,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 7,
+    "cardContent": "Get out of Jail Free",
+    "actionType": "JAIL",
+    "actionPrimary": "OUT",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 8,
+    "cardContent": "Go Back 3 Spaces",
+    "actionType": "TRANSITION_REL",
+    "actionPrimary": "GO",
+    "actionSecondary": -3
+  },
+  {
+    "type": "CHEST",
+    "cardID": 9,
+    "cardContent": "Go to Jail",
+    "actionType": "JAIL",
+    "actionPrimary": "IN",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 10,
+    "cardContent": "Make Repairs",
+    "actionType": "DEBIT_REL",
+    "actionPrimary": "REPAIR",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 11,
+    "cardContent": "Pay £15",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 15,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 12,
+    "cardContent": "Go to King's Cross Station",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 36,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 13,
+    "cardContent": "Advance to Mayfair",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 40,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 14,
+    "cardContent": "Pay Each Player £50",
+    "actionType": "DEBIT_REL",
+    "actionPrimary": "PAY_EACH",
+    "actionSecondary": 50
+  },
+  {
+    "type": "CHEST",
+    "cardID": 15,
+    "cardContent": "Collect £150",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 150,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHEST",
+    "cardID": 16,
+    "cardContent": "Collect £100",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 150,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 0,
+    "cardContent": "Advance to GO",
+    "actionType": "TRANSITION_ABS",
+    "actionPrimary": 1,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 1,
+    "cardContent": "Collect £50",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 50,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 2,
+    "cardContent": "Pay £50",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 50,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 3,
+    "cardContent": "Collect £50",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 50,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 4,
+    "cardContent": "Get Out of Jail Free",
+    "actionType": "JAIL",
+    "actionPrimary": "OUT",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 5,
+    "cardContent": "Go to Jail",
+    "actionType": "JAIL",
+    "actionPrimary": "IN",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 6,
+    "cardContent": "Collect £50 From Each Player",
+    "actionType": "CREDIT_REL",
+    "actionPrimary": "FROM_EACH",
+    "actionSecondary": 50
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 7,
+    "cardContent": "Collect £100",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 100,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 8,
+    "cardContent": "Collect £20",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 20,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 9,
+    "cardContent": "Collect £10 From Each Player",
+    "actionType": "CREDIT_REL",
+    "actionPrimary": "FROM_EACH",
+    "actionSecondary": 10
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 10,
+    "cardContent": "Collect £100",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 100,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 11,
+    "cardContent": "Pay £100",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 100,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 12,
+    "cardContent": "Pay £150",
+    "actionType": "DEBIT_ABS",
+    "actionPrimary": 150,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 13,
+    "cardContent": "Collect £25",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 25,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 14,
+    "cardContent": "Make Repairs",
+    "actionType": "DEBIT_REL",
+    "actionPrimary": "REPAIR",
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 15,
+    "cardContent": "Collect £10",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 10,
+    "actionSecondary": null
+  },
+  {
+    "type": "CHANCE",
+    "cardID": 16,
+    "cardContent": "Collect £100",
+    "actionType": "CREDIT_ABS",
+    "actionPrimary": 100,
+    "actionSecondary": null
+  }
+]
+},{}],2:[function(require,module,exports){
+module.exports=[
+  {
+    "type": "RAILROAD",
+    "location": 36,
+    "name": "King's Cross Station",
+    "color": "Gray",
+    "baseValue": 200,
+    "mortgageValue": 100,
+    "rent": [25, 50, 100, 200]
+  },
+  {
+    "type": "RAILROAD",
+    "location": 26,
+    "name": "Fenchurch St Station",
+    "color": "Gray",
+    "baseValue": 200,
+    "mortgageValue": 100,
+    "rent": [25, 50, 100, 200]
+  },
+  {
+    "type": "RAILROAD",
+    "location": 16,
+    "name": "Marylebone Station",
+    "color": "Gray",
+    "baseValue": 200,
+    "mortgageValue": 100,
+    "rent": [25, 50, 100, 200]
+  },
+  {
+    "type": "RAILROAD",
+    "location": 6,
+    "name": "Reading Railroad",
+    "color": "Gray",
+    "baseValue": 200,
+    "mortgageValue": 100,
+    "rent": [25, 50, 100, 200]
+  },
+{
+    "type": "SPECIAL",
+    "location": 39,
+    "name": "Super Tax",
+    "color": "Gray",
+    "actionType": "debitAbs",
+    "actionParamater": 100
+  },
+  {
+    "type": "SPECIAL",
+    "location": 37,
+    "name": "Chance C",
+    "color": "Gray",
+    "actionType": "drawCard",
+    "actionParamater": "chance"
+  },
+  {
+    "type": "SPECIAL",
+    "location": 34,
+    "name": "Community Chest C",
+    "color": "Gray",
+    "actionType": "drawCard",
+    "actionParamater": "chest"
+  },
+  {
+    "type": "SPECIAL",
+    "location": 31,
+    "name": "Go To Jail",
+    "color": "Gray",
+    "actionType": "transitionAbs",
+    "actionParamater": 0
+  },
+  {
+    "type": "SPECIAL",
+    "location": 23,
+    "name": "Chance B",
+    "color": "Gray",
+    "actionType": "drawCard",
+    "actionParamater": "chance"
+  },
+  {
+    "type": "SPECIAL",
+    "location": 21,
+    "name": "Free Parking",
+    "color": "Gray",
+    "actionType": "parking",
+    "actionParamater": null
+  },
+  {
+    "type": "SPECIAL",
+    "location": 18,
+    "name": "Community Chest B",
+    "color": "Gray",
+    "actionType": "drawCard",
+    "actionParamater": "chest"
+  },
+  {
+    "type": "SPECIAL",
+    "location": 11,
+    "name": "Visiting Jail",
+    "color": "Gray",
+    "actionType": null,
+    "actionParamater": null
+  },
+  {
+    "type": "SPECIAL",
+    "location": 8,
+    "name": "Chance A",
+    "color": "Gray",
+    "actionType": "drawCard",
+    "actionParamater": "chance"
+  },
+  {
+    "type": "SPECIAL",
+    "location": 5,
+    "name": "Income Tax",
+    "color": "grey",
+    "actionType": "debitAbs",
+    "actionParamater": 100
+  },
+  {
+    "type": "SPECIAL",
+    "location": 3,
+    "name": "Community Chest A",
+    "color": "Gray",
+    "actionType": "drawCard",
+    "actionParamater": "chest"
+  },
+{
+    "type": "UTILITY",
+    "location": 13,
+    "name": "Electric Company",
+    "color": "Gray",
+    "baseValue": 150,
+    "mortgageValue": 75,
+    "rent": [4,10]
+  },
+  {
+    "type": "UTILITY",
+    "location": 29,
+    "name": "Water Works",
+    "color": "Gray",
+    "baseValue": 150,
+    "mortgageValue": 75,
+    "rent": [4,10]
+  },
+{
+    "type": "PROPERTY",
+    "location": 2,
+    "name": "Old Kent Road",
+    "groupID": "Brown",
+    "groupIDs": "A",
+    "baseValue": 60,
+    "mortgageValue": 50,
+    "houseValue": 30,
+    "hotelValue": 30,
+    "rent":[2, 10, 30, 90, 160, 250]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 4,
+    "name": "Whitechapel Road",
+    "groupID": "Brown",
+    "groupIDs": "A",
+    "baseValue": 60,
+    "mortgageValue": 50,
+    "houseValue": 30,
+    "hotelValue": 30,
+    "rent": [4, 20, 60, 180, 360, 450]
+    },
+  {
+    "type": "PROPERTY",
+    "location": 7,
+    "name": "The Angel Islington",
+    "groupID": "Cyan",
+    "groupIDs": "B",
+    "baseValue": 100,
+    "mortgageValue": 50,
+    "houseValue": 50,
+    "hotelValue": 50,
+    "rent": [ 6, 30, 90, 270, 400, 550]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 9,
+    "name": "Euston Road",
+    "groupID": "Cyan",
+    "groupIDs": "B",
+    "baseValue": 100,
+    "mortgageValue": 50,
+    "houseValue": 50,
+    "hotelValue": 50,
+    "rent": [6, 30, 90, 270, 400, 550]
+    },
+  {
+    "type": "PROPERTY",
+    "location": 10,
+    "name": "Pentonville Road",
+    "groupID": "Cyan",
+    "groupIDs": "B",
+    "baseValue": 120,
+    "mortgageValue": 50,
+    "houseValue": 50,
+    "hotelValue": 50,
+    "rent": [8, 40, 100, 300, 450, 600]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 12,
+    "name": "Pall Mall",
+    "groupID": "Magenta",
+    "groupIDs": "C",
+    "baseValue": 140,
+    "mortgageValue": 70,
+    "houseValue": 100,
+    "hotelValue": 100,
+    "rent": [10, 50, 150, 450, 625, 750]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 14,
+    "name": "Northumberland Avenue",
+    "groupID": "Magenta",
+    "groupIDs": "C",
+    "baseValue": 140,
+    "mortgageValue": 70,
+    "houseValue": 100,
+    "hotelValue": 100,
+    "rent": [10, 50, 150, 450, 625, 750]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 15,
+    "name": "Whitehall",
+    "groupID": "Magenta",
+    "groupIDs": "C",
+    "baseValue": 160,
+    "mortgageValue": 80,
+    "houseValue": 100,
+    "hotelValue": 100,
+    "rent": [12, 60, 180, 500, 700, 900]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 17,
+    "name": "Bow Street",
+    "groupID": "Orange",
+    "groupIDs": "D",
+    "baseValue": 180,
+    "mortgageValue": 90,
+    "houseValue": 100,
+    "hotelValue": 100,
+    "rent": [14, 70, 200, 550, 750, 950]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 19,
+    "name": "Marlborough Street",
+    "groupID": "Orange",
+    "groupIDs": "D",
+    "baseValue": 180,
+    "mortgageValue": 90,
+    "houseValue": 100,
+    "hotelValue": 100,
+    "rent": [14, 70, 200, 550, 750, 950]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 20,
+    "name": "Vine Street",
+    "groupID": "Orange",
+    "groupIDs": "D",
+    "baseValue": 200,
+    "mortgageValue": 100,
+    "houseValue": 100,
+    "hotelValue": 100,
+    "rent": [16, 80, 220, 600, 800, 1000]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 22,
+    "name": "Strand",
+    "groupID": "Red",
+    "groupIDs": "E",
+    "baseValue": 220,
+    "mortgageValue": 110,
+    "houseValue": 150,
+    "hotelValue": 150,
+    "rent": [18, 90, 250, 700, 875, 1050]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 24,
+    "name": "Fleet Street",
+    "groupID": "Red",
+    "groupIDs": "E",
+    "baseValue": 220,
+    "mortgageValue": 110,
+    "houseValue": 150,
+    "hotelValue": 150,
+    "rent": [18, 90, 250, 700, 875, 1050]
+    },
+  {
+    "type": "PROPERTY",
+    "location": 25,
+    "name": "Trafalgar Square",
+    "groupID": "Red",
+    "groupIDs": "E",
+    "baseValue": 240,
+    "mortgageValue": 120,
+    "houseValue": 150,
+    "hotelValue": 150,
+    "rent": [20, 100, 300, 750, 925, 1100]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 27,
+    "name": "Leicester Square",
+    "groupID": "Yellow",
+    "groupIDs": "F",
+    "baseValue": 260,
+    "mortgageValue": 150,
+    "houseValue": 150,
+    "hotelValue": 150,
+    "rent": [22, 110, 330, 800, 975, 1150]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 28,
+    "name": "Coventry Street",
+    "groupID": "Yellow",
+    "groupIDs": "F",
+    "baseValue": 260,
+    "mortgageValue": 150,
+    "houseValue": 150,
+    "hotelValue": 150,
+    "rent": [22, 110, 330, 800, 975, 1150]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 30,
+    "name": "Piccadily",
+    "groupID": "Yellow",
+    "groupIDs": "F",
+    "baseValue": 280,
+    "mortgageValue": 150,
+    "houseValue": 150,
+    "hotelValue": 150,
+    "rent": [22, 120, 360, 850, 1025, 1200]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 32,
+    "name": "Regent Street",
+    "groupID": "Green",
+    "groupIDs": "G",
+    "baseValue": 300,
+    "mortgageValue": 200,
+    "houseValue": 200,
+    "hotelValue": 200,
+    "rent": [26, 130, 390, 900, 1100, 1275]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 33,
+    "name": "Oxford Street",
+    "groupID": "Green",
+    "groupIDs": "G",
+    "baseValue": 300,
+    "mortgageValue": 200,
+    "houseValue": 200,
+    "hotelValue": 200,
+    "rent": [26, 130, 390, 900, 1100, 1275]
+    },
+  {
+    "type": "PROPERTY",
+    "location": 35,
+    "name": "Bond Street",
+    "groupID": "Green",
+    "groupIDs": "G",
+    "baseValue": 320,
+    "mortgageValue": 200,
+    "houseValue": 200,
+    "hotelValue": 200,
+    "rent": [28, 150, 450, 1000, 1200, 1400]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 38,
+    "name": "Park Lane",
+    "groupID": "Blue",
+    "groupIDs": "H",
+    "baseValue": 350,
+    "mortgageValue": 175,
+    "houseValue": 200,
+    "hotelValue": 200,
+    "rent": [35, 175, 500, 1100, 1300, 1500]
+  },
+  {
+    "type": "PROPERTY",
+    "location": 40,
+    "name": "Mayfair",
+    "groupID": "Blue",
+    "groupIDs": "H",
+    "baseValue": 400,
+    "mortgageValue": 200,
+    "houseValue": 200,
+    "hotelValue": 200,
+    "rent": [50, 200, 600, 1400, 1700, 2000]
+  }
+]
+},{}],3:[function(require,module,exports){
 !function(n,t){"object"==typeof exports&&"undefined"!=typeof module?t(require("lodash")):"function"==typeof define&&define.amd?define(["lodash"],t):t(n._)}(this,function(u){"use strict";(u=u&&u.hasOwnProperty("default")?u.default:u).mixin({combinations:function(t,i){t=u.values(t);var e,o,f=[];return e=function(e,o,n){o.length<i?u.find(t,function(n,t){e(u.concat(o,[n]),t+1)},n):f.push(o)},(o=function(){for(var n=[],t=arguments.length;t--;)n[t]=arguments[t];return e.call.apply(e,[this,o].concat(n))})([],0),f}})});
 
-},{"lodash":2}],2:[function(require,module,exports){
+},{"lodash":4}],4:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -17111,7 +17795,7 @@
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],3:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -17131,10 +17815,15 @@ var Card = /** @class */function () {
 }();
 exports.Card = Card;
 
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var _ = require("lodash");
+var Players_1 = require("./Players");
+var Cells_1 = require("./Cells");
+var Rules_1 = require("./Rules");
+var Dice_1 = require("./Dice");
 ;
 ;
 ;
@@ -17152,8 +17841,6 @@ var Cell = /** @class */function () {
         this.rent = [];
         this.houseCount = null;
         this.hotelCount = null;
-        this.oneUtilityMult = null;
-        this.twoUtilityMult = null;
         this.actionPrimary = null;
         this.actionSecondary = null;
         this.name = cell.name;
@@ -17163,6 +17850,7 @@ var Cell = /** @class */function () {
         if (this.type == "PROPERTY") {
             this.groupID = cell.groupID;
             Cell.PROPERTY_ID_BY_NAME[cell.name] = 's';
+            this.isOwnable = true;
             this.baseValue = cell.baseValue;
             this.mortgageValue = cell.mortgageValue;
             this.rent = cell.rent;
@@ -17179,14 +17867,16 @@ var Cell = /** @class */function () {
             this.rent = cell.rent;
         }
         ;
-        // if(this.type == "UTILITY"){
-        //     this.baseValue = baseValue;
-        //     this.isOwnable = true;
-        //     this.mortgageValue = mortgageValue;
-        //     this.mortgageState = false;
-        //     this.oneUtilityMult = oneUtilityMult;
-        //     this.twoUtilityMult = twoUtilityMult;
-        // };
+        if (this.type == "UTILITY") {
+            this.groupID = 'u';
+            Cell.PROPERTY_ID_BY_NAME[cell.name] = 'u';
+            this.baseValue = cell.baseValue;
+            this.isOwnable = true;
+            this.mortgageValue = cell.mortgageValue;
+            this.mortgageState = false;
+            this.rent = cell.rent;
+        }
+        ;
         if (this.type == "SPECIAL") {
             this.groupID = 's';
             Cell.PROPERTY_ID_BY_NAME[cell.name] = 's';
@@ -17198,591 +17888,417 @@ var Cell = /** @class */function () {
             this.isOwnable = false;
         }
     }
+    // //All cells:
+    // //Ownable cells:
+    /**
+     * Defines the ownership of this Cell. Sets the Cells ownership field to its
+     * new value and adds/overwrites static PLAYER_OWNERSHIP field with Cells
+     * name mapped to player ID
+     *
+     * @param newOwnerID the unique identifier for the owning player
+     */
+    Cell.prototype.setOwnership = function (newOwnerID) {
+        var self = this;
+        this.currentOwner = newOwnerID;
+        //Cell.PLAYER_OWNERSHIP[this.name] = newOwnerID;
+        Cells_1.Cells.CELL_OWNERSHIP[self] = newOwnerID;
+    };
+    /**
+     * Checks if Cell can be (un)mortgaged
+     *
+     * @param action The mortgage action to be checked for. Either "mortgage" or
+     * "unmortgage".
+     * @return True if stated action type is valid under current rules and
+     * property state. False otherwise
+     */
+    Cell.prototype.isMortgageActionValid = function (action) {
+        var returnStatement = false;
+        switch (action) {
+            //check if cell can be mortgaged
+            case "mortgage":
+                //check if cell is ownable; if not then cannot be mortgaged
+                if (!this.isOwnable) {
+                    console.log("\tThis type of cell (" + this.type + ") is not ownable and so cannot be mortgaged");
+                } else if (this.mortgageState) {
+                    //Property type is ownable
+                    //check if property is already mortgaged; if so then cannot be mortgaged
+                    console.log("\tThis property is already mortgaged");
+                } else if (this.houseCount > 0 || this.hotelCount == 1) {
+                    //Property is ownable and is not currently mortgaged.
+                    //Check if property is improved; if so then cannot be mortgaged
+                    console.log("\tImproved properties cannot be mortgaged");
+                } else {
+                    //Property is ownable, unmortgaged and unimproved and thus may be mortgaged
+                    returnStatement = true;
+                }
+                break;
+            case "unmortgage":
+                //Check if cell is already un-mortgaged
+                if (!this.isOwnable) {
+                    //If property is not mortgaged then it cannot be unmortgaged.
+                    console.log("\tThis property is not mortgaged");
+                } else if (Rules_1.Rules.PROPERTY_MORTGAGE_INTEREST_RATE_ENABLED && Players_1.Players.get(this.currentOwner).cash < this.mortgageValue + this.mortgageValue / Rules_1.Rules.PROPERTY_MORTGAGE_INTEREST_RATE_VALUE || !Rules_1.Rules.PROPERTY_MORTGAGE_INTEREST_RATE_ENABLED && Players_1.Players.get(this.currentOwner).cash < this.mortgageValue) {
+                    console.log("\tInsufficient funds avaliable to unmortgage this property");
+                }
+                break;
+        }
+        return returnStatement;
+    };
+    /**
+     * Mortgages Cell with additional checks
+     */
+    Cell.prototype.mortgageProperty = function () {
+        if (this.isMortgageActionValid("mortgage")) {
+            this.mortgageState = true;
+            console.log("\t" + Players_1.Players.get(this.currentOwner).name + " mortgages " + this.name + " for " + this.mortgageValue);
+            Players_1.Players.get(this.currentOwner).playerCashReceive(-1, this.mortgageValue);
+        }
+    };
+    /**
+     * Un-mortgages Cell after checking
+     */
+    Cell.prototype.unmortgageProperty = function () {
+        if (this.isMortgageActionValid("unmortgage")) {
+            var unmortgageValue = Rules_1.Rules.PROPERTY_MORTGAGE_INTEREST_RATE_ENABLED ? this.mortgageValue + this.mortgageValue / Rules_1.Rules.PROPERTY_MORTGAGE_INTEREST_RATE_VALUE : this.mortgageValue;
+            this.mortgageState = false;
+            console.log("\t" + Players_1.Players.get(this.currentOwner).name + " unmortgages " + this.name + " for " + unmortgageValue);
+            Players_1.Players.get(this.currentOwner).playerCashPay(-1, unmortgageValue);
+        }
+    };
+    /**
+     * Takes keys of PLAYER_OWNERSHIP which have corresponding values equal to
+     * the ID of the player who owns this property.
+     *
+     * @return List of all properties (including this one) owned by the player
+     * who owns this property
+     */
+    Cell.prototype.getOwningPlayerOwnership = function () {
+        // ArrayList<String> returnList;
+        // returnList = new ArrayList<>();
+        return Players_1.Players.PLAYERS[this.currentOwner].getOwnership();
+    };
+    /**
+     * Returns list of group IDs of properties owned by player who owns this
+     * Cell
+     *
+     * @return list of group IDs of properties owned by player who owns this
+     * Cell
+     */
+    Cell.prototype.getOwningPlayerGroupID = function () {
+        return this.getOwningPlayerOwnership().map(function (cell) {
+            return cell.groupID;
+        });
+    };
+    /**
+     * Returns the amount of properties in this Cells group owned by the player
+     * who owns this Cell
+     *
+     * @return Returns the amount of properties in this Cells group owned by the
+     * player who owns this Cell
+     */
+    Cell.prototype.getOwningPlayerGroupFrequency = function () {
+        return this.getOwningPlayerGroupID()[this.groupID];
+    };
+    //     /**
+    //      * Returns the number of properties in the group that this Cell is a member
+    //      * of
+    //      *
+    //      * @return Returns the number of properties in the group that this Cell is a
+    //      * member of
+    //      */
+    Cell.prototype.getGroupFrequency = function () {
+        return Cells_1.Cells.PROPERTY_GROUP_SET[this.groupID].length;
+    };
+    Cell.prototype.getPropertyGroupMembers = function () {
+        return Array(Object.Values(Cells_1.Cells.PROPERTY_GROUP_SET[this.groupID]));
+    };
+    Cell.prototype.memberGroupMortgageCount = function () {
+        return this.getPropertyGroupMembers().filter(function (cell) {
+            return cell.mortgageState == true;
+        }).length;
+    };
+    /**
+     * Returns current rent for this Cell (property or railroad)
+     *
+     * @return current rent value
+     */
+    Cell.prototype.getCurrentRent = function () {
+        var returnCase = 0;
+        if (this.mortgageState) {
+            console.log("\tRent cannot be collected on mortgaged properties");
+        } else {
+            switch (this.type) {
+                case "PROPERTY":
+                    if (this.hotelCount == 1) {
+                        returnCase = _.last(this.rent);
+                    } else if (this.houseCount == 0) {
+                        //if property is member of a complete set and all set members are unmortgaged and are unimproved,
+                        if (this.isSetComplete() && this.memberGroupMortgageCount() == 0) {
+                            returnCase = _.first(this.rent) * Rules_1.Rules.GROUP_COMPLETION_RENT_BONUS_VALUE;
+                        } else {
+                            returnCase = _.first(this.rent);
+                        }
+                    } else {
+                        returnCase = this.rent[this.houseCount];
+                    }
+                    break;
+                case "RAILROAD":
+                    var railroadsOwned = this.getOwningPlayerGroupFrequency();
+                    if (railroadsOwned > 0) {
+                        returnCase = this.rent[railroadsOwned - 1];
+                    }
+                    ;
+                    break;
+                case "UTILITY":
+                    var utilitiesOwned = this.getOwningPlayerGroupFrequency();
+                    if (utilitiesOwned > 0) returnCase = this.rent[utilitiesOwned - 1] * Dice_1.Dice.value;
+                    break;
+            }
+        }
+        return returnCase;
+    };
+    /**
+     * Returns specific rent value based on Cell type (property, railroad,
+     * utility) and condition (1 house, 2 houses,...,1 rail, 2 rails... etc )
+     *
+     * @param improvementLevel rent condition rentBase = 0, 1 house = 1 etc.
+     * @return
+     */
+    Cell.prototype.queryCellRent = function (improvementLevel) {
+        var returnCase = 0;
+        switch (this.type) {
+            case "PROPERTY":
+                if (improvementLevel == 0) {
+                    if (this.isSetComplete()) {
+                        returnCase = _.first(this.rent) * Rules_1.Rules.GROUP_COMPLETION_RENT_BONUS_VALUE;
+                    } else {
+                        returnCase = this.rent[0];
+                    }
+                    ;
+                } else {
+                    returnCase = this.rent[improvementLevel];
+                }
+                ;
+                break;
+            case "RAILROAD" || "UTILITY":
+                if (improvementLevel - 1 < this.rent.length) {
+                    returnCase = this.rent[improvementLevel - 1];
+                } else {
+                    returnCase = _.last(this.rent);
+                }
+                ;
+                break;
+        }
+        return returnCase;
+    };
+    // //Property types only:
+    /**
+     * Checks if property is part of a complete, sole player owned set Used to
+     * determine validity for buying improvements and current rent
+     *
+     * @return True if property is part of complete set, false otherwise
+     */
+    Cell.prototype.isSetComplete = function () {
+        return this.getOwningPlayerGroupFrequency() == this.getGroupFrequency();
+    };
+    /**
+     * Checks if property can support an improvement
+     *
+     * @return True if rules allow property to be improved, false otherwise
+     */
+    Cell.prototype.addImprovementsValid = function () {
+        var isValid = false;
+        //Can the player afford improvemens?
+        //cost of improvement is a house if houseCount < propertyHotelReq(), else its a hotel.
+        var improvementUnitCost = this.houseCount < Rules_1.Rules.PROPERTY_HOTEL_REQ ? this.houseValue : this.hotelValue;
+        //is even build enabled
+        //if so, get size of property memebr group, then multiply by cost of improvement
+        var improvementNetCost = Rules_1.Rules.PROPERTY_EVEN_BUILD_ENABLED ? improvementUnitCost * this.getOwningPlayerGroupFrequency() : improvementUnitCost;
+        //Check if player owns complete set
+        if (!this.isSetComplete()) {
+            //Return message is set uncomplete
+            console.log("\tCannot improve properties belonging to incomplete sets");
+            //check if property is of correct type
+        } else if (this.type != "PROPERTY") {
+            console.log("\tThis cell type (" + this.type + ") cannot be improved");
+            //check if property is mortgaged
+        } else if (this.mortgageState) {
+            // if is mortgaged, throw exception
+            console.log("\tCannot improve mortgaged property");
+            //otherwise, proceed to check if property improvment limits are reached
+        } else if (this.hotelCount == 1) {
+            if (Rules_1.Rules.IMPROVEMENT_RESOURCES_FINITE && Rules_1.Rules.PROPERTY_HOTEL_REQ == 0) {
+                console.log("\tCannot improve property beyond 1 Hotel (and there are also no hotels avaliable)");
+            } else {
+                console.log("\tCannot improve property beyond 1 Hotel");
+            }
+        } else if (Rules_1.Rules.IMPROVEMENT_RESOURCES_FINITE && Rules_1.Rules.IMPROVEMENT_AMOUNT_HOTEL == 0 && this.hotelCount == 0 && this.houseCount < Rules_1.Rules.PROPERTY_HOTEL_REQ) {
+            console.log("\tP  roperty eligible for improvement but there are no houses avaliable to purchace");
+        } else if (Rules_1.Rules.IMPROVEMENT_RESOURCES_FINITE && Rules_1.Rules.IMPROVEMENT_AMOUNT_HOTEL == 0 && this.hotelCount == 0 && this.houseCount == Rules_1.Rules.PROPERTY_HOTEL_REQ) {
+            console.log("\tProperty eligible for improvement but there are no hotels avaliable to purchace");
+            //check player has enough cash
+        } else if (Players_1.Players.get(this.currentOwner).cash < improvementNetCost) {
+            console.log("\t" + Players_1.Players.get(this.currentOwner).name + " cannot afford this improvement (cost: " + improvementNetCost + " - cash: " + Players_1.Players.get(this.currentOwner).cash + ")");
+        } else {
+            isValid = true;
+        }
+        return isValid;
+    };
+    /**
+     * Adds 1 improvement to property if allowed by rules. Determines next
+     * improvement type and updates Cell field (house/hotel count, improvement
+     * level) accordingly
+     */
+    Cell.prototype.addImprovement = function () {
+        if (this.addImprovementsValid() && this.houseCount < Rules_1.Rules.PROPERTY_HOTEL_REQ) {
+            this.houseCount++;
+            if (Rules_1.Rules.IMPROVEMENT_RESOURCES_FINITE) {
+                Rules_1.Rules.IMPROVEMENT_AMOUNT_HOUSE--;
+            }
+            Players_1.Players.get(this.currentOwner).playerCashPay(-1, this.houseValue);
+            console.log("\t" + Players_1.Players.get(this.currentOwner).name + " builds a house on " + name + " - New Rent: " + this.getCurrentRent() + " - Houses left: " + Rules_1.Rules.IMPROVEMENT_AMOUNT_HOUSE);
+            //improvemntState++;
+        } else if (this.addImprovementsValid() && this.houseCount == Rules_1.Rules.PROPERTY_HOTEL_REQ) {
+            this.houseCount = 0;
+            Rules_1.Rules.IMPROVEMENT_AMOUNT_HOUSE += Rules_1.Rules.PROPERTY_HOTEL_REQ;
+            this.hotelCount = 1;
+            Rules_1.Rules.IMPROVEMENT_AMOUNT_HOTEL--;
+            Players_1.Players.get(this.currentOwner).playerCashPay(-1, this.hotelValue);
+            console.log("\t" + Players_1.Players.get(this.currentOwner).name + " builds a hotel on " + name + " - New Rent: " + this.getCurrentRent());
+            this.improvemntState++;
+        }
+    };
+    /**
+     * Determines if property can have an improvement (House/Hotel) removed from
+     * it
+     *
+     * @return True if property improvement can be downgraded, False otherwise
+     */
+    Cell.prototype.removeImprovementsValid = function () {
+        //default return value
+        var isValid = false;
+        //is property unimproved
+        if (this.houseCount == 0 && this.hotelCount == 0) {
+            //return message
+            console.log("\tCannot remove improvements from unimproved property");
+            //else, property has some level of improvement
+        } else if (Rules_1.Rules.IMPROVEMENT_RESOURCES_FINITE) {
+            //check rules for finite resources - else if resources are infinite then removal will be valid
+            //if resources are finte, and the player is selleing a hotel then check that the bank has enough houses to downgrade
+            if (this.hotelCount == 1) {
+                //determine how many houses are needed.  Is even build enabled?
+                if (Rules_1.Rules.PROPERTY_EVEN_BUILD_ENABLED && this.getOwningPlayerGroupFrequency() * Rules_1.Rules.PROPERTY_HOTEL_REQ > Rules_1.Rules.IMPROVEMENT_AMOUNT_HOUSE || !Rules_1.Rules.PROPERTY_EVEN_BUILD_ENABLED && Rules_1.Rules.PROPERTY_HOTEL_REQ > Rules_1.Rules.IMPROVEMENT_AMOUNT_HOUSE) {
+                    //removal must be even across all property group members - get the size of membership and multiply by hotelReq
+                    console.log("\tInsufficient amount of houses avaliable to downgrade from hotel");
+                }
+            }
+        } else {
+            isValid = true;
+        }
+        return isValid;
+    };
+    /**
+     * Removes 1 improvement from property if allowed by rules
+     */
+    Cell.prototype.removeImprovements = function () {
+        // if action valid
+        if (this.removeImprovementsValid()) {
+            //and improvement state less than 5 (no hotel) then remove a house
+            if (this.hotelCount == 0) {
+                //remove house form cell
+                this.houseCount--;
+                //add house to bank
+                Rules_1.Rules.IMPROVEMENT_AMOUNT_HOUSE--;
+                //credit owning players acount with resale value (initial sale value divided by penalty amount (default: 2) )
+                Players_1.Players.get(this.currentOwner).playerCashReceive(-1, this.houseValue / Rules_1.Rules.IMPROVEMENT_RESALE_PENALTY);
+                //Otherwise, remove a hotel.
+            } else {
+                //deduct from cells hotel count
+                this.hotelCount = 0;
+                //revert cells house count to upper bonud (default: 4)
+                this.houseCount = Rules_1.Rules.PROPERTY_HOTEL_REQ;
+                //subtract above quantity of houses from game
+                Rules_1.Rules.IMPROVEMENT_AMOUNT_HOUSE -= Rules_1.Rules.PROPERTY_HOTEL_REQ;
+                //add 1 hotel back into game
+                Rules_1.Rules.IMPROVEMENT_AMOUNT_HOTEL++;
+                //credit players account with resale value
+                Players_1.Players.get(this.currentOwner).playerCashReceive(-1, this.hotelValue / Rules_1.Rules.IMPROVEMENT_RESALE_PENALTY);
+            }
+        }
+    };
     Cell.PLAYER_OWNERSHIP = {};
     Cell.PROPERTY_ID_BY_NAME = {};
     return Cell;
 }();
 exports.Cell = Cell;
-// //All cells:
-//     /**
-//      * Gets name of Cell
-//      *
-//      * @return name of this cell
-//      */
-//     public String getName() {
-//         return name;
-//     }
-//     public int getLocation() {
-//         return location;
-//     }
-//     /**
-//      * Gets color of Cell.
-//      *
-//      * @return color of this cell
-//      */
-//     public String getColor() {
-//         return color;
-//     }
-//     /**
-//      * States if this Cell can be owned by a player.
-//      *
-//      * @return True if Cell can be owned by a player, False otherwise
-//      */
-//     public boolean getOwnable() {
-//         return isOwnable;
-//     }
-//     public int getBaseValue() {
-//         return baseValue;
-//     }
-//     public int getRentBase() {
-//         return rentBase;
-//     }
-//     public int getRent1h() {
-//         return rent1H;
-//     }
-//     public int getRent2h() {
-//         return rent2H;
-//     }
-//     public int getRent3h() {
-//         return rent3H;
-//     }
-//     public int getRent4h() {
-//         return rent4H;
-//     }
-//     public int getRentHotel() {
-//         return rentHotel;
-//     }
-//     public int getHouseValue() {
-//         return houseValue;
-//     }
-//     public int getHotelValue() {
-//         return hotelValue;
-//     }
-//     /**
-//      * Gets type of Cell. Type describes nature and enables different possible
-//      * method behaviours.
-//      *
-//      * @return String describing type of cell ("property", "railroad",
-//      * "utility", "jail", "special")
-//      */
-//     public CellType getCellType() {
-//         return cellType;
-//     }
-// //Special Cells:
-//     public String getActionType() {
-//         return actionType;
-//     }
-//     public String getActionParamater() {
-//         return actionParamater;
-//     }
-// //Ownable cells:
-// //    public static Map getTotalOwnership() {
-// //        return PLAYER_OWNERSHIP;
-// //    }
-//     /**
-//      * Defines the ownership of this Cell. Sets the Cells ownership field to its
-//      * new value and adds/overwrites static PLAYER_OWNERSHIP field with Cells
-//      * name mapped to player ID
-//      *
-//      * @param newOwnerID the unique identifier for the owning player
-//      */
-//     public void setOwnership(Integer newOwnerID) {
-//         currentOwner = newOwnerID;
-//         PLAYER_OWNERSHIP.put(name, newOwnerID);
-//         Cells.PLAYER_OWNERSHIP.put(this, newOwnerID);
-//     }
-//     /**
-//      * Returns the unique ID of the player who owns this Cell.
-//      *
-//      * @return owning player ID, null if this Cell is not owned
-//      */
-//     public Integer getOwnership() {
-//         return currentOwner;
-//     }
-//     /**
-//      * States if the Cell is currently mortgaged
-//      *
-//      * @return True if this Cell is mortgaged (mortgageState = true), False
-//      * otherwise
-//      */
-//     public boolean isMortgaged() {
-//         return mortgageState;
-//     }
-//     /**
-//      * Designates Cell as being (un)mortgaged. Does not implement higher rules
-//      * of game
-//      *
-//      * @param set true if property is to be mortgaged, false if property is
-//      * being un-mortgaged
-//      */
-//     public void setMortgageState(boolean set) {
-//         mortgageState = set;
-//     }
-//     public int getMortgageValue() {
-//         return mortgageValue;
-//     }
-//     /**
-//      * Checks if Cell can be (un)mortgaged
-//      *
-//      * @param action The mortgage action to be checked for. Either "mortgage" or
-//      * "unmortgage".
-//      * @return True if stated action type is valid under current rules and
-//      * property state. False otherwise
-//      */
-//     public boolean isMortgageActionValid(String action) {
-//         boolean returnStatement = false;
-//         switch (action) {
-//             //check if cell can be mortgaged
-//             case "mortgage":
-//                 //check if cell is ownable; if not then cannot be mortgaged
-//                 if (!getOwnable()) {
-//                     System.out.println("\tThis type of cell (" + getCellType() + ") is not ownable and so cannot be mortgaged");
-//                 } else if (isMortgaged()) {
-//                     //Property type is ownable
-//                     //check if property is already mortgaged; if so then cannot be mortgaged
-//                     System.out.println("\tThis property is already mortgaged");
-//                 } else if (houseCount > 0 || hotelCount == 1) {
-//                     //Property is ownable and is not currently mortgaged.
-//                     //Check if property is improved; if so then cannot be mortgaged
-//                     System.out.println("\tImproved properties cannot be mortgaged");
-//                 } else {
-//                     //Property is ownable, unmortgaged and unimproved and thus may be mortgaged
-//                     returnStatement = true;
-//                 }
-//                 break;
-//             case "unmortgage":
-//                 //Check if cell is already un-mortgaged
-//                 if (!isMortgaged()) {
-//                     //If property is not mortgaged then it cannot be unmortgaged.
-//                     System.out.println("\tThis property is not mortgaged");
-//                 } else if ((Rules.isMortgageInterestEnabled() && Players.get(currentOwner).getCash() < mortgageValue + (mortgageValue / Rules.getMortgageInterestRate())) || (!Rules.isMortgageInterestEnabled() && Players.get(currentOwner).getCash() < mortgageValue)) {
-//                     System.out.println("\tInsufficient funds avaliable to unmortgage this property");
-//                 }
-//                 break;
-//         }
-//         return returnStatement;
-//     }
-//     /**
-//      * Mortgages Cell with additional checks
-//      */
-//     public void mortgageProperty() {
-//         if (isMortgageActionValid("mortgage")) {
-//             setMortgageState(true);
-//             System.out.println("\t" + Players.get(currentOwner).getName() + " mortgages " + name + " for " + mortgageValue);
-//             Players.get(currentOwner).playerCashRecieve(-1, mortgageValue);
-//         }
-//     }
-//     /**
-//      * Un-mortgages Cell after checking
-//      */
-//     public void unmortgageProperty() {
-//         if (isMortgageActionValid("unmortgage")) {
-//             int unmortgageValue = (Rules.isMortgageInterestEnabled()) ? mortgageValue + (mortgageValue / Rules.getMortgageInterestRate()) : mortgageValue;
-//             setMortgageState(false);
-//             System.out.println("\t" + Players.get(currentOwner).getName() + " unmortgages " + name + " for " + unmortgageValue);
-//             Players.get(currentOwner).playerCashPay(-1, unmortgageValue);
-//         }
-//     }
-//     /**
-//      * Returns PROPERTY_ID_BY_NAME; a static Map between ownable Cells (K,
-//      * String) and their group IDs (V, Character). Used to track which
-//      * property-types are members of which groups for determining improvements
-//      *
-//      * @return PROPERTY_ID_BY_NAME
-//      */
-//     public Map<String, Character> getPropertyIDbyName() {
-//         return PROPERTY_ID_BY_NAME;
-//     }
-//     /**
-//      * Takes keys of PLAYER_OWNERSHIP which have corresponding values equal to
-//      * the ID of the player who owns this property.
-//      *
-//      * @return List of all properties (including this one) owned by the player
-//      * who owns this property
-//      */
-//     public ArrayList getOwningPlayerOwnership() {
-//         ArrayList<String> returnList;
-//         returnList = new ArrayList<>();
-//         PLAYER_OWNERSHIP.keySet().stream().filter((o) -> (PLAYER_OWNERSHIP.get(o).equals(currentOwner))).forEach((String o) -> {
-//             returnList.add((String) o);
-//         });
-//         return returnList;
-//     }
-//     /**
-//      * Returns this Cells property group ID character
-//      *
-//      * @return this Cells property group ID character
-//      */
-//     public char getPropertyGroupID() {
-//         return groupID;
-//     }
-//     /**
-//      * Returns list of group IDs of properties owned by player who owns this
-//      * Cell
-//      *
-//      * @return list of group IDs of properties owned by player who owns this
-//      * Cell
-//      */
-//     public ArrayList getOwningPlayerGroupID() {
-//         ArrayList<Character> returnList;
-//         returnList = new ArrayList<>();
-//         for (int i = 0; i < getOwningPlayerOwnership().size(); i++) {
-//             returnList.add(getPropertyIDbyName().get((String) getOwningPlayerOwnership().get(i)));
-//         }
-//         return returnList;
-//     }
-//     //get number of properties owned by player which have same group IDs
-//     /**
-//      * Returns the amount of properties in this Cells group owned by the player
-//      * who owns this Cell
-//      *
-//      * @return Returns the amount of properties in this Cells group owned by the
-//      * player who owns this Cell
-//      */
-//     public int getOwningPlayerGroupFrequency() {
-//         return Collections.frequency(getOwningPlayerGroupID(), getPropertyGroupID());
-//     }
-//     /**
-//      * Returns the number of properties in the group that this Cell is a member
-//      * of
-//      *
-//      * @return Returns the number of properties in the group that this Cell is a
-//      * member of
-//      */
-//     public int getGroupFrequency() {
-//         return Collections.frequency(getPropertyIDbyName().values(), getPropertyGroupID());
-//     }
-//     public List getPropertyGroupMembers() {
-//         List<Cell> groupMembers = new ArrayList<>();
-//         for (int i = 1; i <= Cells.locationsAmount(); i++) {
-//             if (Cells.get(i).getPropertyGroupID() == groupID) {
-//                 groupMembers.add(Cells.get(i));
-//             }
-//         }
-//         return groupMembers;
-//     }
-//     public int memberGroupMortgageCount() {
-//         int returnValue = 0;
-//         for (Object check : getPropertyGroupMembers()) {
-//             if (((Cell) check).isMortgaged()) {
-//                 returnValue++;
-//             }
-//         }
-//         return returnValue;
-//     }
-//     /**
-//      * Returns current rent for this Cell (property or railroad)
-//      *
-//      * @return current rent value
-//      */
-//     public int getRent() {
-//         int returnCase = 0;
-//         if (isMortgaged()) {
-//             System.out.println("\tRent cannot be collected on mortgaged properties");
-//         } else {
-//             switch (getCellType()) {
-//                 case PROPERTY:
-//                     if (hotelCount == 1) {
-//                         returnCase = rentHotel;
-//                     } else if (houseCount == 0) {
-//                         //if property is member of a complete set and all set members are unmortgaged and are unimproved,
-//                         if (isSetComplete() && memberGroupMortgageCount() > 0) {
-//                             returnCase = rentBase * Rules.getGroupCompletRentBonus();
-//                         } else {
-//                             returnCase = rentBase;
-//                         }
-//                     } else {
-//                         switch (houseCount) {
-//                             case 1:
-//                                 returnCase = rent1H;
-//                                 break;
-//                             case 2:
-//                                 returnCase = rent2H;
-//                                 break;
-//                             case 3:
-//                                 returnCase = rent3H;
-//                                 break;
-//                             case 4:
-//                                 returnCase = rent4H;
-//                                 break;
-//                         }
-//                     }
-//                     break;
-//                 case RAILROAD:
-// //                    switch (getOwningPlayerGroupFrequency()) {
-// //                        case 1:
-// //                            returnCase = rentBase;
-// //                            break;
-// //                        case 2:
-// //                            returnCase = rent2R;
-// //                            break;
-// //                        case 3:
-// //                            returnCase = rent3R;
-// //                            break;
-// //                        case 4:
-// //                            returnCase = rent4R;
-// //                            break;
-// //                    }
-//                     returnCase = (int) railroadRentConditions.get(getOwningPlayerGroupFrequency() - memberGroupMortgageCount());
-//                     break;
-//             }
-//         }
-//         return returnCase;
-//     }
-//     /**
-//      * Returns the rent for this Cell (utility) Multiplies current dice roll by
-//      * value determined by players utility ownership.
-//      *
-//      * @param diceValue The total value of the latest dice roll (sum of all
-//      * faces)
-//      * @return current rent value
-//      */
-//     public int getRent(int diceValue) {
-//         int returnCase = 0;
-//         switch (getOwningPlayerGroupFrequency()) {
-//             case 1:
-//                 returnCase = (oneUtilityMult * diceValue);
-//                 break;
-//             case 2:
-//                 returnCase = (twoUtilityMult * diceValue);
-//                 break;
-//         }
-//         return returnCase;
-//     }
-//     /**
-//      * Returns specific rent value based on Cell type (property, railroad,
-//      * utility) and condition (1 house, 2 houses,...,1 rail, 2 rails... etc )
-//      *
-//      * @param field rent condition ("rentBase","rent1H",.., )
-//      * @return
-//      */
-//     public int getRent(String field) {
-//         int returnCase = 0;
-//         switch (getCellType()) {
-//             case PROPERTY:
-//                 switch (field) {
-//                     case "Base":
-//                         if (isSetComplete()) {
-//                             returnCase = 2 * rentBase;
-//                             break;
-//                         } else {
-//                             returnCase = rentBase;
-//                             break;
-//                         }
-//                     //break;
-//                     case "1H":
-//                         returnCase = rent1H;
-//                         break;
-//                     //break;
-//                     case "2H":
-//                         returnCase = rent2H;
-//                         break;
-//                     //break;
-//                     case "3H":
-//                         returnCase = rent3H;
-//                         break;
-//                     //break;
-//                     case "4H":
-//                         returnCase = rent4H;
-//                         break;
-//                     //	break;
-//                     case "Hotel":
-//                         returnCase = rentHotel;
-//                     //	break;
-//                 }
-//                 break;
-//             case RAILROAD:
-//                 switch (field) {
-//                     case "Base":
-//                         returnCase = rentBase;
-//                         break;
-//                     //break;
-//                     case "2R":
-//                         returnCase = rent2R;
-//                         break;
-//                     //break;
-//                     case "3R":
-//                         returnCase = rent3R;
-//                         break;
-//                     //break;
-//                     case "4R":
-//                         returnCase = rent4R;
-//                         break;
-//                     //break;
-//                 }
-//                 break;
-//             case UTILITY:
-//                 switch (getOwningPlayerGroupFrequency()) {
-//                     case 1:
-//                         returnCase = oneUtilityMult;
-//                         break;
-//                     //break;
-//                     case 2:
-//                         returnCase = twoUtilityMult;
-//                         break;
-//                     //break;
-//                 }
-//                 break;
-//         }
-//         return returnCase;
-//     }
-// //Property types only:
-//     //    /**
-// //     * Returns state of property Cells improvement 0 - unimproved 1 - 1 House
-// //     * .... 5 - Hotel
-// //     *
-// //     * @return integer relating current state of property improvement
-// //     */
-// //    public int getImprovmentState() {
-// //        return improvemntState;
-// //    }
-//     /**
-//      * Checks if property is part of a complete, sole player owned set Used to
-//      * determine validity for buying improvements and current rent
-//      *
-//      * @return True if property is part of complete set, false otherwise
-//      */
-//     public boolean isSetComplete() {
-//         return (getOwningPlayerGroupFrequency() == getGroupFrequency());
-//     }
-//     /**
-//      * Checks if property can support an improvement
-//      *
-//      * @return True if rules allow property to be improved, false otherwise
-//      */
-//     public boolean addImprovementsValid() {
-//         boolean isValid = false;
-//         //Can the player afford improvemens?
-//         //cost of improvement is a house if houseCount < propertyHotelReq(), else its a hotel.
-//         int improvementUnitCost = (houseCount < Rules.getPropertyHotelReq()) ? houseValue : hotelValue;
-//         //is even build enabled
-//         //if so, get size of property memebr group, then multiply by cost of improvement
-//         int improvementNetCost = (Rules.isPropertyEvenBuildEnabled()) ? improvementUnitCost * getOwningPlayerGroupFrequency() : improvementUnitCost;
-//         //Check if player owns complete set
-//         if (!isSetComplete()) {
-//             //Return message is set uncomplete
-//             System.out.println("\tCannot improve properties belonging to incomplete sets");
-//             //check if property is of correct type
-//         } else if (getCellType() != CellType.PROPERTY) {
-//             System.out.println("\tThis cell type (" + getCellType() + ") cannot be improved");
-//             //check if property is mortgaged
-//         } else if (isMortgaged()) {
-//             // if is mortgaged, throw exception
-//             System.out.println("\tCannot improve mortgaged property");
-//             //otherwise, proceed to check if property improvment limits are reached
-//         } else if (hotelCount == 1) {
-//             if (Rules.isImprovementResourcesFinite() && Rules.getImprovementAmountHotel() == 0) {
-//                 System.out.println("\tCannot improve property beyond 1 Hotel (and there are also no hotels avaliable)");
-//             } else {
-//                 System.out.println("\tCannot improve property beyond 1 Hotel");
-//             }
-//         } else if (Rules.isImprovementResourcesFinite() && Rules.getImprovementAmountHouse() == 0 && hotelCount == 0 && houseCount < Rules.getPropertyHotelReq()) {
-//             System.out.println("\tP  roperty eligible for improvement but there are no houses avaliable to purchace");
-//         } else if (Rules.isImprovementResourcesFinite() && Rules.getImprovementAmountHotel() == 0 && hotelCount == 0 && houseCount == Rules.getPropertyHotelReq()) {
-//             System.out.println("\tProperty eligible for improvement but there are no hotels avaliable to purchace");
-//             //check player has enough cash
-//         } else if (Players.get(getOwnership()).getCash() < improvementNetCost) {
-//             System.out.println("\t" + Players.get(getOwnership()).getName() + " cannot afford this improvement (cost: " + improvementNetCost + " - cash: " + Players.get(getOwnership()).getCash() + ")");
-//         } else {
-//             isValid = true;
-//         }
-//         return isValid;
-//     }
-//     public int getHouseCount() {
-//         return houseCount;
-//     }
-//     public int getHotelCount() {
-//         return hotelCount;
-//     }
-//     /**
-//      * Adds 1 improvement to property if allowed by rules. Determines next
-//      * improvement type and updates Cell field (house/hotel count, improvement
-//      * level) accordingly
-//      */
-//     public void addImprovement() {
-//         if (addImprovementsValid() && houseCount < Rules.getPropertyHotelReq()) {
-//             houseCount++;
-//             if (Rules.isImprovementResourcesFinite()) {
-//                 Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() - 1);
-//             }
-//             Players.get(currentOwner).playerCashPay(-1, houseValue);
-//             System.out.println("\t" + Players.get(currentOwner).getName() + " builds a house on " + name + " - New Rent: " + getRent() + " - Houses left: " + Rules.getImprovementAmountHouse());
-//             //improvemntState++;
-//         } else if (addImprovementsValid() && houseCount == Rules.getPropertyHotelReq()) {
-//             houseCount = 0;
-//             Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() + Rules.getPropertyHotelReq());
-//             hotelCount = 1;
-//             Rules.setImprovementAmountHotel(Rules.getImprovementAmountHotel() - 1);
-//             Players.get(currentOwner).playerCashPay(-1, hotelValue);
-//             System.out.println("\t" + Players.get(currentOwner).getName() + " builds a hotel on " + name + " - New Rent: " + getRent());
-//             //improvemntState++;
-//         }
-//     }
-//     /**
-//      * Determines if property can have an improvement (House/Hotel) removed from
-//      * it
-//      *
-//      * @return True if property improvement can be downgraded, False otherwise
-//      */
-//     public boolean removeImprovementsValid() {
-//         //default return value
-//         boolean isValid = false;
-//         //is property unimproved
-//         if ((houseCount == 0 && hotelCount == 0)) {
-//             //return message
-//             System.out.println("\tCannot remove improvements from unimproved property");
-//             //else, property has some level of improvement
-//         } else if (Rules.isImprovementResourcesFinite()) {
-//             //check rules for finite resources - else if resources are infinite then removal will be valid
-//             //if resources are finte, and the player is selleing a hotel then check that the bank has enough houses to downgrade
-//             if (hotelCount == 1) {
-//                 //determine how many houses are needed.  Is even build enabled?
-//                 if ((Rules.isPropertyEvenBuildEnabled() && (getOwningPlayerGroupFrequency() * Rules.getPropertyHotelReq() > Rules.getImprovementAmountHouse())) || (!Rules.isPropertyEvenBuildEnabled() && Rules.getPropertyHotelReq() > Rules.getImprovementAmountHouse())) {
-//                     //removal must be even across all property group members - get the size of membership and multiply by hotelReq
-//                     System.out.println("\tInsufficient amount of houses avaliable to downgrade from hotel");
-//                 }
-//             }
-//         } else {
-//             isValid = true;
-//         }
-//         return isValid;
-//     }
-//     /**
-//      * Removes 1 improvement from property if allowed by rules
-//      */
-//     public void removeImprovements() {
-//         // if action valid
-//         if (removeImprovementsValid()) {
-//             //and improvement state less than 5 (no hotel) then remove a house
-//             if (hotelCount == 0) {
-//                 //remove house form cell
-//                 houseCount--;
-//                 //add house to bank
-//                 Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() + 1);
-//                 //credit owning players acount with resale value (initial sale value divided by penalty amount (default: 2) )
-//                 Players.get(getOwnership()).playerCashRecieve(-1, (int) (houseValue / Rules.getPropertyResalePenaltyValue()));
-//                 //Otherwise, remove a hotel.
-//             } else {
-//                 //deduct from cells hotel count
-//                 hotelCount = 0;
-//                 //revert cells house count to upper bonud (default: 4)
-//                 houseCount = Rules.getPropertyHotelReq();
-//                 //subtract above quantity of houses from game
-//                 Rules.setImprovementAmountHouse(Rules.getImprovementAmountHouse() - Rules.getPropertyHotelReq());
-//                 //add 1 hotel back into game
-//                 Rules.setImprovementAmountHotel(Rules.getImprovementAmountHotel() + 1);
-//                 //credit players account with resale value
-//                 Players.get(getOwnership()).playerCashRecieve(-1, (int) (hotelValue / Rules.getPropertyResalePenaltyValue()));
-//             }
-//     }
-// }
 
-},{}],5:[function(require,module,exports){
+},{"./Cells":7,"./Dice":10,"./Players":12,"./Rules":13,"lodash":4}],7:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Rules_1 = require("./Rules");
+var enums_1 = require("./enums");
+var Cell_1 = require("./Cell");
+;
+;
+// interface IStringStringMap extends IStringTMap<string> {};
+var Cells = /** @class */function () {
+    function Cells() {
+        //"In Jail" is always at position 0
+        Cells.add({ type: enums_1.CellType.SPECIAL, location: 0, name: "In Jail", color: "Gray", actionPrimary: null, actionSecondary: null }, 0);
+        // "GO" is always at position 1
+        var goLandingValue = Rules_1.Rules.GO_LANDING_BONUS_ENABLED ? Rules_1.Rules.GO_LANDING_BONUS_VALUE + Rules_1.Rules.PASS_GO_CREDIT : Rules_1.Rules.PASS_GO_CREDIT;
+        Cells.add({ type: enums_1.CellType.SPECIAL, location: 1, name: "GO", color: "Gray", actionPrimary: "creditAbs", actionSecondary: goLandingValue }, 1);
+    }
+    ;
+    Cells.add = function (cellParams, location) {
+        if (location) {
+            location = Object.keys(Cells.LOCATIONS).length + 1;
+        }
+        ;
+        var cell = new Cell_1.Cell(cellParams);
+        Cells.LOCATIONS[location] = cell;
+        if (Cells.PROPERTY_GROUP_SET[cell.groupID] == undefined) {
+            Cells.PROPERTY_GROUP_SET[cell.groupID] = [];
+        }
+        ;
+        Cells.PROPERTY_GROUP_SET[cell.groupID].push(cell);
+    };
+    /**
+     * Gets the Cell object stored at position boardLocaion in the map
+     * LOCATIONS.
+     *
+     * @param boardLocation the location of a position on the board counted from
+     * GO = 1
+     * @return the Cell object representing that position.
+     */
+    Cells.get = function (boardLocation) {
+        return Cells.LOCATIONS[boardLocation];
+    };
+    Object.defineProperty(Cells, "jailExitLocation", {
+        get: function get() {
+            return this._jailExitLocation;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * LOCATIONS maps the index (K) of each position on the game board to it's
+     * defining Cell object (V).
+     */
+    Cells.LOCATIONS = {};
+    Cells.PROPERTY_GROUP_SET = {};
+    Cells.CELL_OWNERSHIP = {};
+    Cells._jailExitLocation = 11;
+    return Cells;
+}();
+exports.Cells = Cells;
+
+},{"./Cell":6,"./Rules":13,"./enums":14}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var _ = require("lodash");
-// import * as cardData from './config/cardData.json';
 var Card_1 = require("./Card");
 var ChanceCards = /** @class */function () {
     function ChanceCards(cardData) {
@@ -17868,12 +18384,11 @@ var ChanceCards = /** @class */function () {
 }();
 exports.ChanceCards = ChanceCards;
 
-},{"./Card":3,"lodash":2}],6:[function(require,module,exports){
+},{"./Card":5,"lodash":4}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var _ = require("lodash");
-// import * as cardData from './config/cardData.json';
 var Card_1 = require("./Card");
 var ChestCards = /** @class */function () {
     function ChestCards(cardData) {
@@ -17959,7 +18474,7 @@ var ChestCards = /** @class */function () {
 }();
 exports.ChestCards = ChestCards;
 
-},{"./Card":3,"lodash":2}],7:[function(require,module,exports){
+},{"./Card":5,"lodash":4}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -17995,21 +18510,19 @@ var Die = /** @class */function () {
  */
 var Dice = /** @class */function () {
     function Dice(sidesArray) {
-        var _this = this;
         //Create and hold instances of Die.
-        this.dice = [];
         sidesArray.map(function (sides) {
-            return _this.dice.push(new Die(sides));
+            return Dice._dice.push(new Die(sides));
         });
         //The sum of all face values of all dice once rolled
-        this.value = null;
+        Dice._value = null;
         //Array of dice face values once rolled
-        this.faces = null;
+        Dice._faces = null;
         //true if all face values are equal, false otherwise
-        this.allEqual = null;
+        Dice._allEqual = null;
         //object mapping possible value of each roll (key) to it's probability (value)
-        this.rollProb = null;
-        var input = this.dice.map(function (die) {
+        Dice._rollProb = null;
+        var input = Dice._dice.map(function (die) {
             return die.sides;
         });
         var rolloverCounter = 0;
@@ -18020,7 +18533,7 @@ var Dice = /** @class */function () {
         /**
          * Helper function for calculating roll probabilities.
          *
-         * @param {*} index
+         * @param index
          */
         function rollover(index) {
             if (index > 0 && rolloverCounter % Math.pow(input[index], input.length - 1 - index) == 0) {
@@ -18075,55 +18588,680 @@ var Dice = /** @class */function () {
             });
         });
         var freq = _.countBy(outReduce);
-        this.rollProb = _.zipObject(Object.keys(freq), Object.values(freq).map(function (prob) {
-            return 100 * (prob / Object.values(freq).reduce(function (a, b) {
+        var p = Object.keys(freq).map(function (key) {
+            return freq[key];
+        });
+        Dice._rollProb = _.zipObject(Object.keys(freq).map(function (str) {
+            return parseInt(str);
+        }), p.map(function (prob) {
+            return 100 * (prob / p.reduce(function (a, b) {
                 return a + b;
             }));
         }));
         //init. Dice
-        this.roll();
+        Dice.roll();
     }
     ;
-    /**
-     * Method for rolling dice.  Sets object values.
-     *
-     * @returns Randomly generated integer equal to the sum of the face values of all rolled dice.
-     * @memberof Dice
-     */
-    Dice.prototype.roll = function () {
-        var _this = this;
-        this.faces = this.dice.map(function (die) {
+    Object.defineProperty(Dice, "faces", {
+        /**
+         * Method for rolling dice.  Sets object values.
+         *
+         * @returns Randomly generated integer equal to the sum of the face values of all rolled dice.
+         * @memberof Dice
+         */
+        get: function get() {
+            return Dice._faces;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Dice, "value", {
+        get: function get() {
+            return Dice._value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Dice.roll = function () {
+        Dice._faces = Dice._dice.map(function (die) {
             return die.rollDie();
         });
-        this.value = this.faces.reduce(function (a, b) {
+        Dice._value = Dice._faces.reduce(function (a, b) {
             return a + b;
         });
-        if (this.dice.length > 1) {
-            this.allEqual = this.faces.every(function (face) {
-                return face === _this.faces[0];
+        if (Dice._dice.length > 1) {
+            Dice._allEqual = Dice._faces.every(function (face) {
+                return face === Dice._faces[0];
             });
         } else {
-            this.allEqual = false;
+            Dice._allEqual = false;
         }
         ;
-        return this.value;
+        return Dice._value;
     };
+    Object.defineProperty(Dice, "allEqual", {
+        get: function get() {
+            return Dice._allEqual;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Dice, "rollProb", {
+        get: function get() {
+            return Dice._rollProb;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     *Creates an instance of Dice.
+     * @param {*} sidesArray Each element in the array constructs a die with amount of sides equal to the array value.
+     * @memberof Dice
+     */
+    Dice._dice = [];
+    Dice._rollProb = {};
     return Dice;
 }();
 exports.Dice = Dice;
-// var dice = new Dice([6,6,3]);
-// console.log(
-//     dice.rollProb
-// )
 
-},{"lodash":2,"lodash.combinations":1}],8:[function(require,module,exports){
+},{"lodash":4,"lodash.combinations":3}],11:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = require("lodash");
+var Players_1 = require("./Players");
+// import { LogEntry } from "./LogEntry";
+var Rules_1 = require("./Rules");
+var Cells_1 = require("./Cells");
+var Dice_1 = require("./Dice");
+var Player = /** @class */function () {
+    //log of players current turn
+    // private _logEntry: LogEntry;
+    /**
+     * Constructor for player. User may specify players starting cash,
+     * _position and amount of jail bonds avaliable.
+     *
+     * @param playerID Unique integer to identify player and locate in static
+     * PLAYERS map.
+     * @param name String to identify players to user
+     * @param token Token enum to visually locate player on game board
+     * @param _position The starting location for the player. _position 1 by
+     * default.
+     * @param cash The starting cash amount for the player. 1500 by default
+     * @param jailBondsAvaliable The amount of jail bonds avaliable to the
+     * player. 0 by default.
+     */
+    function Player(playerID, name, token) {
+        this._ID = playerID;
+        this._name = name;
+        this._token = token;
+        this.__position = 1;
+        this._cash = Rules_1.Rules.INITIAL_PLAYER_CASH;
+    }
+    Object.defineProperty(Player.prototype, "ID", {
+        //Get player's -
+        /**
+         * Returns the players unique integer identifier
+         *
+         * @return int - players ID
+         */
+        get: function get() {
+            return this._ID;
+        },
+        set: function set(newID) {
+            this._ID = newID;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Player.prototype, "name", {
+        /**
+         * Returns the players name
+         *
+         * @return String - player's name
+         */
+        get: function get() {
+            return this._name;
+        },
+        set: function set(newName) {
+            this._name = newName;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Player.prototype, "token", {
+        /**
+         * Returns the players token (enum)
+         *
+         * @return enum - player's token
+         */
+        get: function get() {
+            return this._token;
+        },
+        set: function set(newToken) {
+            this._token = newToken;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Player.prototype, "_position", {
+        /**
+         * Returns the _position of the player in terms of its location on the game
+         * board/index of LOCATIONS
+         *
+         * @return LOCATIONS key / board _position
+         */
+        get: function get() {
+            return this.__position;
+        },
+        //Set players:
+        //    /**
+        //     * Sets the player as being in Jail.
+        //     *
+        //     * @param jailState True: in Jail, False otherwise.
+        //     */
+        //    public void setJailState(boolean jailState) {
+        //        inJail = jailState;
+        //    }
+        //    /**
+        //     * Sets the amount of time (in turns) the player has currently been in jail
+        //     * for.
+        //     *
+        //     * @param time
+        //     */
+        //    public void setJailTimeSpent(int time) {
+        //        jailTimeSpent = time;
+        //    }
+        /**
+         * Set new _position for player on game board
+         *
+         * @param new_position Location on game board given as index of Cells
+         * _position in LOCATIONS
+         */
+        set: function set(new_position) {
+            this.__position = new_position;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Player.prototype, "cash", {
+        set: function set(newCash) {
+            this._cash = newCash;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    /**
+     * Gets the type of cell which the player is currently occupying
+     *
+     * @return [string] Cell type currently occupied by player.
+     */
+    Player.prototype.getCurrentCell = function () {
+        return Cells_1.Cells.get(this.__position);
+    };
+    Player.prototype.get_positionType = function () {
+        return this.getCurrentCell().type;
+    };
+    Player.prototype.getActionType = function () {
+        return this.getCurrentCell().actionPrimary;
+    };
+    Player.prototype.getActionParamater = function () {
+        return this.getCurrentCell().actionSecondary;
+    };
+    /**
+     * Gets name of current _position cell
+     *
+     * @return
+     */
+    Player.prototype.get_positionName = function () {
+        return this.getCurrentCell().name;
+    };
+    /**
+     * Gets name of specified cell
+     *
+     * @param cell_position [int] specification for cell. Cells _position on
+     * board.
+     * @return [String] Name of cell
+     */
+    Player.prototype.getCellName = function (cell_position) {
+        return Cells_1.Cells.get(cell_position).name;
+    };
+    /**
+     * Return amount of "get out of jail free" card(s) avaliable to the player
+     *
+     * @return
+     */
+    Player.prototype.getBondsAvaliable = function () {
+        return this._jailBondsAvaliableChance + this._jailBondsAvaliableChest;
+    };
+    Object.defineProperty(Player.prototype, "inJail", {
+        /**
+         * Is the player in jail? T/F
+         *
+         * @return True if player is in jail, False otherwise.
+         */
+        get: function get() {
+            return this._inJail;
+        },
+        set: function set(newJailState) {
+            this._inJail = newJailState;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Player.prototype, "jailTimeSpent", {
+        /**
+         * How many consecutive turns has the player spent in jail
+         *
+         * @return [int] number of turns spent in current 'in jail' event.
+         */
+        get: function get() {
+            return this._jailTimeSpent;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Player.prototype, "speedingCount", {
+        /**
+         * How many doubles has the player rolled so far this turn? Resets to 0 at
+         * end of turn.
+         *
+         * @return [int] amount of doubles rolled on this current turn.
+         */
+        get: function get() {
+            return this._speedingCount;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Player.prototype, "currentCard", {
+        /**
+         * Returns last card drawn by this player
+         *
+         * @return [List] Card last drawn by player.
+         */
+        get: function get() {
+            return this._currentCard;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ;
+    /**
+     *
+     * @param payingPlayerID [0,1,2...] for players.  use -1 for bank
+     * @param cashAmount
+     */
+    Player.prototype.playerCashReceive = function (payingPlayerID, cashAmount) {
+        if (payingPlayerID >= 0) {
+            var payingPlayer = Players_1.Players.get(payingPlayerID);
+            this._cash += cashAmount;
+            payingPlayer.cash -= cashAmount;
+            // logEntry.logEvent(RECEIVE, cashAmount, payingPlayerID);
+        } else {
+            this._cash += cashAmount;
+            // logEntry.logEvent(RECEIVE, cashAmount, payingPlayerID);
+        }
+    };
+    ;
+    Player.prototype.playerCashPay = function (recievingPlayerID, cashAmount) {
+        if (recievingPlayerID >= 0) {
+            var recievingPlayer = Players_1.Players.get(recievingPlayerID);
+            this._cash -= cashAmount;
+            recievingPlayer.cash += cashAmount;
+            // logEntry.logEvent(PAY, cashAmount, recievingPlayerID);
+        } else {
+            this._cash -= cashAmount;
+            // logEntry.logEvent(PAY, cashAmount, recievingPlayerID);
+        }
+    };
+    ;
+    //    /**
+    //     * Add(take) a "Get out of jail free card" to(from) the player
+    //     *
+    //     * @param addAmmount Positive(negative) integer value will give to(remove
+    //     * from) player
+    //     */
+    //    public void addJailBond(int addAmmount) {
+    //        jailBondsAvaliable += addAmmount;
+    //    }
+    /**
+     * Sets player as owner of specified Cell at location on game board
+     *
+     * @param propertyBoardLocation The location of the property in terms of its
+     * _position on the game board/index in LOCATIONS
+     */
+    Player.prototype.setOwnership = function (propertyBoardLocation) {
+        var cell = Cells_1.Cells.get(propertyBoardLocation);
+        cell.setOwnership(this._ID);
+        Cells_1.Cells.CELL_OWNERSHIP[cell] = this._ID;
+    };
+    ;
+    //look through Cells.getPlayerOwnership()
+    //return all cells with value == this.playerID
+    Player.prototype.getOwnership = function () {
+        var result = _.pickBy(Cells_1.Cells.CELL_OWNERSHIP, function (value, key) {
+            return _.startsWith(value, this._ID);
+        });
+        return Object.values(result);
+    };
+    ;
+    Player.prototype.getCompleteSets = function () {
+        return _.groupBy(this.getOwnership().filter(function (cell) {
+            return cell.isSetComplete();
+        }), function (cell) {
+            cell.groupID;
+        });
+    };
+    ;
+    Player.prototype.getPropertyGroupMembers = function (groupID) {
+        return this.getOwnership().filter(function (cell) {
+            return cell.groupID == groupID;
+        });
+    };
+    ;
+    Player.prototype.getCompleteSetID = function () {
+        return _.uniq(Object.keys(this.getCompleteSets()));
+    };
+    ;
+    Player.prototype.addPropertyImprovementByGroup = function (groupID) {
+        this.getPropertyGroupMembers(groupID).map(function (cell) {
+            return cell.addImprovement();
+        });
+    };
+    /**
+     * Adds an improvement to each property with groupID
+     */
+    // public addPropertyImprovementByGroup(groupID: string) {
+    //     let ownedCells = this.getOwnership();
+    //     let ownedGroupCells: Array<Cell> = ownedCells.filter(cell => cell.groupID == groupID)
+    //     ownedGroupCells.map( cell => cell.addImprovement());
+    // }
+    // ---------------------------------------------
+    //calculating player worth
+    Player.prototype.getOwnedPropertyImprovementValue = function () {
+        var propertyImprovementValues = this.getOwnership().map(function (cell) {
+            return function (cell) {
+                if (cell.getHotelCount() == 0) {
+                    if (cell.getHouseCount() == 0) {
+                        //property has no improvements
+                        return 0;
+                    } else {
+                        //property has no hotels but >0 houses
+                        return cell.hotelCount * cell.houseValue * (1 / Rules_1.Rules.IMPROVEMENT_RESALE_PENALTY);
+                    }
+                } else {
+                    //property has >0 hotel
+                    return (Rules_1.Rules.PROPERTY_HOTEL_REQ * cell.houseValue + cell.hotelValue) * (1 / Rules_1.Rules.IMPROVEMENT_RESALE_PENALTY);
+                }
+            };
+        });
+        return propertyImprovementValues.reduce(function (a, b) {
+            return a + b;
+        });
+    };
+    ;
+    Player.prototype.getOwnedPropertyBaseValue = function () {
+        return this.getOwnership().map(function (cell) {
+            return cell.mortgageValue;
+        }).reduce(function (a, b) {
+            return a + b;
+        });
+    };
+    Player.prototype.getOwnedPropertyNetValue = function () {
+        return this.getOwnedPropertyBaseValue() + this.getOwnedPropertyImprovementValue();
+    };
+    Player.prototype.getPlayerNetWorth = function () {
+        return this.cash + this.getOwnedPropertyNetValue();
+    };
+    //-------------------------------------------------------
+    Player.prototype.mortgageProperty = function (propertyID) {
+        Cells_1.Cells.get(propertyID).mortgageProperty();
+    };
+    Player.prototype.unMortgageProperty = function (propertyID) {
+        Cells_1.Cells.get(propertyID).unmortgageProperty();
+    };
+    /**
+     * Returns cells type for specified location
+     *
+     * @param cellLocation Location of cell on game board
+     * @return [String] type of cell ("property","railroad","utility"...)
+     */
+    Player.prototype.getCellType = function (cellLocation) {
+        return Cells_1.Cells.LOCATIONS[cellLocation].type;
+    };
+    /**
+     * Sends the player to jail by setting the players inJail state to True and
+     * _positions the player to 0.
+     */
+    Player.prototype.gotoJail = function () {
+        // this.logEntry.logEvent(JUMP, 0);
+        this._inJail = true;
+        this._position = 0;
+    };
+    /**
+     * Exits the player from jail; sets inJail state as False, re_positions the
+     * player back onto the game board and resets the jail time counter.
+     */
+    Player.prototype.leaveJail = function () {
+        this._inJail = false;
+        this._position = Cells_1.Cells.jailExitLocation;
+        this._jailTimeSpent = 0;
+        this._exitingJail = true;
+        // logEntry.logEvent(NOTIFICATION, "player exits jail");
+    };
+    Player.prototype.exitingJail = function () {
+        return this._exitingJail;
+    };
+    //end set
+    /**
+     * Returns board location of next specified cell type
+     *
+     * @param target [String] Type of cell to search for
+     * @return [int] Board location of target cell
+     */
+    Player.prototype.findNextCellType = function (target) {
+        var i = this._position;
+        var search = this.getCellType(i);
+        while (search != target) {
+            i++;
+            while (i > 40) {
+                i -= Object.keys(Cells_1.Cells.LOCATIONS).length - 1;
+            }
+            search = this.getCellType(i);
+        }
+        return i;
+    };
+    ;
+    Player.prototype.cashSignificance = function (debitValue) {
+        var returnValue = 0;
+        var sig = debitValue / this._cash * 100;
+        if (sig >= 10 && sig < 20) {
+            returnValue = 1;
+        } else if (sig >= 20 && sig < 40) {
+            returnValue = 2;
+        } else if (sig > 40) {
+            returnValue = 3;
+        }
+        return returnValue;
+    };
+    Player.prototype.cellBenefit = function (testLocation) {
+        var benefit = 0;
+        //check if cell is ownable
+        if (testLocation.isOwnable) {
+            //check if owned
+            if (testLocation.isOwnable == null) {
+                //is unowned
+                benefit += 2;
+                //does player already own part of set
+                var freq = 0;
+                var testID_1 = testLocation.groupID;
+                this.getOwnership().filter(function (cell) {
+                    return cell.groupID == testID_1;
+                });
+                //if so, inc. benefit
+                if (freq > 0) {
+                    benefit++;
+                    //and does the property complete a set
+                    if (freq == testLocation.getGroupFrequency() - 1) {
+                        benefit++;
+                    }
+                }
+            } else {
+                //property is onwed, get rent
+                //is type UTILITY
+                var testRent = testLocation.getCurrentRent();
+                //is the rent significant
+                benefit -= this.cashSignificance(testRent);
+            }
+        } else {
+            switch (testLocation.actionPrimary) {
+                case "drawCard":
+                    if ("chest" == testLocation.actionSecondary) {
+                        //assume chest to have good outcome
+                        benefit++;
+                    } else {
+                        //assume chest to have nominal to negative outcome
+                        benefit--;
+                    }
+                    break;
+                case "debitAbs":
+                case "debitRel":
+                    benefit -= this.cashSignificance(testLocation.actionSecondary);
+                    break;
+                case "creditAbs":
+                case "creditRel":
+                    benefit += this.cashSignificance(testLocation.actionSecondary);
+                    break;
+                case "parking":
+                    //defualt action is null, thus a positive outcome
+                    benefit++;
+                    //is bonus enabled
+                    if (Rules_1.Rules.FREE_PARKING_BONUS_ENABLED) {
+                        benefit += this.cashSignificance(Rules_1.Rules.FREE_PARKING_BONUS_VALUE);
+                    }
+                    break;
+                case "transitionAbs":
+                    if ("0" == testLocation.actionSecondary) {
+                        benefit--;
+                    } else {
+                        benefit = this.cellBenefit(testLocation.actionSecondary);
+                    }
+                    break;
+                case "transitionRel":
+                    var newLocation = testLocation.location + testLocation.actionSecondary;
+                    var newCell = Cells_1.Cells.get(newLocation);
+                    benefit = this.cellBenefit(newCell);
+                    break;
+            }
+        }
+        return benefit;
+    };
+    Player.prototype.leaveJailEarly = function () {
+        var leaveJail = false;
+        var leaveJailFrom = Cells_1.Cells.jailExitLocation;
+        var resultsPositive = 0;
+        var resultsNegative = 0;
+        var roll = Object.keys(Dice_1.Dice.rollProb);
+        for (var val in roll) {
+            var testCell = Cells_1.Cells.get(leaveJailFrom + parseInt(val));
+            var result = this.cellBenefit(testCell);
+            if (result > 0) {
+                resultsPositive += result * Dice_1.Dice.rollProb[val];
+            } else {
+                resultsNegative += result * Dice_1.Dice.rollProb[val];
+            }
+        }
+        if (resultsPositive > resultsNegative) {
+            leaveJail = true;
+        }
+        return leaveJail;
+    };
+    Player.prototype.initializeTurn = function () {
+        // this.logEntry = new LogEntry(playerID);
+        // logEntry.logEvent(START);
+    };
+    return Player;
+}();
+exports.Player = Player;
+
+},{"./Cells":7,"./Dice":10,"./Players":12,"./Rules":13,"lodash":4}],12:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var _ = require("lodash");
+var Player_1 = require("./Player");
+var enums_1 = require("./enums");
+;
+;
+var Players = /** @class */function () {
+    function Players() {}
+    /**
+     * Creates a new instance of the default Player class and stores it within
+     * PLAYERS
+     *
+     * @param name String - name of player
+     * @param index Integer - unique player ID
+     * @param token Token - players token
+     */
+    Players.add = function (name, token) {
+        var currentPlayersLen = Players.amount();
+        var playerIndex = currentPlayersLen + 1;
+        Players._PLAYERS[playerIndex] = new Player_1.Player(playerIndex, name, token);
+    };
+    /**
+     * Gets Player obj. corresponding to player ID from PLAYERS map.
+     *
+     * @param playerID Returns specified Player using players ID
+     * @return
+     */
+    Players.get = function (playerID) {
+        return Players._PLAYERS[playerID];
+    };
+    Players.amount = function () {
+        return Object.keys(Players._PLAYERS).length;
+    };
+    Object.defineProperty(Players, "PLAYERS", {
+        get: function get() {
+            return Players._PLAYERS;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Players.prototype.getAvaliableTokens = function () {
+        //get reserved tokens
+        var reservedTokens = Object.Values(Players.PLAYERS).map(function (player) {
+            return player.token();
+        });
+        var allTokens = Object.keys(enums_1.Token);
+        return _.difference(allTokens, reservedTokens);
+    };
+    /**
+     * Maps unique player ID (K, Integer) to player (V, Player)
+     */
+    Players._PLAYERS = {};
+    return Players;
+}();
+exports.Players = Players;
+
+},{"./Player":11,"./enums":14,"lodash":4}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var Rules = /** @class */function () {
     function Rules() {}
-    Object.defineProperty(Rules, "LEAVE_JAIL_FEE_VALUE", {
+    Object.defineProperty(Rules, "INITIAL_PLAYER_CASH", {
         //=========================================== METHODS ============================================
+        get: function get() {
+            return Rules._INITIAL_PLAYER_CASH;
+        },
+        set: function set(cash) {
+            Rules._INITIAL_PLAYER_CASH = cash;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Rules, "LEAVE_JAIL_FEE_VALUE", {
         // ------------------------ JAIL --------------------------------------
         /**
          * Cash player must pay to leave jail via 'Bail' route.
@@ -18465,6 +19603,13 @@ var Rules = /** @class */function () {
     Rules.clear_FREE_PARKING_BONUS_VALUE = function () {
         Rules._FREE_PARKING_BONUS_VALUE = 0;
     };
+    Object.defineProperty(Rules, "FREE_PARKING_BONUS_VALUE", {
+        get: function get() {
+            return Rules._FREE_PARKING_BONUS_VALUE;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Rules, "SPEEDING_ENABLED", {
         /**
          * Checks if the speeding rule should be enforced.
@@ -18611,6 +19756,16 @@ var Rules = /** @class */function () {
         configurable: true
     });
     // ========================== DEFAULT RULES ============================
+    // -------------------- INIT -----------------------------
+    /**
+     * Starting cash for new player
+     *
+     * @private
+     * @static
+     * @type {number}
+     * @memberof Rules
+     */
+    Rules._INITIAL_PLAYER_CASH = 2500;
     // --------------------- GO --------------------------
     /**
      * Cash value given to the player after passing 'GO'.
@@ -18758,38 +19913,123 @@ var Rules = /** @class */function () {
 }();
 exports.Rules = Rules;
 
-},{}],9:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
+"use strict";
+// export enum RuleName {
+//     PASS_GO_BONUS_FIELD,
+//     ENABLE_GO_LANDING_BONUS,
+//     ENABLE_FREE_PARKING_BONUS,
+//     ENABLE_BONUS_CAP,
+//     ENABLE_FINITE_RESOURCES,
+//     HOUSE_AMOUNT_FIELD,
+//     HOTEL_AMOUNT_FIELD,
+//     ENABLE_EVEN_BUILD,
+//     HOTEL_PREREQUISITE_FIELD,
+//     IMPROVEMENT_DEPRECIATION_FIELD,
+//     SET_COMPLETION_BONUS_FIELD,
+//     ENABLE_MORTGAGE_INTEREST,
+//     MORTGAGE_INTEREST_RATE_FIELD,
+//     ENABLE_SPEEDING,
+//     SPEED_LIMIT_FILED,
+//     MAX_JAIL_TERM_FIELD,
+//     BAIL_FEE_FIELD
+// };
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var EventType;
+(function (EventType) {
+    EventType[EventType["START"] = 0] = "START";
+    EventType[EventType["END"] = 1] = "END";
+    EventType[EventType["PLAYER"] = 2] = "PLAYER";
+    EventType[EventType["ADVANCE"] = 3] = "ADVANCE";
+    EventType[EventType["JUMP"] = 4] = "JUMP";
+    EventType[EventType["JUMP_NEXT"] = 5] = "JUMP_NEXT";
+    EventType[EventType["INITIAL_LOCATION"] = 6] = "INITIAL_LOCATION";
+    EventType[EventType["INTERMEDIATE_LOCATION"] = 7] = "INTERMEDIATE_LOCATION";
+    EventType[EventType["FINAL_LOCATION"] = 8] = "FINAL_LOCATION";
+    EventType[EventType["ROLL_DICE"] = 9] = "ROLL_DICE";
+    EventType[EventType["PURCHACE"] = 10] = "PURCHACE";
+    EventType[EventType["PAY"] = 11] = "PAY";
+    EventType[EventType["RECEIVE"] = 12] = "RECEIVE";
+    EventType[EventType["DRAW_CHEST"] = 13] = "DRAW_CHEST";
+    EventType[EventType["DRAW_CHANCE"] = 14] = "DRAW_CHANCE";
+    EventType[EventType["NOTIFICATION"] = 15] = "NOTIFICATION";
+    EventType[EventType["HOUSE_ADD"] = 16] = "HOUSE_ADD";
+    EventType[EventType["HOUSE_REMOVE"] = 17] = "HOUSE_REMOVE";
+    EventType[EventType["HOTEL_ADD"] = 18] = "HOTEL_ADD";
+    EventType[EventType["HOTEL_REMOVE"] = 19] = "HOTEL_REMOVE";
+})(EventType = exports.EventType || (exports.EventType = {}));
+;
+var CellType;
+(function (CellType) {
+    CellType["PROPERTY"] = "PROPERTY";
+    CellType["RAILROAD"] = "RAILROAD";
+    CellType["UTILITY"] = "UTILITY";
+    CellType["SPECIAL"] = "SPECIAL";
+    CellType["JAIL"] = "JAIL";
+})(CellType = exports.CellType || (exports.CellType = {}));
+;
+var ActionType;
+(function (ActionType) {
+    ActionType["TRANSITION_ABS"] = "TRANSITION_ABS";
+    ActionType["TRANSITION_REL"] = "TRANSITION_REL";
+    ActionType["DEBIT_ABS"] = "DEBIT_ABS";
+    ActionType["DEBIT_REL"] = "DEBIT_REL";
+    ActionType["CREDIT_ABS"] = "CREDIT_ABS";
+    ActionType["CREDIT_REL"] = "CREDIT_REL";
+    ActionType["JAIL"] = "JAIL";
+})(ActionType = exports.ActionType || (exports.ActionType = {}));
+;
+var ActionPrimary;
+(function (ActionPrimary) {
+    ActionPrimary["IN"] = "IN";
+    ActionPrimary["OUT"] = "OUT";
+    ActionPrimary["NEXT"] = "NEXT";
+    ActionPrimary["FROM_EACH"] = "FROM_EACH";
+    ActionPrimary["PAY_EACH"] = "PAY_EACH";
+    ActionPrimary["REPAIR"] = "REPAIR";
+    ActionPrimary["GO"] = "GO";
+})(ActionPrimary = exports.ActionPrimary || (exports.ActionPrimary = {}));
+;
+var Token;
+(function (Token) {
+    Token["WHEELBARROW"] = "WHEELBARROW";
+    Token["BATTLESHIP"] = "BATTLESHIP";
+    Token["RACECAR"] = "RACECAR";
+    Token["THIMBLE"] = "THIMBLE";
+    Token["SHOE"] = "SHOE";
+    Token["DOG"] = "DOG";
+    Token["TOPHAT"] = "TOPHAT";
+    Token["CAT"] = "CAT";
+})(Token = exports.Token || (exports.Token = {}));
+
+},{}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var Cells_1 = require("./Cells");
+var enums_1 = require("./enums");
 var Dice_1 = require("./Dice");
 var ChanceCards_1 = require("./ChanceCards");
 var ChestCards_1 = require("./ChestCards");
 var Rules_1 = require("./Rules");
-var Cell_1 = require("./Cell");
+var Players_1 = require("./Players");
+var cardData = require("../config/cardData.json");
+var cellData = require("../config/cellData.json");
 new Rules_1.Rules();
-var dice = new Dice_1.Dice([6, 6, 6]);
-function initCardDecks(cardData) {
-    new ChanceCards_1.ChanceCards(cardData);
-    new ChestCards_1.ChestCards(cardData);
-}
-;
-// let cell:SpecialCell: {type: <CellType>"SPECIAL", location:39, name:"Super Tax", color:"Gray", actionPrimary:"debitAbs", actionSecondary:100};
-console.log(new Cell_1.Cell({ type: "SPECIAL", location: 39, name: "Super Tax", color: "Gray", actionPrimary: "debitAbs", actionSecondary: 100 }));
-console.log(new Cell_1.Cell({ type: "RAILROAD", location: 36, name: "King's Cross Station", color: "Gray", baseValue: 200, mortgageValue: 100, rent: [25, 50, 100, 200] }));
-console.log(new Cell_1.Cell({
-    type: "PROPERTY",
-    location: 38,
-    name: "Park Lane",
-    color: "Blue",
-    groupID: "H",
-    baseValue: 350,
-    mortgageValue: 175,
-    houseValue: 200,
-    hotelValue: 200,
-    rent: [35, 175, 500, 1100, 1300, 1500]
-}));
+new Cells_1.Cells();
+new Players_1.Players();
+new Dice_1.Dice([6, 6]);
+new ChanceCards_1.ChanceCards(cardData);
+new ChestCards_1.ChestCards(cardData);
+// console.log(cellData[0]);
+// JSON.parse(cellData[0])
+cellData.map(function (cell) {
+  return Cells_1.Cells.add(cell);
+});
+console.log(Cells_1.Cells.LOCATIONS);
+Players_1.Players.add("TEST", enums_1.Token.SHOE);
 
-},{"./Cell":4,"./ChanceCards":5,"./ChestCards":6,"./Dice":7,"./Rules":8}]},{},[9])
+},{"../config/cardData.json":1,"../config/cellData.json":2,"./Cells":7,"./ChanceCards":8,"./ChestCards":9,"./Dice":10,"./Players":12,"./Rules":13,"./enums":14}]},{},[15])
 
 //# sourceMappingURL=bundle.js.map
