@@ -46,7 +46,7 @@ export class Dice{
     private static _value: number;
     private static _faces: Array<number>;
     private static _allEqual: boolean;
-    private static _rollProb: Object;
+    private static _rollProb: { [roll: number]: number } = {};
     constructor(sidesArray:Array<number>){
         //Create and hold instances of Die.
         sidesArray.map(sides=>Dice._dice.push(new Die(sides)));
@@ -113,8 +113,11 @@ export class Dice{
         while( ! _.isEqual(rolloverValues, input) ){rollSequence()};
         outCast = output.map(elem=>JSON.parse("[" + elem + "]"));
         outReduce = outCast.map( values => values.reduce( (a,b) => a+b ) );
-        var freq = _.countBy(outReduce);
-        Dice._rollProb = _.zipObject( Object.keys(freq), (<any>Object).values(freq).map(prob => 100 * (prob/ (<any>Object).values(freq).reduce( (a,b)=>a+b ))) );
+        var freq: { [key: number]: number} = _.countBy(outReduce);
+
+        let p: Array<number> = Object.keys(freq).map(key=><number>freq[key]);
+
+        Dice._rollProb = _.zipObject( (Object.keys(freq).map(str=>parseInt(str))), p.map(prob => 100 * (prob/p.reduce( (a,b)=>a+b ))) );
 
         //init. Dice
         Dice.roll();
@@ -150,7 +153,7 @@ export class Dice{
         return Dice._allEqual;
     }
 
-    public static get rollProb(): Object {
+    public static get rollProb() {
         return Dice._rollProb;
     }
 }

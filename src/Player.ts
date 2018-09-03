@@ -301,52 +301,32 @@ export class Player {
         return (<any>Object).values(result);
     };
 
-    // public getCompleteSets() {
-    //     let completeProperties: Array<Cell> = [];
-    //     Iterator<Cell> test = getOwnership().iterator();
-    //     while (test.hasNext()) {
-    //         Cell cand = test.next();
-    //         if (cand.isSetComplete()) {
-    //             completeProperties.add(cand);
-    //         }
-    //     }
-    //     return completeProperties;
-    // }
+    public getCompleteSets(): {} {
+       return _.groupBy( this.getOwnership().filter( cell => cell.isSetComplete() ), function(cell: Cell){
+           cell.groupID
+       })
+    };
 
-    // public List<Cell> getPropertyGroupMembers(char groupID) {
-    //     List<Cell> groupMembers = new ArrayList<>();
-    //     for (int i = 1; i <= Cells.locationsAmount(); i++) {
-    //         if (Cells.get(i).getPropertyGroupID() == groupID) {
-    //             groupMembers.add(Cells.get(i));
-    //         }
-    //     }
-    //     return groupMembers;
-    // }
+    public getPropertyGroupMembers(groupID: string): Array<Cell> {
+       return this.getOwnership().filter( cell => cell.groupID == groupID);
+    };
 
-    // public Set<Character> getCompleteSetID() {
-    //     List<Character> propertyIDs = new ArrayList<>();
-    //     for (Object q : getCompleteSets()) {
-    //         Cell temp = (Cell) q;
-    //         propertyIDs.add(temp.getPropertyGroupID());
-    //     }
-    //     return new HashSet<>(propertyIDs);
-    // }
+    public getCompleteSetID(): Array<string> {
+        return _.uniq( Object.keys(this.getCompleteSets()) );
+    };
 
-//    public void addPropertyImprovementByGroup(char groupID) {
-//        List q = getPropertyGroupMembers(groupID);
-//        for (int i = 0; i < q.size(); i++) {
-//            ((Cell) q.get(i)).addImprovement();
-//        }
-//    }
+   public addPropertyImprovementByGroup(groupID: string) {
+       this.getPropertyGroupMembers(groupID).map( cell => cell.addImprovement() );
+   }
 
 /**
  * Adds an improvement to each property with groupID
  */
-    public addPropertyImprovementByGroup(groupID: string) {
-        let ownedCells = this.getOwnership();
-        let ownedGroupCells: Array<Cell> = ownedCells.filter(cell => cell.groupID == groupID)
-        ownedGroupCells.map( cell => cell.addImprovement());
-    }
+    // public addPropertyImprovementByGroup(groupID: string) {
+    //     let ownedCells = this.getOwnership();
+    //     let ownedGroupCells: Array<Cell> = ownedCells.filter(cell => cell.groupID == groupID)
+    //     ownedGroupCells.map( cell => cell.addImprovement());
+    // }
 
 // ---------------------------------------------
 //calculating player worth
@@ -487,21 +467,14 @@ export class Player {
             } else {
                 //property is onwed, get rent
                 //is type UTILITY
-                int testRent;
-                if (testLocation.getCellType() == UTILITY) {
-                    testRent = testLocation.getRent(Dice.getExpectedRoll().get(0));
-                } else {
-                    //type PROPERTY or RAILROAD
-                    testRent = testLocation.getRent();
-                }
+                let testRent: number = testLocation.getCurrentRent();
                 //is the rent significant
-                benefit -= cashSignificance(testRent);
+                benefit -= this.cashSignificance(testRent);
             }
         } else {
-            String type = testLocation.getActionType();
-            switch (type) {
+            switch (testLocation.actionPrimary) {
                 case "drawCard":
-                    if ("chest".equals(testLocation.getActionParamater())) {
+                    if ("chest" == testLocation.actionSecondary) {
                         //assume chest to have good outcome
                         benefit++;
                     } else {
@@ -511,49 +484,52 @@ export class Player {
                     break;
                 case "debitAbs":
                 case "debitRel":
-                    benefit -= cashSignificance(Integer.parseInt(testLocation.getActionParamater()));
+                    benefit -= this.cashSignificance(testLocation.actionSecondary);
                     break;
                 case "creditAbs":
                 case "creditRel":
-                    benefit += cashSignificance(Integer.parseInt(testLocation.getActionParamater()));
+                    benefit += this.cashSignificance(testLocation.actionSecondary);
                     break;
                 case "parking":
                     //defualt action is null, thus a positive outcome
                     benefit++;
                     //is bonus enabled
-                    if (Rules.isFreeParkingBonusEnabled()) {
-                        benefit += cashSignificance(Rules.getFreeParkingBonusValue());
+                    if (Rules.FREE_PARKING_BONUS_ENABLED) {
+                        benefit += this.cashSignificance(Rules.FREE_PARKING_BONUS_VALUE);
                     }
                     break;
                 case "transitionAbs":
-                    if ("0".equals(testLocation.getActionParamater())) {
+                    if ("0" == testLocation.actionSecondary) {
                         benefit--;
                     } else {
-                        benefit = cellBenefit(Cells.get(Integer.valueOf(testLocation.getActionParamater())));
+                        benefit = this.cellBenefit(testLocation.actionSecondary);
                     }
                     break;
                 case "transitionRel":
-                    int newLocation = testLocation.getLocation() + Integer.parseInt(testLocation.getActionParamater());
-                    Cell newCell = Cells.get(newLocation);
-                    benefit = cellBenefit(newCell);
+                    let newLocation: number = testLocation.location + testLocation.actionSecondary;
+                    let newCell: Cell = Cells.get(newLocation);
+                    benefit = this.cellBenefit(newCell);
                     break;
             }
         }
         return benefit;
     }
 
-    public boolean leaveJailEarly() {
-        boolean leaveJail = false;
-        int leaveJailFrom = 11;
-        double resultsPositive = 0;
-        double resultsNegative = 0;
-        for (int roll : Dice.getRollProbabilities().keySet()) {
-            Cell testCell = Cells.get(leaveJailFrom + roll);
-            int result = cellBenefit(testCell);
+    public leaveJailEarly(): boolean {
+        let leaveJail: boolean = false;
+        let leaveJailFrom: number = Cells.jailExitLocation;
+        let resultsPositive: number = 0;
+        let resultsNegative: number = 0;
+
+        let roll: Array<string> = Object.keys(Dice.rollProb);
+
+        for (let val in roll) {
+            let testCell: Cell = Cells.get(leaveJailFrom + parseInt(val));
+            let result: number = this.cellBenefit(testCell);
             if (result > 0) {
-                resultsPositive += (result * Dice.getRollProbabilities().get(roll));
+                resultsPositive += (result * Dice.rollProb[val]);
             } else {
-                resultsNegative += (result * Dice.getRollProbabilities().get(roll));
+                resultsNegative += (result * Dice.rollProb[val]);
             }
         }
         if (resultsPositive > resultsNegative) {
@@ -562,315 +538,312 @@ export class Player {
         return leaveJail;
     }
 
-    public void initializeTurn() {
-
-        this.logEntry = new LogEntry(playerID);
-        logEntry.logEvent(START);
+    public initializeTurn() {
+        // this.logEntry = new LogEntry(playerID);
+        // logEntry.logEvent(START);
     }
 
     /**
      * Calling this method begins the player's turn.
      */
-    public void beginTurn() {
-        logEntry.logEvent(PLAYER);
-        Dice.clearRoll();
-        // player rolls dice and reads value
-        Dice.roll();
-        int steps = Dice.getRollSum();
+    // public beginTurn() {
+    //     // logEntry.logEvent(PLAYER);
+    //     // player rolls dice and reads value
+    //     let steps: number = Dice.roll();
 
-        if (isInJail() && jailTimeSpent < Rules.getMaxJailTerm()) {
-            //Decide if best to leave jail early or take default method (roll dice)
-            //Take dice roll expectation - Dice.getExpectationRoll() -
+    //     if (this.inJail && this.jailTimeSpent < Rules.MAX_JAIL_TERM_VALUE) {
+    //         //Decide if best to leave jail early or take default method (roll dice)
+    //         //Take dice roll expectation - Dice.getExpectationRoll() -
 
-            //Leave jail early:
-            //1: use card if avaliable
-            //            if (jailBondsAvaliableChance > 0) {
-            //                ChanceCards.reinsertJailBond();
-            //                jailBondsAvaliableChance--;
-            //            } else if (jailBondsAvaliableChest > 0) {
-            //                ChestCards.reinsertJailBond();
-            //                jailBondsAvaliableChest--;
-            //            }
-            //2: pay fee (default: 50)
-            //Default action: Roll dice.  If doubles, advance token by thown amount.  Do not roll again.
-            if (Dice.isDouble(Dice.getFaceValues())) {
-                logEntry.logEvent(NOTIFICATION, name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
-                leaveJail();
-                advanceToken(steps);
-            } else {
-                //else, take another turn in jail
-                jailTimeSpent++;
-                logEntry.logEvent(NOTIFICATION, name + " fails to roll doubles " + Dice.getFaceValues() + " and spends another turn in jail (turns until release: " + (Rules.getMaxJailTerm() - jailTimeSpent) + ")");
-                //endTurn();
-            }
-            //Player still in jail for maximum duration
-        } else if (isInJail() && jailTimeSpent == Rules.getMaxJailTerm()) {
-            //Player gets last chance to roll dice
-            if (Dice.isDouble(Dice.getFaceValues())) {
-                logEntry.logEvent(NOTIFICATION, name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
-                leaveJail();
-                advanceToken(steps);
-                //if unsucessful, player must pay fine and leave.
-            } else {
-                logEntry.logEvent(NOTIFICATION, name + " has failed to roll doubles " + Dice.getFaceValues() + " and has thus served the maximum jail term.");
-                //check if player can afford fine -
-                //if(cash>=Rules.getJailLeaveFee()) -- do below
-                logEntry.logEvent(NOTIFICATION, name + " pays the fine");
-                playerCashPay(-1, Rules.getJailLeaveFee());
-                leaveJail();
-                advanceToken(steps);
-                //else - raise funds >= Rules.getJailLeaveFee()
-            }
-            //Player is not in jail:
-        } else {
-            // check if player rolls doubles; if so, and if speeding rule is enabled, increment speed counter
-            logEntry.logEvent(ROLL_DICE);
-            if (Dice.isDouble(Dice.getFaceValues())) {
-                speedingCount++;
-            }
-            // check if players speed counter has reached limit (default 3); if so, send to jail.
-            if (speedingCount == Rules.getDoublesSpeedingLimit()) {
-                logEntry.logEvent(NOTIFICATION, name + " sent to jail for speeding");
-                gotoJail();
-                // otherwise, proceed with turn
-            } else {
-                //advance token
-                advanceToken(steps);
-            }
-        }
-    }
+    //         //Leave jail early:
+    //         //1: use card if avaliable
+    //         //            if (jailBondsAvaliableChance > 0) {
+    //         //                ChanceCards.reinsertJailBond();
+    //         //                jailBondsAvaliableChance--;
+    //         //            } else if (jailBondsAvaliableChest > 0) {
+    //         //                ChestCards.reinsertJailBond();
+    //         //                jailBondsAvaliableChest--;
+    //         //            }
+    //         //2: pay fee (default: 50)
+    //         //Default action: Roll dice.  If doubles, advance token by thown amount.  Do not roll again.
+    //         if (Dice.isDouble(Dice.getFaceValues())) {
+    //             logEntry.logEvent(NOTIFICATION, name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
+    //             leaveJail();
+    //             advanceToken(steps);
+    //         } else {
+    //             //else, take another turn in jail
+    //             jailTimeSpent++;
+    //             logEntry.logEvent(NOTIFICATION, name + " fails to roll doubles " + Dice.getFaceValues() + " and spends another turn in jail (turns until release: " + (Rules.getMaxJailTerm() - jailTimeSpent) + ")");
+    //             //endTurn();
+    //         }
+    //         //Player still in jail for maximum duration
+    //     } else if (isInJail() && jailTimeSpent == Rules.getMaxJailTerm()) {
+    //         //Player gets last chance to roll dice
+    //         if (Dice.isDouble(Dice.getFaceValues())) {
+    //             logEntry.logEvent(NOTIFICATION, name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
+    //             leaveJail();
+    //             advanceToken(steps);
+    //             //if unsucessful, player must pay fine and leave.
+    //         } else {
+    //             logEntry.logEvent(NOTIFICATION, name + " has failed to roll doubles " + Dice.getFaceValues() + " and has thus served the maximum jail term.");
+    //             //check if player can afford fine -
+    //             //if(cash>=Rules.getJailLeaveFee()) -- do below
+    //             logEntry.logEvent(NOTIFICATION, name + " pays the fine");
+    //             playerCashPay(-1, Rules.getJailLeaveFee());
+    //             leaveJail();
+    //             advanceToken(steps);
+    //             //else - raise funds >= Rules.getJailLeaveFee()
+    //         }
+    //         //Player is not in jail:
+    //     } else {
+    //         // check if player rolls doubles; if so, and if speeding rule is enabled, increment speed counter
+    //         logEntry.logEvent(ROLL_DICE);
+    //         if (Dice.isDouble(Dice.getFaceValues())) {
+    //             speedingCount++;
+    //         }
+    //         // check if players speed counter has reached limit (default 3); if so, send to jail.
+    //         if (speedingCount == Rules.getDoublesSpeedingLimit()) {
+    //             logEntry.logEvent(NOTIFICATION, name + " sent to jail for speeding");
+    //             gotoJail();
+    //             // otherwise, proceed with turn
+    //         } else {
+    //             //advance token
+    //             advanceToken(steps);
+    //         }
+    //     }
+    // }
 
-    public void midTurn() {
-        if (get_positionType() == SPECIAL) {
-            String type = getActionType();
-            String para = getActionParamater();
-            switch (type) {
-                //Draw a card
-                case "drawCard":
-                    switch (para) {
-                        // Draw Chance card
-                        case "chance":
-                            drawChanceCard();
-                            break;
-                        //Draw chest card
-                        case "chest":
-                            drawChestCard();
-                            break;
-                    }
-                    // Actions for post card draw.  Print type of card drawn, parse drawn card action.
-                    parseCardAction(readCurrentCard());
-                    break;
-                //Transition to new fixed location
-                case "transitionAbs":
-                    // The player is being sent to jail (lands on goto jail cell)
-                    if ("0".equals(para)) {
-                        gotoJail();
-                    } else {
-                        // Player has landed on some other transitional cell
-                        advanceToken(Integer.parseInt(para));
-                    }
-                    break;
-                //Recieve money
-                case "creditAbs":
-                    playerCashRecieve(-1, Integer.parseInt(para));
-                    break;
-                //Pay money
-                case "debitAbs":
-                    //If the free parking bonus rule is being enforced
-                    if (Rules.isFreeParkingBonusEnabled()) {
-                        //pay the money into the free parking fund
-                        Rules.incFreeParkingBonusValue(Integer.parseInt(para));
-                    } else {
-                        //else, pay the bank
-                        playerCashPay(-1, Integer.parseInt(para));
-                    }
-                    break;
-                //Potentially do nothing.  Check rules.
-                case "parking":
-                    if (Rules.isFreeParkingBonusEnabled()) {
-                        //get current amount of bonus cash
-                        //pay amount to player.
-                        playerCashRecieve(-1, Rules.getFreeParkingBonusValue());
-                        //Clear bonus - set to 0
-                        Rules.clearFreeParkingBonus();
-                    }
-                    //else, do nothing.
-                    break;
-            }
-        } else {
-            Cell occupiedCell = Cells.get((Integer) get_position());
-            //can cell be owned? if so..
-            if (occupiedCell.getOwnable()) {
-                //is it currently unowned? If so, purchace property
-                if (occupiedCell.getOwnership() == null) {
-                    cash -= occupiedCell.getBaseValue();
-                    occupiedCell.setOwnership(getPlayerID());
-                    logEntry.logEvent(PURCHACE, _position, occupiedCell.getBaseValue());
-                    //If it is owned but by the current player, then do nothing
-                } else if (Objects.equals(occupiedCell.getOwnership(), getPlayerID())) {
-                    //It is owned and by another player, then pay rent
-                } else if (get_positionType() == UTILITY) {
-                    playerCashPay(occupiedCell.getOwnership(), occupiedCell.getRent(Dice.getRollSum()));
-                } else {
-                    playerCashPay(occupiedCell.getOwnership(), occupiedCell.getRent());
-                }
-            }
-        }
-        if (Dice.isDouble(Dice.getFaceValues()) && !isInJail() && !isPlayerExitingJail()) {
-            logEntry.logEvent(NOTIFICATION, name + " takes another turn");
-        }
+    // public void midTurn() {
+    //     if (get_positionType() == SPECIAL) {
+    //         String type = getActionType();
+    //         String para = getActionParamater();
+    //         switch (type) {
+    //             //Draw a card
+    //             case "drawCard":
+    //                 switch (para) {
+    //                     // Draw Chance card
+    //                     case "chance":
+    //                         drawChanceCard();
+    //                         break;
+    //                     //Draw chest card
+    //                     case "chest":
+    //                         drawChestCard();
+    //                         break;
+    //                 }
+    //                 // Actions for post card draw.  Print type of card drawn, parse drawn card action.
+    //                 parseCardAction(readCurrentCard());
+    //                 break;
+    //             //Transition to new fixed location
+    //             case "transitionAbs":
+    //                 // The player is being sent to jail (lands on goto jail cell)
+    //                 if ("0".equals(para)) {
+    //                     gotoJail();
+    //                 } else {
+    //                     // Player has landed on some other transitional cell
+    //                     advanceToken(Integer.parseInt(para));
+    //                 }
+    //                 break;
+    //             //Recieve money
+    //             case "creditAbs":
+    //                 playerCashRecieve(-1, Integer.parseInt(para));
+    //                 break;
+    //             //Pay money
+    //             case "debitAbs":
+    //                 //If the free parking bonus rule is being enforced
+    //                 if (Rules.isFreeParkingBonusEnabled()) {
+    //                     //pay the money into the free parking fund
+    //                     Rules.incFreeParkingBonusValue(Integer.parseInt(para));
+    //                 } else {
+    //                     //else, pay the bank
+    //                     playerCashPay(-1, Integer.parseInt(para));
+    //                 }
+    //                 break;
+    //             //Potentially do nothing.  Check rules.
+    //             case "parking":
+    //                 if (Rules.isFreeParkingBonusEnabled()) {
+    //                     //get current amount of bonus cash
+    //                     //pay amount to player.
+    //                     playerCashRecieve(-1, Rules.getFreeParkingBonusValue());
+    //                     //Clear bonus - set to 0
+    //                     Rules.clearFreeParkingBonus();
+    //                 }
+    //                 //else, do nothing.
+    //                 break;
+    //         }
+    //     } else {
+    //         Cell occupiedCell = Cells.get((Integer) get_position());
+    //         //can cell be owned? if so..
+    //         if (occupiedCell.getOwnable()) {
+    //             //is it currently unowned? If so, purchace property
+    //             if (occupiedCell.getOwnership() == null) {
+    //                 cash -= occupiedCell.getBaseValue();
+    //                 occupiedCell.setOwnership(getPlayerID());
+    //                 logEntry.logEvent(PURCHACE, _position, occupiedCell.getBaseValue());
+    //                 //If it is owned but by the current player, then do nothing
+    //             } else if (Objects.equals(occupiedCell.getOwnership(), getPlayerID())) {
+    //                 //It is owned and by another player, then pay rent
+    //             } else if (get_positionType() == UTILITY) {
+    //                 playerCashPay(occupiedCell.getOwnership(), occupiedCell.getRent(Dice.getRollSum()));
+    //             } else {
+    //                 playerCashPay(occupiedCell.getOwnership(), occupiedCell.getRent());
+    //             }
+    //         }
+    //     }
+    //     if (Dice.isDouble(Dice.getFaceValues()) && !isInJail() && !isPlayerExitingJail()) {
+    //         logEntry.logEvent(NOTIFICATION, name + " takes another turn");
+    //     }
 
-    }
+    // }
 
-    /**
-     * ends players turn - resets speeding counter
-     */
-    public void endTurn() {
-        logEntry.logEvent(END);
-        speedingCount = 0;
-        exitingJail = false;
-        GameLog.logPlayerTurn(logEntry);
-    }
+    // /**
+    //  * ends players turn - resets speeding counter
+    //  */
+    // public void endTurn() {
+    //     logEntry.logEvent(END);
+    //     speedingCount = 0;
+    //     exitingJail = false;
+    //     GameLog.logPlayerTurn(logEntry);
+    // }
 
-    /**
-     * Move player +- N steps. Rolls over if _position exceeds 40.
-     *
-     * @param steps [int] Amount of steps player takes. If negative, player will
-     * move backwards.
-     */
-    public void advanceToken(int steps) {
-        //advance token
-        _position += steps;
-        // get relative (to GO) postion - subtract 40 if abs. positon >40 (i.e., player circumvents the board by passing go)
-        if (_position > Cells.locationsAmount()) {
-            //Player has circumvented the board
-            _position -= Cells.locationsAmount();
-            //has the player passed or landed on GO
-            if (_position != 1) {
-                //The player has passed GO
-                logEntry.logEvent(NOTIFICATION, " passes GO");
-                playerCashRecieve(-1, Rules.getPassGoCredit());
-            }
-        } else if (_position < 1) {
-            _position += Cells.locationsAmount();
-        }
-        int positionInfoCost = Cells.get(_position).getBaseValue();
-        Integer _positionInfoOwnership = Cells.get(_position).getOwnership();
-        int _positionInfocurrentRent = (get_positionType() == UTILITY) ? (Cells.get(_position)).getRent(Dice.getRollSum()) : Cells.get(_position).getRent();
+    // /**
+    //  * Move player +- N steps. Rolls over if _position exceeds 40.
+    //  *
+    //  * @param steps [int] Amount of steps player takes. If negative, player will
+    //  * move backwards.
+    //  */
+    // public void advanceToken(int steps) {
+    //     //advance token
+    //     _position += steps;
+    //     // get relative (to GO) postion - subtract 40 if abs. positon >40 (i.e., player circumvents the board by passing go)
+    //     if (_position > Cells.locationsAmount()) {
+    //         //Player has circumvented the board
+    //         _position -= Cells.locationsAmount();
+    //         //has the player passed or landed on GO
+    //         if (_position != 1) {
+    //             //The player has passed GO
+    //             logEntry.logEvent(NOTIFICATION, " passes GO");
+    //             playerCashRecieve(-1, Rules.getPassGoCredit());
+    //         }
+    //     } else if (_position < 1) {
+    //         _position += Cells.locationsAmount();
+    //     }
+    //     int positionInfoCost = Cells.get(_position).getBaseValue();
+    //     Integer _positionInfoOwnership = Cells.get(_position).getOwnership();
+    //     int _positionInfocurrentRent = (get_positionType() == UTILITY) ? (Cells.get(_position)).getRent(Dice.getRollSum()) : Cells.get(_position).getRent();
 
-        if (Cells.get(_position).getOwnable()) {
-            if (_positionInfoOwnership != null) {
-                logEntry.logEvent(ADVANCE, steps, _position, Players.get(_positionInfoOwnership).getPlayerID(), _positionInfocurrentRent);
-            } else {
-                logEntry.logEvent(ADVANCE, steps, _position, _positionInfoCost);
-            }
-        } else {
-            logEntry.logEvent(ADVANCE, steps, _position);
-        }
+    //     if (Cells.get(_position).getOwnable()) {
+    //         if (_positionInfoOwnership != null) {
+    //             logEntry.logEvent(ADVANCE, steps, _position, Players.get(_positionInfoOwnership).getPlayerID(), _positionInfocurrentRent);
+    //         } else {
+    //             logEntry.logEvent(ADVANCE, steps, _position, _positionInfoCost);
+    //         }
+    //     } else {
+    //         logEntry.logEvent(ADVANCE, steps, _position);
+    //     }
 
-    }
+    // }
 
-    public List drawChanceCard() {
-        List newCard = ChanceCards.drawCard();
-        currentCard = newCard;
-        logEntry.logEvent(DRAW_CHANCE);
-        return newCard;
-    }
+    // public List drawChanceCard() {
+    //     List newCard = ChanceCards.drawCard();
+    //     currentCard = newCard;
+    //     logEntry.logEvent(DRAW_CHANCE);
+    //     return newCard;
+    // }
 
-    public List drawChestCard() {
-        List newCard = ChestCards.drawCard();
-        currentCard = newCard;
-        logEntry.logEvent(DRAW_CHEST);
-        return newCard;
-    }
+    // public List drawChestCard() {
+    //     List newCard = ChestCards.drawCard();
+    //     currentCard = newCard;
+    //     logEntry.logEvent(DRAW_CHEST);
+    //     return newCard;
+    // }
 
-    /**
-     * Returns last card drawn by player. Returns null if player has not yet
-     * drawn a card.
-     *
-     * @return [List] Last card drawn by player.
-     */
-    public List readCurrentCard() {
-        return currentCard;
-    }
+    // /**
+    //  * Returns last card drawn by player. Returns null if player has not yet
+    //  * drawn a card.
+    //  *
+    //  * @return [List] Last card drawn by player.
+    //  */
+    // public List readCurrentCard() {
+    //     return currentCard;
+    // }
 
-    public void parseCardAction(List card) {
-        String cardType = (String) card.get(2);
-        String cardAction1 = (String) card.get(3);
-        String cardAction2 = (String) card.get(4);
+    // public void parseCardAction(List card) {
+    //     String cardType = (String) card.get(2);
+    //     String cardAction1 = (String) card.get(3);
+    //     String cardAction2 = (String) card.get(4);
 
-        // System.out.println("Parsing Card..");
-        switch (cardType) {
-            // cases of players transition to fixed, absolute location
-            case "TRANSITION_ABS":
-                _position = Integer.parseInt(cardAction1);
-                logEntry.logEvent(JUMP, Integer.parseInt(cardAction1));
-                midTurn();
-                return;
-            // cases of players transition dependent on current location
-            case "TRANSITION_REL":
-                switch (cardAction1) {
-                    // player advance to next property type (rail, util)
-                    case "NEXT":
-                        _position = findNextCellType(cardAction2);
-                        logEntry.logEvent(JUMP_NEXT, findNextCellType(cardAction2));
-                        midTurn();
-                        return;
-                    // player advance N spaces from current _position
-                    case "GO":
-                        advanceToken(Integer.parseInt(cardAction2));
-                        midTurn();
-                        return;
-                }
-                return;
-            // player recieves jail card
-            case "JAIL":
-                switch (cardAction1) {
-                    case "IN":
-                        //player sent to jail
-                        gotoJail();
-                        return;
+    //     // System.out.println("Parsing Card..");
+    //     switch (cardType) {
+    //         // cases of players transition to fixed, absolute location
+    //         case "TRANSITION_ABS":
+    //             _position = Integer.parseInt(cardAction1);
+    //             logEntry.logEvent(JUMP, Integer.parseInt(cardAction1));
+    //             midTurn();
+    //             return;
+    //         // cases of players transition dependent on current location
+    //         case "TRANSITION_REL":
+    //             switch (cardAction1) {
+    //                 // player advance to next property type (rail, util)
+    //                 case "NEXT":
+    //                     _position = findNextCellType(cardAction2);
+    //                     logEntry.logEvent(JUMP_NEXT, findNextCellType(cardAction2));
+    //                     midTurn();
+    //                     return;
+    //                 // player advance N spaces from current _position
+    //                 case "GO":
+    //                     advanceToken(Integer.parseInt(cardAction2));
+    //                     midTurn();
+    //                     return;
+    //             }
+    //             return;
+    //         // player recieves jail card
+    //         case "JAIL":
+    //             switch (cardAction1) {
+    //                 case "IN":
+    //                     //player sent to jail
+    //                     gotoJail();
+    //                     return;
 
-                    case "OUT":
-                        //player gets out of jail free
-                        return;
-                }
-                return;
-            // cases of player recieving fixed sum of cash
-            case "CREDIT_ABS":
-                playerCashRecieve(-1, Integer.parseInt(cardAction1));
-                return;
-            // cases of player recieving variable ammount of cash dependent on current game params.
-            case "CREDIT_REL":
-                return;
-            // cases of player paying fixed ammount of cash
-            case "DEBIT_ABS":
-                //If the free parking bonus rule is being enforced
-                if (Rules.isFreeParkingBonusEnabled()) {
-                    //pay the money into the free parking fund
-                    logEntry.logEvent(NOTIFICATION, Rules.incFreeParkingBonusValue(Integer.parseInt(cardAction1)));
-                    playerCashPay(-1, Integer.parseInt(cardAction1));
-                } else {
-                    //else, pay the bank
-                    playerCashPay(-1, Integer.parseInt(cardAction1));
-                }
-                return;
-            // player paying variable ammount of cash
-            case "DEBIT_REL":
-                switch (cardAction1) {
-                    case "PAY_EACH":
-                        //pay each player cardAction2
-                        for (Integer i = 0; i < Players.amount(); i++) {
-                            if (Objects.equals(i, playerID)) {
-                                //do nothing
-                            } else {
-                                playerCashPay(i, Integer.parseInt(cardAction2));
-                            }
-                        }
-                    // return;
-                }
-            //return;
-        }
-    }
+    //                 case "OUT":
+    //                     //player gets out of jail free
+    //                     return;
+    //             }
+    //             return;
+    //         // cases of player recieving fixed sum of cash
+    //         case "CREDIT_ABS":
+    //             playerCashRecieve(-1, Integer.parseInt(cardAction1));
+    //             return;
+    //         // cases of player recieving variable ammount of cash dependent on current game params.
+    //         case "CREDIT_REL":
+    //             return;
+    //         // cases of player paying fixed ammount of cash
+    //         case "DEBIT_ABS":
+    //             //If the free parking bonus rule is being enforced
+    //             if (Rules.isFreeParkingBonusEnabled()) {
+    //                 //pay the money into the free parking fund
+    //                 logEntry.logEvent(NOTIFICATION, Rules.incFreeParkingBonusValue(Integer.parseInt(cardAction1)));
+    //                 playerCashPay(-1, Integer.parseInt(cardAction1));
+    //             } else {
+    //                 //else, pay the bank
+    //                 playerCashPay(-1, Integer.parseInt(cardAction1));
+    //             }
+    //             return;
+    //         // player paying variable ammount of cash
+    //         case "DEBIT_REL":
+    //             switch (cardAction1) {
+    //                 case "PAY_EACH":
+    //                     //pay each player cardAction2
+    //                     for (Integer i = 0; i < Players.amount(); i++) {
+    //                         if (Objects.equals(i, playerID)) {
+    //                             //do nothing
+    //                         } else {
+    //                             playerCashPay(i, Integer.parseInt(cardAction2));
+    //                         }
+    //                     }
+    //                 // return;
+    //             }
+    //         //return;
+    //     }
+    // }
 
 }

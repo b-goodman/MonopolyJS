@@ -501,6 +501,10 @@ export class Rules {
         Rules._FREE_PARKING_BONUS_VALUE = 0;
     }
 
+    public static get FREE_PARKING_BONUS_VALUE():number {
+        return Rules._FREE_PARKING_BONUS_VALUE;
+    }
+
     // ---------------------------------- SPEEDING ------------------------------------
     /**
      *

@@ -154,42 +154,6 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
 // //All cells:
    
 
-//     public int getBaseValue() {
-//         return baseValue;
-//     }
-
-//     public int getRentBase() {
-//         return rentBase;
-//     }
-
-//     public int getRent1h() {
-//         return rent1H;
-//     }
-
-//     public int getRent2h() {
-//         return rent2H;
-//     }
-
-//     public int getRent3h() {
-//         return rent3H;
-//     }
-
-//     public int getRent4h() {
-//         return rent4H;
-//     }
-
-//     public int getRentHotel() {
-//         return rentHotel;
-//     }
-
-//     public int getHouseValue() {
-//         return houseValue;
-//     }
-
-//     public int getHotelValue() {
-//         return hotelValue;
-//     }
-
 
 
 // //Ownable cells:
