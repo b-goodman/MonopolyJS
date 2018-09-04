@@ -18236,6 +18236,7 @@ exports.Cell = Cell;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var _ = require("lodash");
 var Rules_1 = require("./Rules");
 var enums_1 = require("./enums");
 var Cell_1 = require("./Cell");
@@ -18243,17 +18244,27 @@ var Cell_1 = require("./Cell");
 ;
 // interface IStringStringMap extends IStringTMap<string> {};
 var Cells = /** @class */function () {
-    function Cells() {
+    function Cells(cellData) {
         //"In Jail" is always at position 0
         Cells.add({ type: enums_1.CellType.SPECIAL, location: 0, name: "In Jail", color: "Gray", actionPrimary: null, actionSecondary: null }, 0);
         // "GO" is always at position 1
         var goLandingValue = Rules_1.Rules.GO_LANDING_BONUS_ENABLED ? Rules_1.Rules.GO_LANDING_BONUS_VALUE + Rules_1.Rules.PASS_GO_CREDIT : Rules_1.Rules.PASS_GO_CREDIT;
         Cells.add({ type: enums_1.CellType.SPECIAL, location: 1, name: "GO", color: "Gray", actionPrimary: "creditAbs", actionSecondary: goLandingValue }, 1);
+        //load custom cells from cellData
+        cellData.map(function (cell) {
+            return Cells.add(cell, cell.location);
+        });
+        //find location of "Visiting Jail" and set as jail exit location
+        Cells._jailExitLocation = _.findIndex(Object.keys(Cells.LOCATIONS).map(function (key) {
+            return Cells.LOCATIONS[key];
+        }), function (cell) {
+            return cell.name == "Visiting Jail";
+        });
     }
     ;
     Cells.add = function (cellParams, location) {
-        if (location) {
-            location = Object.keys(Cells.LOCATIONS).length + 1;
+        if (location == undefined) {
+            location = Object.keys(Cells.LOCATIONS).length;
         }
         ;
         var cell = new Cell_1.Cell(cellParams);
@@ -18289,12 +18300,11 @@ var Cells = /** @class */function () {
     Cells.LOCATIONS = {};
     Cells.PROPERTY_GROUP_SET = {};
     Cells.CELL_OWNERSHIP = {};
-    Cells._jailExitLocation = 11;
     return Cells;
 }();
 exports.Cells = Cells;
 
-},{"./Cell":6,"./Rules":13,"./enums":14}],8:[function(require,module,exports){
+},{"./Cell":6,"./Rules":13,"./enums":14,"lodash":4}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -20017,17 +20027,14 @@ var Players_1 = require("./Players");
 var cardData = require("../config/cardData.json");
 var cellData = require("../config/cellData.json");
 new Rules_1.Rules();
-new Cells_1.Cells();
+new Cells_1.Cells(cellData);
 new Players_1.Players();
 new Dice_1.Dice([6, 6]);
 new ChanceCards_1.ChanceCards(cardData);
 new ChestCards_1.ChestCards(cardData);
 // console.log(cellData[0]);
 // JSON.parse(cellData[0])
-cellData.map(function (cell) {
-  return Cells_1.Cells.add(cell);
-});
-console.log(Cells_1.Cells.LOCATIONS);
+console.log(Cells_1.Cells.jailExitLocation);
 Players_1.Players.add("TEST", enums_1.Token.SHOE);
 
 },{"../config/cardData.json":1,"../config/cellData.json":2,"./Cells":7,"./ChanceCards":8,"./ChestCards":9,"./Dice":10,"./Players":12,"./Rules":13,"./enums":14}]},{},[15])

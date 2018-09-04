@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 import { Rules } from './Rules';
 import { CellType } from './enums';
 import { Cell, SpecialCell, PropertyCell, RailroadCell, UtilityCell } from './Cell';
@@ -18,9 +19,9 @@ export class Cells {
     public static LOCATIONS: NumberCellMap = {};
     public static PROPERTY_GROUP_SET = {};
     public static CELL_OWNERSHIP = {};
-    private static _jailExitLocation = 11;
+    private static _jailExitLocation: number;
 
-    constructor() {
+    constructor(cellData) {
         //"In Jail" is always at position 0
         Cells.add( {type: CellType.SPECIAL, location:0, name:"In Jail", color:"Gray", actionPrimary:null, actionSecondary:null} ,0 );
 
@@ -28,11 +29,17 @@ export class Cells {
         let goLandingValue: number = (Rules.GO_LANDING_BONUS_ENABLED ? Rules.GO_LANDING_BONUS_VALUE + Rules.PASS_GO_CREDIT : Rules.PASS_GO_CREDIT);
         Cells.add({type: CellType.SPECIAL, location:1, name:"GO", color:"Gray", actionPrimary:"creditAbs", actionSecondary:goLandingValue}, 1);
 
+        //load custom cells from cellData
+        (<any>cellData).map(cell => Cells.add(cell, cell.location));
+        //find location of "Visiting Jail" and set as jail exit location
+        Cells._jailExitLocation = _.findIndex( Object.keys(Cells.LOCATIONS).map(key=>Cells.LOCATIONS[key]), function(cell){ return cell.name == "Visiting Jail"; });
+
+        
     };
 
     public static add( cellParams: PropertyCell | SpecialCell | RailroadCell | UtilityCell, location?: number ){
-        if(location){
-            location = Object.keys(Cells.LOCATIONS).length + 1;
+        if(location == undefined){
+            location = Object.keys(Cells.LOCATIONS).length;
         };
         let cell: Cell = new Cell( cellParams );
         Cells.LOCATIONS[location] = cell;
