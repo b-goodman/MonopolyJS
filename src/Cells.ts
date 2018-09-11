@@ -33,8 +33,6 @@ export class Cells {
         (<any>cellData).map(cell => Cells.add(cell, cell.location));
         //find location of "Visiting Jail" and set as jail exit location
         Cells._jailExitLocation = _.findIndex( Object.keys(Cells.LOCATIONS).map(key=>Cells.LOCATIONS[key]), function(cell){ return cell.name == "Visiting Jail"; });
-
-        
     };
 
     public static add( cellParams: PropertyCell | SpecialCell | RailroadCell | UtilityCell, location?: number ){

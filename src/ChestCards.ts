@@ -14,7 +14,7 @@ export class ChestCards {
         let chestCardData = (<any>cardData).filter(function(card){ return card["type"] == "CHANCE" });
         chestCardData.map( card => this.add(card["cardID"], card["cardContent"], card["actionType"], card["actionPrimary"], card["actionSecondary"]));
         //init. CHANCE_CARD_LIB
-        this.shuffleDeck();
+        ChestCards.shuffleDeck();
     }
 
 
@@ -43,7 +43,7 @@ export class ChestCards {
      * Initialises a new deque by shuffling List CARD_LIB and copying to Deque
      * CARD_DECK
      */
-    public shuffleDeck() {
+    public static shuffleDeck() {
         ChestCards.CHANCE_CARD_LIB = _.shuffle(ChestCards.CHEST_CARD_LIB);
     }
 
@@ -53,7 +53,7 @@ export class ChestCards {
      *
      * @return [Card] Next Card obj. in deque
      */
-    public getNextCard(): Card {
+    public static getNextCard(): Card {
         return ChestCards.CHANCE_CARD_LIB.shift();
     }
 
@@ -62,7 +62,7 @@ export class ChestCards {
      *
      * @return [Card] Next Card obj. parsed as list (printable) in deque
      */
-    public readNextCard(): Card {
+    public static readNextCard(): Card {
         return _.head(ChestCards.CHANCE_CARD_LIB);
     }
 
@@ -72,9 +72,9 @@ export class ChestCards {
      *
      * @return [Card] New random card from deck.
      */
-    public drawCard() {
-        if (this.getNextCard() == undefined) {
-            this.shuffleDeck();
+    public static drawCard() {
+        if (ChestCards.getNextCard() == undefined) {
+            ChestCards.shuffleDeck();
         }
         //Removal of "Get out of jail free cards" from deck
         //on drawing card
@@ -88,7 +88,7 @@ export class ChestCards {
         return drawnCard;
     }
 
-    public reinsertJailBond() {
+    public static reinsertJailBond() {
         //Polls form bail holding deque, appends result to current deck.
         ChestCards.CHANCE_CARD_LIB.push(_.head(ChestCards.JAIL_BONDS));
     }
