@@ -10,6 +10,8 @@ import { Rules } from "./Rules";
 import { Cells } from "./Cells";
 import { Cell } from "./Cell";
 import { Dice } from "./Dice";
+import { LogEntry } from "./LogEntry";
+
 export class Player {
 
     //Player ID
@@ -46,7 +48,7 @@ export class Player {
     private _currentCard: Card;
 
     //log of players current turn
-    // private _logEntry: LogEntry;
+    private _logEntry: LogEntry;
 
     /**
      * Constructor for player. User may specify players starting cash,
@@ -533,8 +535,8 @@ export class Player {
     }
 
     public initializeTurn() {
-        // this.logEntry = new LogEntry(playerID);
-        // logEntry.logEvent(START);
+        this._logEntry = new LogEntry(this.ID);
+        this._logEntry.logEvent(EventType.START);
     }
 
     /**
