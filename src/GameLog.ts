@@ -7,7 +7,6 @@ export class GameLog {
     private static _logCounter: number = 0;
 
     public static logPlayerTurn(playerTurn: LogEntry) {
-
         this._GAME_LOG.push(playerTurn);
     }
 

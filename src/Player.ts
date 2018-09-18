@@ -1,9 +1,10 @@
+import { GameLog } from './GameLog';
 import { ActionType, ActionPrimary } from "./enums";
 import { ChestCards } from './ChestCards';
 import { ChanceCards } from './ChanceCards';
 import * as _ from "lodash";
 import { Players } from './Players';
-import { Token, CellType } from "./enums";
+import { Token, CellType, EventType } from "./enums";
 import { Card } from "./Card";
 // import { LogEntry } from "./LogEntry";
 import { Rules } from "./Rules";
@@ -536,7 +537,7 @@ export class Player {
 
     public initializeTurn() {
         this._logEntry = new LogEntry(this.ID);
-        this._logEntry.logEvent(EventType.START);
+        this._logEntry.logEvent(EventType.START, null);
     }
 
     /**
@@ -612,83 +613,84 @@ export class Player {
     }
 
     public midTurn() {
-        if (positionType() == SPECIAL) {
-            String type = getActionType();
-            String para = getActionParamater();
+        if (Cells.get(this.position).type == CellType.SPECIAL) {
+           let type: string = Cells.get(this.position).actionPrimary;
+            let para = Cells.get(this.position).actionSecondary;
+            let card: Card = null;
             switch (type) {
                 //Draw a card
                 case "drawCard":
                     switch (para) {
                         // Draw Chance card
                         case "chance":
-                            drawChanceCard();
+                            card = ChanceCards.drawCard();
                             break;
                         //Draw chest card
                         case "chest":
-                            drawChestCard();
+                            card = ChestCards.drawCard();
                             break;
                     }
                     // Actions for post card draw.  Print type of card drawn, parse drawn card action.
-                    parseCardAction(readCurrentCard());
+                    this.parseCardAction(card);
                     break;
                 //Transition to new fixed location
                 case "transitionAbs":
                     // The player is being sent to jail (lands on goto jail cell)
-                    if ("0".equals(para)) {
-                        gotoJail();
+                    if (para == "0") {
+                        this.gotoJail();
                     } else {
                         // Player has landed on some other transitional cell
-                        advanceToken(Integer.parseInt(para));
+                        this.advanceToken(parseInt(para));
                     }
                     break;
                 //Recieve money
                 case "creditAbs":
-                    playerCashRecieve(-1, Integer.parseInt(para));
+                    this.playerCashReceive(-1, parseInt(para));
                     break;
                 //Pay money
                 case "debitAbs":
                     //If the free parking bonus rule is being enforced
-                    if (Rules.isFreeParkingBonusEnabled()) {
+                    if (Rules.FREE_PARKING_BONUS_ENABLED) {
                         //pay the money into the free parking fund
-                        Rules.incFreeParkingBonusValue(Integer.parseInt(para));
+                        Rules.increment__FREE_PARKING_BONUS_VALUE(parseInt(para));
                     } else {
                         //else, pay the bank
-                        playerCashPay(-1, Integer.parseInt(para));
+                        this.playerCashPay(-1, parseInt(para));
                     }
                     break;
                 //Potentially do nothing.  Check rules.
                 case "parking":
-                    if (Rules.isFreeParkingBonusEnabled()) {
+                    if (Rules.FREE_PARKING_BONUS_ENABLED) {
                         //get current amount of bonus cash
                         //pay amount to player.
-                        playerCashRecieve(-1, Rules.getFreeParkingBonusValue());
+                        this.playerCashReceive(-1, Rules.FREE_PARKING_BONUS_VALUE);
                         //Clear bonus - set to 0
-                        Rules.clearFreeParkingBonus();
+                        Rules.clear_FREE_PARKING_BONUS_VALUE;
                     }
                     //else, do nothing.
                     break;
             }
         } else {
-            Cell occupiedCell = Cells.get((Integer) get_position());
+            let occupiedCell: Cell = Cells.get(this.position);
             //can cell be owned? if so..
-            if (occupiedCell.getOwnable()) {
+            if (occupiedCell.isOwnable) {
                 //is it currently unowned? If so, purchace property
-                if (occupiedCell.getOwnership() == null) {
-                    cash -= occupiedCell.getBaseValue();
-                    occupiedCell.setOwnership(getPlayerID());
-                    logEntry.logEvent(PURCHACE, _position, occupiedCell.getBaseValue());
+                if (occupiedCell.currentOwner == null) {
+                    this.cash -= occupiedCell.baseValue;
+                    occupiedCell.setOwnership(this.ID);
+                    this._logEntry.logEvent(EventType.PURCHACE, [this._position, occupiedCell.baseValue]);
                     //If it is owned but by the current player, then do nothing
-                } else if (Objects.equals(occupiedCell.getOwnership(), getPlayerID())) {
+                } else if (occupiedCell.currentOwner == this.ID) {
                     //It is owned and by another player, then pay rent
-                } else if (get_positionType() == UTILITY) {
-                    playerCashPay(occupiedCell.getOwnership(), occupiedCell.getRent(Dice.getRollSum()));
+                } else if (this.get_positionType() == CellType.UTILITY) {
+                    this.playerCashPay(occupiedCell.currentOwner, occupiedCell.getCurrentRent());
                 } else {
-                    playerCashPay(occupiedCell.getOwnership(), occupiedCell.getRent());
+                    this.playerCashPay(occupiedCell.currentOwner, occupiedCell.getCurrentRent());
                 }
             }
         }
-        if (Dice.isDouble(Dice.getFaceValues()) && !isInJail() && !isPlayerExitingJail()) {
-            logEntry.logEvent(NOTIFICATION, name + " takes another turn");
+        if (Dice.allEqual && !this.inJail && !this._exitingJail) {
+            this._logEntry.logEvent(EventType.NOTIFICATION, [name + " takes another turn"]);
         }
 
     }
@@ -696,11 +698,11 @@ export class Player {
     // /**
     //  * ends players turn - resets speeding counter
     //  */
-    public void endTurn() {
-        logEntry.logEvent(END);
+    public endTurn() {
+        this._logEntry.logEvent(EventType.END,[]);
         this._speedingCount = 0;
         this._exitingJail = false;
-        GameLog.logPlayerTurn(logEntry);
+        GameLog.logPlayerTurn(this._logEntry);
     }
 
     /**
@@ -719,7 +721,7 @@ export class Player {
             //has the player passed or landed on GO
             if (this.position != 1) {
                 //The player has passed GO
-                logEntry.logEvent(NOTIFICATION, " passes GO");
+                this._logEntry.logEvent(EventType.NOTIFICATION, " passes GO");
                 this.playerCashReceive(-1, Rules.PASS_GO_CREDIT);
             }
         } else if (this.position < 1) {
@@ -731,12 +733,12 @@ export class Player {
 
         if (Cells.get(this.position).isOwnable) {
             if (positionInfoOwnership != null) {
-                logEntry.logEvent(ADVANCE, steps, _position, Players.get(_positionInfoOwnership).getPlayerID(), _positionInfocurrentRent);
+                this._logEntry.logEvent(EventType.ADVANCE, [steps, this.position, Players.get(positionInfoOwnership).ID, positionInfocurrentRent]);
             } else {
-                logEntry.logEvent(ADVANCE, steps, _position, _positionInfoCost);
+                this._logEntry.logEvent(EventType.ADVANCE, [steps, this.position, positionInfoCost]);
             }
         } else {
-            logEntry.logEvent(ADVANCE, steps, _position);
+            this._logEntry.logEvent(EventType.ADVANCE, [steps, this.position]);
         }
 
     }
@@ -744,14 +746,14 @@ export class Player {
     public drawChanceCard(): Card {
         let newCard: Card = ChanceCards.drawCard();
         //currentCard = newCard;
-        logEntry.logEvent(DRAW_CHANCE);
+        this._logEntry.logEvent(EventType.DRAW_CHANCE,[]);
         return newCard;
     }
 
     public drawChestCard(): Card {
         let newCard: Card = ChestCards.drawCard();
         //currentCard = newCard;
-        logEntry.logEvent(DRAW_CHEST);
+        this._logEntry.logEvent(EventType.DRAW_CHEST,[]);
         return newCard;
     }
 
@@ -832,10 +834,10 @@ export class Player {
                     case "PAY_EACH":
                         //pay each player cardAction2
                         for (let i = 0; i < Players.amount(); i++) {
-                            if (Objects.equals(i, playerID)) {
+                            if (this.ID == i) {
                                 //do nothing
                             } else {
-                                playerCashPay(i, Integer.parseInt(cardAction2));
+                                this.playerCashPay(i, parseInt(cardAction2));
                             }
                         }
                     // return;

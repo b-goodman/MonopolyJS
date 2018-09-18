@@ -166,54 +166,22 @@ class Event {
         return returnCase;
     }
 
-//        public EventType getEventActionKeyword(){
-//            return keyword;
-//        }
-//
-//        public int[] getEventActionParameters(){
-//            return actionParameters;
-//        }
-}
+    public getEventActionKeyword(): EventType{
+        return this.EVENT_TYPE;
+    }
+
+    public getEventActionParameters(): Array<number>{
+        return this.actionParameters;
+    }
+
 
 //    public LogEntry() {
 //        //record game state
-//        PLAYER_OWNERSHIP = Cells.getPlayerOwnership();
+//        this.PLAYER_OWNERSHIP = Cells.getPlayerOwnership();
 //        LOCATIONS = Cells.getLocations();
 //    }
-// public void logEvent(EventType keyword, int... actionParameters) {
-//     LOG_EVENTS.add(new Event(playerID, keyword, actionParameters));
-// }
 
-// public void logEvent(EventType keyword) {
-//     //Event event = new Event(playerID, keyword);
-//     LOG_EVENTS.add(new Event(playerID, keyword));
-// }
-
-// public void logEvent(EventType keyword, String description) {
-//     //Event event = new Event(playerID, keyword, description);
-//     LOG_EVENTS.add(new Event(playerID, keyword, description));
-// }
-
-// public void clearTurnLog() {
-//     LOG_EVENTS.clear();
-// }
-
-// public void submitTurnLog() {
-//     GameLog.logPlayerTurn(this);
-// }
-
-// public List<Event> getLogEvents() {
-//     return LOG_EVENTS;
-// }
-
-// public List<String> parseLogEntry() {
-//     List<String> returnList = new ArrayList<>();
-//     for (Object logElement : LOG_EVENTS) {
-//         returnList.add(((Event) logElement).parse());
-//     }
-//     return returnList;
-// }
-
+}
 
 
 
@@ -225,6 +193,14 @@ export class LogEntry {
 
     constructor(playerID: number) {
         this.playerID = playerID;
+    }
+
+    public logEvent( keyword: EventType, actionParameters: Array<number>) {
+        this.LOG_EVENTS.push(new Event(this.playerID, keyword, actionParameters));
+    }
+
+    public parseLogEntry() {
+        return this.LOG_EVENTS.map(event=>event.parse());
     }
 
 }
