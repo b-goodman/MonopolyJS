@@ -18232,7 +18232,7 @@ var Cell = /** @class */function () {
 }();
 exports.Cell = Cell;
 
-},{"./Cells":7,"./Dice":10,"./Players":12,"./Rules":13,"lodash":4}],7:[function(require,module,exports){
+},{"./Cells":7,"./Dice":10,"./Players":14,"./Rules":15,"lodash":4}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -18270,10 +18270,16 @@ var Cells = /** @class */function () {
         var cell = new Cell_1.Cell(cellParams);
         Cells.LOCATIONS[location] = cell;
         if (Cells.PROPERTY_GROUP_SET[cell.groupID] == undefined) {
-            Cells.PROPERTY_GROUP_SET[cell.groupID] = [];
+            Cells.PROPERTY_GROUP_SET[cell.groupID] = [cell];
+        } else {
+            try {
+                Cells.PROPERTY_GROUP_SET[cell.groupID].push(cell);
+            } catch (error) {
+                console.log(error);
+                console.log(cell);
+            }
         }
-        ;
-        Cells.PROPERTY_GROUP_SET[cell.groupID].push(cell);
+        // Cells.PROPERTY_GROUP_SET[cell.groupID].push(cell);
     };
     /**
      * Gets the Cell object stored at position boardLocaion in the map
@@ -18304,7 +18310,7 @@ var Cells = /** @class */function () {
 }();
 exports.Cells = Cells;
 
-},{"./Cell":6,"./Rules":13,"./enums":14,"lodash":4}],8:[function(require,module,exports){
+},{"./Cell":6,"./Rules":15,"./enums":16,"lodash":4}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -18321,7 +18327,7 @@ var ChanceCards = /** @class */function () {
             return _this.add(card["cardID"], card["cardContent"], card["actionType"], card["actionPrimary"], card["actionSecondary"]);
         });
         //init. CHANCE_CARD_DECK
-        this.shuffleDeck();
+        ChanceCards.shuffleDeck();
     }
     /**
      * Create new Card and add to library
@@ -18340,7 +18346,7 @@ var ChanceCards = /** @class */function () {
      * Initialises a new deque by shuffling List CARD_LIB and copying to Deque
      * CARD_DECK
      */
-    ChanceCards.prototype.shuffleDeck = function () {
+    ChanceCards.shuffleDeck = function () {
         ChanceCards.CHANCE_CARD_DECK = _.shuffle(ChanceCards.CHANCE_CARD_LIB);
     };
     //
@@ -18349,7 +18355,7 @@ var ChanceCards = /** @class */function () {
      *
      * @return [Card] Next Card obj. in deque
      */
-    ChanceCards.prototype.getNextCard = function () {
+    ChanceCards.getNextCard = function () {
         return ChanceCards.CHANCE_CARD_DECK.shift();
     };
     /**
@@ -18357,7 +18363,7 @@ var ChanceCards = /** @class */function () {
      *
      * @return [Card] Next Card obj. parsed as list (printable) in deque
      */
-    ChanceCards.prototype.readNextCard = function () {
+    ChanceCards.readNextCard = function () {
         return _.head(ChanceCards.CHANCE_CARD_DECK);
     };
     /**
@@ -18366,9 +18372,9 @@ var ChanceCards = /** @class */function () {
      *
      * @return [Card] New random card from deck.
      */
-    ChanceCards.prototype.drawCard = function () {
-        if (this.getNextCard() == undefined) {
-            this.shuffleDeck();
+    ChanceCards.drawCard = function () {
+        if (ChanceCards.getNextCard() == undefined) {
+            ChanceCards.shuffleDeck();
         }
         //Removal of "Get out of jail free cards" from deck
         //on drawing card
@@ -18383,7 +18389,7 @@ var ChanceCards = /** @class */function () {
         }
         return drawnCard;
     };
-    ChanceCards.prototype.reinsertJailBond = function () {
+    ChanceCards.reinsertJailBond = function () {
         //Polls form bail holding deque, appends result to current deck.
         ChanceCards.CHANCE_CARD_DECK.push(_.head(ChanceCards.JAIL_BONDS));
     };
@@ -18411,7 +18417,7 @@ var ChestCards = /** @class */function () {
             return _this.add(card["cardID"], card["cardContent"], card["actionType"], card["actionPrimary"], card["actionSecondary"]);
         });
         //init. CHANCE_CARD_LIB
-        this.shuffleDeck();
+        ChestCards.shuffleDeck();
     }
     /**
      * Create new Card and add to library
@@ -18430,7 +18436,7 @@ var ChestCards = /** @class */function () {
      * Initialises a new deque by shuffling List CARD_LIB and copying to Deque
      * CARD_DECK
      */
-    ChestCards.prototype.shuffleDeck = function () {
+    ChestCards.shuffleDeck = function () {
         ChestCards.CHANCE_CARD_LIB = _.shuffle(ChestCards.CHEST_CARD_LIB);
     };
     //
@@ -18439,7 +18445,7 @@ var ChestCards = /** @class */function () {
      *
      * @return [Card] Next Card obj. in deque
      */
-    ChestCards.prototype.getNextCard = function () {
+    ChestCards.getNextCard = function () {
         return ChestCards.CHANCE_CARD_LIB.shift();
     };
     /**
@@ -18447,7 +18453,7 @@ var ChestCards = /** @class */function () {
      *
      * @return [Card] Next Card obj. parsed as list (printable) in deque
      */
-    ChestCards.prototype.readNextCard = function () {
+    ChestCards.readNextCard = function () {
         return _.head(ChestCards.CHANCE_CARD_LIB);
     };
     /**
@@ -18456,9 +18462,9 @@ var ChestCards = /** @class */function () {
      *
      * @return [Card] New random card from deck.
      */
-    ChestCards.prototype.drawCard = function () {
-        if (this.getNextCard() == undefined) {
-            this.shuffleDeck();
+    ChestCards.drawCard = function () {
+        if (ChestCards.getNextCard() == undefined) {
+            ChestCards.shuffleDeck();
         }
         //Removal of "Get out of jail free cards" from deck
         //on drawing card
@@ -18473,7 +18479,7 @@ var ChestCards = /** @class */function () {
         }
         return drawnCard;
     };
-    ChestCards.prototype.reinsertJailBond = function () {
+    ChestCards.reinsertJailBond = function () {
         //Polls form bail holding deque, appends result to current deck.
         ChestCards.CHANCE_CARD_LIB.push(_.head(ChestCards.JAIL_BONDS));
     };
@@ -18678,15 +18684,282 @@ exports.Dice = Dice;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var GameLog = /** @class */function () {
+    function GameLog() {}
+    GameLog.logPlayerTurn = function (playerTurn) {
+        this._GAME_LOG.push(playerTurn);
+    };
+    Object.defineProperty(GameLog, "GAME_LOG", {
+        get: function get() {
+            return this._GAME_LOG;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GameLog, "logCounter", {
+        get: function get() {
+            return this._logCounter;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    GameLog.incLogCounter = function () {
+        this._logCounter++;
+    };
+    GameLog._GAME_LOG = [];
+    GameLog._logCounter = 0;
+    return GameLog;
+}();
+exports.GameLog = GameLog;
+
+},{}],12:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Dice_1 = require("./Dice");
+var Players_1 = require("./Players");
+var enums_1 = require("./enums");
+var Cells_1 = require("./Cells");
+var GameLog_1 = require("./GameLog");
+;
+;
+;
+var Event = /** @class */function () {
+    //constructor
+    function Event(playerID, keyword, actionParameters) {
+        //record game state
+        this.LOCATIONS = {};
+        this.PLAYERS = {};
+        this.DICE_VALUES = [];
+        this.actionParameters = [];
+        this.description = null;
+        //record game state
+        this.LOCATIONS = Cells_1.Cells.LOCATIONS;
+        this.PLAYERS = Players_1.Players.PLAYERS;
+        this.DICE_VALUES = Dice_1.Dice.faces;
+        this.PLAYER_ID = playerID;
+        this.EVENT_TYPE = keyword;
+        this.actionParameters = actionParameters;
+        this.PLAYER_NAME = Players_1.Players.get(playerID).name;
+        this.position = Players_1.Players.get(playerID).position;
+        if (keyword == enums_1.EventType.START) {
+            GameLog_1.GameLog.incLogCounter();
+        }
+        this.logCount = GameLog_1.GameLog.logCounter;
+        this.card = Players_1.Players.get(playerID).currentCard;
+        this.cash = Players_1.Players.get(playerID).cash;
+    }
+    //methods
+    //verbose parse
+    Event.prototype.parse = function () {
+        var returnCase = null;
+        switch (this.EVENT_TYPE) {
+            //
+            case enums_1.EventType.START:
+                returnCase = this.logCount.toString();
+                break;
+            case enums_1.EventType.END:
+                returnCase = "ends turn on " + this.LOCATIONS[this.position].name;
+                break;
+            case enums_1.EventType.PLAYER:
+                returnCase = this.PLAYER_NAME + " begins turn on " + this.LOCATIONS[this.position].name;
+                break;
+            case enums_1.EventType.INITIAL_LOCATION:
+                //return name of initial location cell
+                returnCase = this.LOCATIONS[this.actionParameters[0]].name;
+                break;
+            case enums_1.EventType.INTERMEDIATE_LOCATION:
+                returnCase = this.LOCATIONS[this.actionParameters[0]].name;
+                break;
+            case enums_1.EventType.FINAL_LOCATION:
+                returnCase = this.LOCATIONS[this.actionParameters[0]].name;
+                break;
+            case enums_1.EventType.ROLL_DICE:
+                if (Dice_1.Dice.allEqual) {
+                    returnCase = "rolls dice and gets doubles! - " + this.DICE_VALUES;
+                } else {
+                    returnCase = "rolls dice - " + this.DICE_VALUES;
+                }
+                break;
+            case enums_1.EventType.ADVANCE:
+                var returnAdvance = void 0;
+                switch (this.actionParameters.length) {
+                    case 4:
+                        returnAdvance = "moves " + this.actionParameters[0] + " steps and lands on " + this.LOCATIONS[this.actionParameters[1]].name + " - Owned by: " + this.PLAYERS[this.actionParameters[2]].name + ", Rent: " + this.actionParameters[3];
+                        break;
+                    case 3:
+                        returnAdvance = "moves " + this.actionParameters[0] + " steps and lands on " + this.LOCATIONS[this.actionParameters[1]].name + " - Avaliable to purchace for " + this.actionParameters[2];
+                        break;
+                    default:
+                        returnAdvance = "moves " + this.actionParameters[0] + " spaces and lands on " + this.LOCATIONS[this.actionParameters[1]].name;
+                        break;
+                }
+                returnCase = returnAdvance;
+                break;
+            case enums_1.EventType.JUMP:
+                returnCase = "moves to " + this.LOCATIONS[this.actionParameters[0]].name;
+                break;
+            case enums_1.EventType.JUMP_NEXT:
+                returnCase = "moves to next " + this.LOCATIONS[this.actionParameters[0]].type + " (" + this.LOCATIONS[this.actionParameters[0]].name + ")";
+                break;
+            case enums_1.EventType.PURCHACE:
+                //propertyID, amount
+                returnCase = "purchaces " + this.LOCATIONS[this.actionParameters[0]].name + " for " + this.actionParameters[1];
+                break;
+            case enums_1.EventType.HOUSE_ADD:
+                //improved location, new rent, houses remaining
+                returnCase = "builds house on" + this.LOCATIONS[this.actionParameters[0]].name + " - New Rent: " + this.actionParameters[1] + " - Houses Left: " + this.actionParameters[2];
+                break;
+            case enums_1.EventType.HOTEL_ADD:
+                //improved location, new rent, hotels remaining
+                returnCase = "builds hotel on" + this.LOCATIONS[this.actionParameters[0]].name + " - New Rent: " + this.actionParameters[1] + " - Hotels Left: " + this.actionParameters[2];
+                break;
+            case enums_1.EventType.PAY:
+                //value, creditor
+                var creditor = void 0;
+                var returnCreditor = void 0;
+                switch (this.actionParameters[1]) {
+                    case 0:
+                        returnCreditor = "BANK";
+                        break;
+                    case -1:
+                        returnCreditor = "FREE PARKING";
+                        break;
+                    default:
+                        returnCreditor = this.PLAYERS[this.actionParameters[1]].name;
+                        break;
+                }
+                creditor = returnCreditor;
+                returnCase = "pays " + this.actionParameters[0] + " to " + creditor + " - Bal: " + this.cash;
+                break;
+            case enums_1.EventType.RECEIVE:
+                //value, debitor
+                var debitor = void 0;
+                var returnDebitor = void 0;
+                switch (this.actionParameters[1]) {
+                    case 0:
+                        returnDebitor = "BANK";
+                        break;
+                    case -1:
+                        returnDebitor = "FREE PARKING";
+                        break;
+                    default:
+                        returnDebitor = this.PLAYERS[this.actionParameters[1]].name;
+                        break;
+                }
+                debitor = returnDebitor;
+                returnCase = "is paid " + this.actionParameters[0] + " by " + debitor + " - Bal: " + this.cash;
+                break;
+            case enums_1.EventType.DRAW_CHEST:
+                returnCase = "draws a COMMUNITY CHEST card: " + this.card.cardContent;
+                break;
+            case enums_1.EventType.DRAW_CHANCE:
+                returnCase = "draws a CHANCE card: " + this.card.cardContent;
+                break;
+            case enums_1.EventType.NOTIFICATION:
+                returnCase = this.description;
+                break;
+        }
+        return returnCase;
+    };
+    Event.prototype.getEventActionKeyword = function () {
+        return this.EVENT_TYPE;
+    };
+    Event.prototype.getEventActionParameters = function () {
+        return this.actionParameters;
+    };
+    return Event;
+}();
+var LogEntry = /** @class */function () {
+    function LogEntry(playerID) {
+        //game state
+        this.LOG_EVENTS = [];
+        this.playerID = playerID;
+    }
+    LogEntry.prototype.logEvent = function (keyword, actionParameters) {
+        this.LOG_EVENTS.push(new Event(this.playerID, keyword, actionParameters));
+    };
+    LogEntry.prototype.parseLogEntry = function () {
+        return this.LOG_EVENTS.map(function (event) {
+            return event.parse();
+        });
+    };
+    return LogEntry;
+}();
+exports.LogEntry = LogEntry;
+// public static List parseTurnLogEntry(List logEntry) {
+//        List<String> returnList = new ArrayList<>();
+//        String playerName = null;
+//        String diceTotal = null;
+//        String playerPosition = null;
+//
+//        for (Object line : logEntry) {
+//            String splitLine = (String) line;
+//            String[] parts = splitLine.split("\\:");
+//            switch (parts[0]) {
+//                case "START":
+//                    switch (parts[1]) {
+//                        case "FULL":
+//                            //do nothing
+//                            break;
+//                        case "FORECAST":
+//                            returnList.add(" - FORECAST TURN - ");
+//                            break;
+//                    }
+//                    break;
+//                case "PLAYER":
+//                    playerName = parts[1];
+//                    returnList.add("\n" + playerName + " begins turn");
+//                    break;
+//                case "INITIAL_LOC":
+//                    playerPosition = parts[1];
+//                    returnList.add("\t" + playerName + " begins on " + Cells.get(Integer.parseInt(parts[1])).getName());
+//                    break;
+//                case "ROLL_DICE":
+//                    diceTotal = parts[1];
+//                    returnList.add("\t" + playerName + " rolls " + diceTotal);
+//                    break;
+//                case "SPEEDING":
+//                    returnList.add("\t" + playerName + " rolls doubles! - Doubles rolled this turn: " + parts[1]);
+//                    break;
+//                case "INTERMEDIATE_LOC":
+//                    returnList.add("\t" + playerName + " moves " + diceTotal + " steps and lands on " + Cells.get(Integer.parseInt(parts[1])).getName());
+//                    break;
+//                case "PURCHACE":
+//                    String[] purchace = parts[1].split("\\~");
+//                    returnList.add("\t" + playerName + " purchaces " + Cells.get(Integer.parseInt(purchace[0])).getName() + " for " + purchace[1]);
+//                    break;
+//                case "PAY":
+//                    String[] cashPay = parts[1].split("\\->");
+//                    returnList.add("\t" + playerName + " pays " + (("BANK".equals(cashPay[1])) ? "BANK" : Players.get(Integer.parseInt(cashPay[1])).getName()) + " " + cashPay[0]);
+//                    break;
+//                case "CONTINUE":
+//                    returnList.add("\t" + playerName + " takes another turn");
+//                case "FINAL_LOC":
+//                    returnList.add("\t" + playerName + " ends turn on " + parts[1] + "\n");
+//                    break;
+//
+//            }
+//        }
+//        return returnList;
+//    }
+
+},{"./Cells":7,"./Dice":10,"./GameLog":11,"./Players":14,"./enums":16}],13:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var GameLog_1 = require("./GameLog");
+var ChestCards_1 = require("./ChestCards");
+var ChanceCards_1 = require("./ChanceCards");
 var _ = require("lodash");
 var Players_1 = require("./Players");
+var enums_1 = require("./enums");
 // import { LogEntry } from "./LogEntry";
 var Rules_1 = require("./Rules");
 var Cells_1 = require("./Cells");
 var Dice_1 = require("./Dice");
+var LogEntry_1 = require("./LogEntry");
 var Player = /** @class */function () {
-    //log of players current turn
-    // private _logEntry: LogEntry;
     /**
      * Constructor for player. User may specify players starting cash,
      * _position and amount of jail bonds avaliable.
@@ -18705,7 +18978,7 @@ var Player = /** @class */function () {
         this._ID = playerID;
         this._name = name;
         this._token = token;
-        this.__position = 1;
+        this._position = 1;
         this._cash = Rules_1.Rules.INITIAL_PLAYER_CASH;
     }
     Object.defineProperty(Player.prototype, "ID", {
@@ -18754,7 +19027,7 @@ var Player = /** @class */function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Player.prototype, "_position", {
+    Object.defineProperty(Player.prototype, "position", {
         /**
          * Returns the _position of the player in terms of its location on the game
          * board/index of LOCATIONS
@@ -18762,8 +19035,11 @@ var Player = /** @class */function () {
          * @return LOCATIONS key / board _position
          */
         get: function get() {
-            return this.__position;
+            return this._position;
         },
+        // public get logEntry(): LogEntry {
+        //     return this._logEntry;
+        // }
         //Set players:
         //    /**
         //     * Sets the player as being in Jail.
@@ -18789,7 +19065,7 @@ var Player = /** @class */function () {
          * _position in LOCATIONS
          */
         set: function set(new_position) {
-            this.__position = new_position;
+            this._position = new_position;
         },
         enumerable: true,
         configurable: true
@@ -18807,7 +19083,7 @@ var Player = /** @class */function () {
      * @return [string] Cell type currently occupied by player.
      */
     Player.prototype.getCurrentCell = function () {
-        return Cells_1.Cells.get(this.__position);
+        return Cells_1.Cells.get(this._position);
     };
     Player.prototype.get_positionType = function () {
         return this.getCurrentCell().type;
@@ -18979,14 +19255,6 @@ var Player = /** @class */function () {
             return cell.addImprovement();
         });
     };
-    /**
-     * Adds an improvement to each property with groupID
-     */
-    // public addPropertyImprovementByGroup(groupID: string) {
-    //     let ownedCells = this.getOwnership();
-    //     let ownedGroupCells: Array<Cell> = ownedCells.filter(cell => cell.groupID == groupID)
-    //     ownedGroupCells.map( cell => cell.addImprovement());
-    // }
     // ---------------------------------------------
     //calculating player worth
     Player.prototype.getOwnedPropertyImprovementValue = function () {
@@ -19188,14 +19456,306 @@ var Player = /** @class */function () {
         return leaveJail;
     };
     Player.prototype.initializeTurn = function () {
-        // this.logEntry = new LogEntry(playerID);
-        // logEntry.logEvent(START);
+        this._logEntry = new LogEntry_1.LogEntry(this.ID);
+        this._logEntry.logEvent(enums_1.EventType.START, null);
+    };
+    /**
+     * Calling this method begins the player's turn.
+     */
+    Player.prototype.beginTurn = function () {
+        // logEntry.logEvent(PLAYER);
+        // player rolls dice and reads value
+        var steps = Dice_1.Dice.roll();
+        if (this.inJail && this.jailTimeSpent < Rules_1.Rules.MAX_JAIL_TERM_VALUE) {
+            //Decide if best to leave jail early or take default method (roll dice)
+            //Take dice roll expectation - Dice.getExpectationRoll() -
+            //Leave jail early:
+            //1: use card if avaliable
+            if (this._jailBondsAvaliableChance > 0) {
+                ChanceCards_1.ChanceCards.reinsertJailBond();
+                this._jailBondsAvaliableChance--;
+            } else if (this._jailBondsAvaliableChest > 0) {
+                ChestCards_1.ChestCards.reinsertJailBond();
+                this._jailBondsAvaliableChest--;
+            }
+            ;
+            //2: pay fee (default: 50)
+            //Default action: Roll dice.  If doubles, advance token by thown amount.  Do not roll again.
+            if (Dice_1.Dice.allEqual) {
+                this._logEntry.logEvent(enums_1.EventType.NOTIFICATION, [this.name + " rolls doubles - [" + Dice_1.Dice.faces.toString() + "] - and gets to leave jail early!"]);
+                this.leaveJail();
+                this.advanceToken(steps);
+            } else {
+                //else, take another turn in jail
+                this._jailTimeSpent++;
+                this._logEntry.logEvent(enums_1.EventType.NOTIFICATION, [this.name + " fails to roll doubles [" + Dice_1.Dice.faces.toString() + "] and spends another turn in jail (turns until release: " + (Rules_1.Rules.MAX_JAIL_TERM_VALUE - this.jailTimeSpent) + ")"]);
+                //endTurn();
+            }
+            //Player still in jail for maximum duration
+        } else if (this.inJail && this.jailTimeSpent == Rules_1.Rules.MAX_JAIL_TERM_VALUE) {
+            //Player gets last chance to roll dice
+            if (Dice_1.Dice.allEqual) {
+                this._logEntry.logEvent(enums_1.EventType.NOTIFICATION, [this.name + " rolls doubles [" + Dice_1.Dice.faces.toString() + "] and gets to leave jail early!"]);
+                this.leaveJail();
+                this.advanceToken(steps);
+                //if unsucessful, player must pay fine and leave.
+            } else {
+                this._logEntry.logEvent(enums_1.EventType.NOTIFICATION, [this.name + " has failed to roll doubles [" + Dice_1.Dice.faces.toString() + "] and has thus served the maximum jail term."]);
+                //check if player can afford fine -
+                //if(cash>=Rules.getJailLeaveFee()) -- do below
+                this._logEntry.logEvent(enums_1.EventType.NOTIFICATION, [this.name + " pays the fine"]);
+                this.playerCashPay(-1, Rules_1.Rules.LEAVE_JAIL_FEE_VALUE);
+                this.leaveJail();
+                this.advanceToken(steps);
+                //else - raise funds >= Rules.getJailLeaveFee()
+            }
+            //Player is not in jail:
+        } else {
+            // check if player rolls doubles; if so, and if speeding rule is enabled, increment speed counter
+            this._logEntry.logEvent(enums_1.EventType.ROLL_DICE, []);
+            if (Dice_1.Dice.allEqual) {
+                this._speedingCount++;
+            }
+            // check if players speed counter has reached limit (default 3); if so, send to jail.
+            if (this._speedingCount == Rules_1.Rules.DOUBLES_SPEEDING_LIMIT) {
+                this._logEntry.logEvent(enums_1.EventType.NOTIFICATION, [this.name + " sent to jail for speeding"]);
+                this.gotoJail();
+                // otherwise, proceed with turn
+            } else {
+                //advance token
+                this.advanceToken(steps);
+            }
+        }
+    };
+    Player.prototype.midTurn = function () {
+        if (Cells_1.Cells.get(this.position).type == enums_1.CellType.SPECIAL) {
+            var type = Cells_1.Cells.get(this.position).actionPrimary;
+            var para = Cells_1.Cells.get(this.position).actionSecondary;
+            var card = null;
+            switch (type) {
+                //Draw a card
+                case "drawCard":
+                    switch (para) {
+                        // Draw Chance card
+                        case "chance":
+                            card = ChanceCards_1.ChanceCards.drawCard();
+                            break;
+                        //Draw chest card
+                        case "chest":
+                            card = ChestCards_1.ChestCards.drawCard();
+                            break;
+                    }
+                    // Actions for post card draw.  Print type of card drawn, parse drawn card action.
+                    this.parseCardAction(card);
+                    break;
+                //Transition to new fixed location
+                case "transitionAbs":
+                    // The player is being sent to jail (lands on goto jail cell)
+                    if (para == "0") {
+                        this.gotoJail();
+                    } else {
+                        // Player has landed on some other transitional cell
+                        this.advanceToken(parseInt(para));
+                    }
+                    break;
+                //Recieve money
+                case "creditAbs":
+                    this.playerCashReceive(-1, parseInt(para));
+                    break;
+                //Pay money
+                case "debitAbs":
+                    //If the free parking bonus rule is being enforced
+                    if (Rules_1.Rules.FREE_PARKING_BONUS_ENABLED) {
+                        //pay the money into the free parking fund
+                        Rules_1.Rules.increment__FREE_PARKING_BONUS_VALUE(parseInt(para));
+                    } else {
+                        //else, pay the bank
+                        this.playerCashPay(-1, parseInt(para));
+                    }
+                    break;
+                //Potentially do nothing.  Check rules.
+                case "parking":
+                    if (Rules_1.Rules.FREE_PARKING_BONUS_ENABLED) {
+                        //get current amount of bonus cash
+                        //pay amount to player.
+                        this.playerCashReceive(-1, Rules_1.Rules.FREE_PARKING_BONUS_VALUE);
+                        //Clear bonus - set to 0
+                        Rules_1.Rules.clear_FREE_PARKING_BONUS_VALUE;
+                    }
+                    //else, do nothing.
+                    break;
+            }
+        } else {
+            var occupiedCell = Cells_1.Cells.get(this.position);
+            //can cell be owned? if so..
+            if (occupiedCell.isOwnable) {
+                //is it currently unowned? If so, purchace property
+                if (occupiedCell.currentOwner == null) {
+                    this.cash -= occupiedCell.baseValue;
+                    occupiedCell.setOwnership(this.ID);
+                    this._logEntry.logEvent(enums_1.EventType.PURCHACE, [this._position, occupiedCell.baseValue]);
+                    //If it is owned but by the current player, then do nothing
+                } else if (occupiedCell.currentOwner == this.ID) {
+                    //It is owned and by another player, then pay rent
+                } else if (this.get_positionType() == enums_1.CellType.UTILITY) {
+                    this.playerCashPay(occupiedCell.currentOwner, occupiedCell.getCurrentRent());
+                } else {
+                    this.playerCashPay(occupiedCell.currentOwner, occupiedCell.getCurrentRent());
+                }
+            }
+        }
+        if (Dice_1.Dice.allEqual && !this.inJail && !this._exitingJail) {
+            this._logEntry.logEvent(enums_1.EventType.NOTIFICATION, [name + " takes another turn"]);
+        }
+    };
+    // /**
+    //  * ends players turn - resets speeding counter
+    //  */
+    Player.prototype.endTurn = function () {
+        this._logEntry.logEvent(enums_1.EventType.END, []);
+        this._speedingCount = 0;
+        this._exitingJail = false;
+        GameLog_1.GameLog.logPlayerTurn(this._logEntry);
+    };
+    /**
+     * Move player +- N steps. Rolls over if _position exceeds 40.
+     *
+     * @param steps [int] Amount of steps player takes. If negative, player will
+     * move backwards.
+     */
+    Player.prototype.advanceToken = function (steps) {
+        //advance token
+        this.position += steps;
+        // get relative (to GO) postion - subtract 40 if abs. positon >40 (i.e., player circumvents the board by passing go)
+        if (this.position > Object.keys(Cells_1.Cells.LOCATIONS).length) {
+            //Player has circumvented the board
+            this.position -= Object.keys(Cells_1.Cells.LOCATIONS).length;
+            //has the player passed or landed on GO
+            if (this.position != 1) {
+                //The player has passed GO
+                this._logEntry.logEvent(enums_1.EventType.NOTIFICATION, [" passes GO"]);
+                this.playerCashReceive(-1, Rules_1.Rules.PASS_GO_CREDIT);
+            }
+        } else if (this.position < 1) {
+            this.position += Object.keys(Cells_1.Cells.LOCATIONS).length;
+        }
+        var positionInfoCost = Cells_1.Cells.get(this.position).baseValue;
+        var positionInfoOwnership = Cells_1.Cells.get(this.position).currentOwner;
+        var positionInfocurrentRent = Cells_1.Cells.get(this.position).getCurrentRent();
+        if (Cells_1.Cells.get(this.position).isOwnable) {
+            if (positionInfoOwnership != null) {
+                this._logEntry.logEvent(enums_1.EventType.ADVANCE, [steps, this.position, Players_1.Players.get(positionInfoOwnership).ID, positionInfocurrentRent]);
+            } else {
+                this._logEntry.logEvent(enums_1.EventType.ADVANCE, [steps, this.position, positionInfoCost]);
+            }
+        } else {
+            this._logEntry.logEvent(enums_1.EventType.ADVANCE, [steps, this.position]);
+        }
+    };
+    Player.prototype.drawChanceCard = function () {
+        var newCard = ChanceCards_1.ChanceCards.drawCard();
+        //currentCard = newCard;
+        this._logEntry.logEvent(enums_1.EventType.DRAW_CHANCE, []);
+        return newCard;
+    };
+    Player.prototype.drawChestCard = function () {
+        var newCard = ChestCards_1.ChestCards.drawCard();
+        //currentCard = newCard;
+        this._logEntry.logEvent(enums_1.EventType.DRAW_CHEST, []);
+        return newCard;
+    };
+    // /**
+    //  * Returns last card drawn by player. Returns null if player has not yet
+    //  * drawn a card.
+    //  *
+    //  * @return [List] Last card drawn by player.
+    //  */
+    // public List readCurrentCard() {
+    //     return currentCard;
+    // }
+    Player.prototype.parseCardAction = function (card) {
+        var cardType = card.actionType;
+        var cardAction1 = card.actionPrimary;
+        var cardAction2 = card.actionSecondary;
+        // System.out.println("Parsing Card..");
+        switch (cardType) {
+            // cases of players transition to fixed, absolute location
+            case "TRANSITION_ABS":
+                this._position = parseInt(cardAction1);
+                //logEntry.logEvent(JUMP, Integer.parseInt(cardAction1));
+                this.midTurn();
+                return;
+            // cases of players transition dependent on current location
+            case "TRANSITION_REL":
+                switch (cardAction1) {
+                    // player advance to next property type (rail, util)
+                    case "NEXT":
+                        this.position = this.findNextCellType(cardAction2);
+                        this._logEntry.logEvent(enums_1.EventType.JUMP_NEXT, [this.findNextCellType(cardAction2)]);
+                        this.midTurn();
+                        return;
+                    // player advance N spaces from current _position
+                    case "GO":
+                        this.advanceToken(parseInt(cardAction2));
+                        this.midTurn();
+                        return;
+                }
+                return;
+            // player recieves jail card
+            case "JAIL":
+                switch (cardAction1) {
+                    case "IN":
+                        //player sent to jail
+                        this.gotoJail();
+                        return;
+                    case "OUT":
+                        //player gets out of jail free
+                        return;
+                }
+                return;
+            // cases of player recieving fixed sum of cash
+            case "CREDIT_ABS":
+                this.playerCashReceive(-1, parseInt(cardAction1));
+                return;
+            // cases of player recieving variable ammount of cash dependent on current game params.
+            case "CREDIT_REL":
+                return;
+            // cases of player paying fixed ammount of cash
+            case "DEBIT_ABS":
+                //If the free parking bonus rule is being enforced
+                if (Rules_1.Rules.FREE_PARKING_BONUS_ENABLED) {
+                    //pay the money into the free parking fund
+                    Rules_1.Rules.increment__FREE_PARKING_BONUS_VALUE(parseInt(cardAction1));
+                    this._logEntry.logEvent(enums_1.EventType.NOTIFICATION, ["pays " + cardAction1 + " into Free Parking."]);
+                    this.playerCashPay(-1, parseInt(cardAction1));
+                } else {
+                    //else, pay the bank
+                    this.playerCashPay(-1, parseInt(cardAction1));
+                    this._logEntry.logEvent(enums_1.EventType.NOTIFICATION, ["pays " + cardAction1 + " to bank."]);
+                }
+                return;
+            // player paying variable ammount of cash
+            case "DEBIT_REL":
+                switch (cardAction1) {
+                    case "PAY_EACH":
+                        //pay each player cardAction2
+                        for (var i = 0; i < Players_1.Players.amount(); i++) {
+                            if (this.ID == i) {
+                                //do nothing
+                            } else {
+                                this.playerCashPay(i, parseInt(cardAction2));
+                            }
+                        }
+                    // return;
+                }
+            //return;
+        }
     };
     return Player;
 }();
 exports.Player = Player;
 
-},{"./Cells":7,"./Dice":10,"./Players":12,"./Rules":13,"lodash":4}],12:[function(require,module,exports){
+},{"./Cells":7,"./ChanceCards":8,"./ChestCards":9,"./Dice":10,"./GameLog":11,"./LogEntry":12,"./Players":14,"./Rules":15,"./enums":16,"lodash":4}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -19254,7 +19814,7 @@ var Players = /** @class */function () {
 }();
 exports.Players = Players;
 
-},{"./Player":11,"./enums":14,"lodash":4}],13:[function(require,module,exports){
+},{"./Player":13,"./enums":16,"lodash":4}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -19923,51 +20483,32 @@ var Rules = /** @class */function () {
 }();
 exports.Rules = Rules;
 
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
-// export enum RuleName {
-//     PASS_GO_BONUS_FIELD,
-//     ENABLE_GO_LANDING_BONUS,
-//     ENABLE_FREE_PARKING_BONUS,
-//     ENABLE_BONUS_CAP,
-//     ENABLE_FINITE_RESOURCES,
-//     HOUSE_AMOUNT_FIELD,
-//     HOTEL_AMOUNT_FIELD,
-//     ENABLE_EVEN_BUILD,
-//     HOTEL_PREREQUISITE_FIELD,
-//     IMPROVEMENT_DEPRECIATION_FIELD,
-//     SET_COMPLETION_BONUS_FIELD,
-//     ENABLE_MORTGAGE_INTEREST,
-//     MORTGAGE_INTEREST_RATE_FIELD,
-//     ENABLE_SPEEDING,
-//     SPEED_LIMIT_FILED,
-//     MAX_JAIL_TERM_FIELD,
-//     BAIL_FEE_FIELD
-// };
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var EventType;
 (function (EventType) {
-    EventType[EventType["START"] = 0] = "START";
-    EventType[EventType["END"] = 1] = "END";
-    EventType[EventType["PLAYER"] = 2] = "PLAYER";
-    EventType[EventType["ADVANCE"] = 3] = "ADVANCE";
-    EventType[EventType["JUMP"] = 4] = "JUMP";
-    EventType[EventType["JUMP_NEXT"] = 5] = "JUMP_NEXT";
-    EventType[EventType["INITIAL_LOCATION"] = 6] = "INITIAL_LOCATION";
-    EventType[EventType["INTERMEDIATE_LOCATION"] = 7] = "INTERMEDIATE_LOCATION";
-    EventType[EventType["FINAL_LOCATION"] = 8] = "FINAL_LOCATION";
-    EventType[EventType["ROLL_DICE"] = 9] = "ROLL_DICE";
-    EventType[EventType["PURCHACE"] = 10] = "PURCHACE";
-    EventType[EventType["PAY"] = 11] = "PAY";
-    EventType[EventType["RECEIVE"] = 12] = "RECEIVE";
-    EventType[EventType["DRAW_CHEST"] = 13] = "DRAW_CHEST";
-    EventType[EventType["DRAW_CHANCE"] = 14] = "DRAW_CHANCE";
-    EventType[EventType["NOTIFICATION"] = 15] = "NOTIFICATION";
-    EventType[EventType["HOUSE_ADD"] = 16] = "HOUSE_ADD";
-    EventType[EventType["HOUSE_REMOVE"] = 17] = "HOUSE_REMOVE";
-    EventType[EventType["HOTEL_ADD"] = 18] = "HOTEL_ADD";
-    EventType[EventType["HOTEL_REMOVE"] = 19] = "HOTEL_REMOVE";
+    EventType["START"] = "START";
+    EventType["END"] = "END";
+    EventType["PLAYER"] = "PLAYER";
+    EventType["ADVANCE"] = "ADVANCE";
+    EventType["JUMP"] = "JUMP";
+    EventType["JUMP_NEXT"] = "JUMP_NEXT";
+    EventType["INITIAL_LOCATION"] = "INITIAL_LOCATION";
+    EventType["INTERMEDIATE_LOCATION"] = "INTERMEDIATE_LOCATION";
+    EventType["FINAL_LOCATION"] = "FINAL_LOCATION";
+    EventType["ROLL_DICE"] = "ROLL_DICE";
+    EventType["PURCHACE"] = "PURCHACE";
+    EventType["PAY"] = "PAY";
+    EventType["RECEIVE"] = "RECEIVE";
+    EventType["DRAW_CHEST"] = "DRAW_CHEST";
+    EventType["DRAW_CHANCE"] = "DRAW_CHANCE";
+    EventType["NOTIFICATION"] = "NOTIFICATION";
+    EventType["HOUSE_ADD"] = "HOUSE_ADD";
+    EventType["HOUSE_REMOVE"] = "HOUSE_REMOVE";
+    EventType["HOTEL_ADD"] = "HOTEL_ADD";
+    EventType["HOTEL_REMOVE"] = "HOTEL_REMOVE";
 })(EventType = exports.EventType || (exports.EventType = {}));
 ;
 var CellType;
@@ -20013,10 +20554,11 @@ var Token;
     Token["CAT"] = "CAT";
 })(Token = exports.Token || (exports.Token = {}));
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var _ = require("lodash");
 var Cells_1 = require("./Cells");
 var enums_1 = require("./enums");
 var Dice_1 = require("./Dice");
@@ -20024,6 +20566,7 @@ var ChanceCards_1 = require("./ChanceCards");
 var ChestCards_1 = require("./ChestCards");
 var Rules_1 = require("./Rules");
 var Players_1 = require("./Players");
+var GameLog_1 = require("./GameLog");
 var cardData = require("../config/cardData.json");
 var cellData = require("../config/cellData.json");
 new Rules_1.Rules();
@@ -20032,11 +20575,25 @@ new Players_1.Players();
 new Dice_1.Dice([6, 6]);
 new ChanceCards_1.ChanceCards(cardData);
 new ChestCards_1.ChestCards(cardData);
-// console.log(cellData[0]);
-// JSON.parse(cellData[0])
-console.log(Cells_1.Cells.jailExitLocation);
+new GameLog_1.GameLog();
+console.log(Object.keys(Cells_1.Cells.LOCATIONS).length);
 Players_1.Players.add("TEST", enums_1.Token.SHOE);
+_.map(Players_1.Players.PLAYERS, function (value, key) {
+  value.initializeTurn();
+});
+_.map(Players_1.Players.PLAYERS, function (value, key) {
+  value.beginTurn();
+});
+_.map(Players_1.Players.PLAYERS, function (value, key) {
+  value.midTurn();
+});
+_.map(Players_1.Players.PLAYERS, function (value, key) {
+  value.endTurn();
+});
+console.log(GameLog_1.GameLog.GAME_LOG.map(function (log) {
+  return log.parseLogEntry();
+}));
 
-},{"../config/cardData.json":1,"../config/cellData.json":2,"./Cells":7,"./ChanceCards":8,"./ChestCards":9,"./Dice":10,"./Players":12,"./Rules":13,"./enums":14}]},{},[15])
+},{"../config/cardData.json":1,"../config/cellData.json":2,"./Cells":7,"./ChanceCards":8,"./ChestCards":9,"./Dice":10,"./GameLog":11,"./Players":14,"./Rules":15,"./enums":16,"lodash":4}]},{},[17])
 
 //# sourceMappingURL=bundle.js.map

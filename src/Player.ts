@@ -218,6 +218,10 @@ export class Player {
         return this._currentCard;
     }
 
+    // public get logEntry(): LogEntry {
+    //     return this._logEntry;
+    // }
+
 //Set players:
 //    /**
 //     * Sets the player as being in Jail.
@@ -565,13 +569,13 @@ export class Player {
             //2: pay fee (default: 50)
             //Default action: Roll dice.  If doubles, advance token by thown amount.  Do not roll again.
             if (Dice.allEqual) {
-                //logEntry.logEvent(NOTIFICATION, name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
+                this._logEntry.logEvent(EventType.NOTIFICATION, [this.name + " rolls doubles - [" + Dice.faces.toString() + "] - and gets to leave jail early!"]);
                 this.leaveJail();
                 this.advanceToken(steps);
             } else {
                 //else, take another turn in jail
                 this._jailTimeSpent++;
-                //logEntry.logEvent(NOTIFICATION, name + " fails to roll doubles " + Dice.getFaceValues() + " and spends another turn in jail (turns until release: " + (Rules.getMaxJailTerm() - jailTimeSpent) + ")");
+                this._logEntry.logEvent(EventType.NOTIFICATION, [this.name + " fails to roll doubles [" + Dice.faces.toString() + "] and spends another turn in jail (turns until release: " + (Rules.MAX_JAIL_TERM_VALUE - this.jailTimeSpent) + ")"]);
                 //endTurn();
             }
 
@@ -579,15 +583,15 @@ export class Player {
         } else if (this.inJail && this.jailTimeSpent == Rules.MAX_JAIL_TERM_VALUE) {
             //Player gets last chance to roll dice
             if (Dice.allEqual) {
-                //logEntry.logEvent(NOTIFICATION, name + " rolls doubles " + Dice.getFaceValues() + " and gets to leave jail early!");
+                this._logEntry.logEvent(EventType.NOTIFICATION, [this.name + " rolls doubles [" + Dice.faces.toString() + "] and gets to leave jail early!"]);
                 this.leaveJail();
                 this.advanceToken(steps);
                 //if unsucessful, player must pay fine and leave.
             } else {
-                //logEntry.logEvent(NOTIFICATION, name + " has failed to roll doubles " + Dice.getFaceValues() + " and has thus served the maximum jail term.");
+                this._logEntry.logEvent(EventType.NOTIFICATION, [this.name + " has failed to roll doubles [" + Dice.faces.toString() + "] and has thus served the maximum jail term."]);
                 //check if player can afford fine -
                 //if(cash>=Rules.getJailLeaveFee()) -- do below
-                //logEntry.logEvent(NOTIFICATION, name + " pays the fine");
+                this._logEntry.logEvent(EventType.NOTIFICATION, [this.name + " pays the fine"]);
                 this.playerCashPay(-1, Rules.LEAVE_JAIL_FEE_VALUE);
                 this.leaveJail();
                 this.advanceToken(steps);
@@ -596,13 +600,13 @@ export class Player {
             //Player is not in jail:
         } else {
             // check if player rolls doubles; if so, and if speeding rule is enabled, increment speed counter
-            //logEntry.logEvent(ROLL_DICE);
+            this._logEntry.logEvent(EventType.ROLL_DICE,[]);
             if (Dice.allEqual) {
                 this._speedingCount++;
             }
             // check if players speed counter has reached limit (default 3); if so, send to jail.
             if (this._speedingCount == Rules.DOUBLES_SPEEDING_LIMIT) {
-                //logEntry.logEvent(NOTIFICATION, name + " sent to jail for speeding");
+                this._logEntry.logEvent(EventType.NOTIFICATION, [this.name + " sent to jail for speeding"]);
                 this.gotoJail();
                 // otherwise, proceed with turn
             } else {
@@ -715,17 +719,17 @@ export class Player {
         //advance token
         this.position += steps;
         // get relative (to GO) postion - subtract 40 if abs. positon >40 (i.e., player circumvents the board by passing go)
-        if (this.position > Cells.locationsAmount()) {
+        if (this.position > Object.keys(Cells.LOCATIONS).length) {
             //Player has circumvented the board
-            this.position -= Cells.locationsAmount();
+            this.position -= Object.keys(Cells.LOCATIONS).length;
             //has the player passed or landed on GO
             if (this.position != 1) {
                 //The player has passed GO
-                this._logEntry.logEvent(EventType.NOTIFICATION, " passes GO");
+                this._logEntry.logEvent(EventType.NOTIFICATION, [" passes GO"]);
                 this.playerCashReceive(-1, Rules.PASS_GO_CREDIT);
             }
         } else if (this.position < 1) {
-            this.position += Cells.locationsAmount();
+            this.position += Object.keys(Cells.LOCATIONS).length;
         }
         let positionInfoCost: number = Cells.get(this.position).baseValue;
         let positionInfoOwnership: number = Cells.get(this.position).currentOwner;
@@ -786,7 +790,7 @@ export class Player {
                     // player advance to next property type (rail, util)
                     case "NEXT":
                         this.position = this.findNextCellType(cardAction2);
-                        //logEntry.logEvent(JUMP_NEXT, findNextCellType(cardAction2));
+                        this._logEntry.logEvent(EventType.JUMP_NEXT, [this.findNextCellType(cardAction2)]);
                         this.midTurn();
                         return;
                     // player advance N spaces from current _position
@@ -821,11 +825,13 @@ export class Player {
                 //If the free parking bonus rule is being enforced
                 if (Rules.FREE_PARKING_BONUS_ENABLED) {
                     //pay the money into the free parking fund
-                    //logEntry.logEvent(NOTIFICATION, Rules.incFreeParkingBonusValue(Integer.parseInt(cardAction1)));
+                    Rules.increment__FREE_PARKING_BONUS_VALUE(parseInt(cardAction1));
+                    this._logEntry.logEvent(EventType.NOTIFICATION, ["pays "+ cardAction1 + " into Free Parking."] );
                     this.playerCashPay(-1, parseInt(cardAction1));
                 } else {
                     //else, pay the bank
                     this.playerCashPay(-1, parseInt(cardAction1));
+                    this._logEntry.logEvent(EventType.NOTIFICATION, ["pays "+ cardAction1 + " to bank."] );
                 }
                 return;
             // player paying variable ammount of cash

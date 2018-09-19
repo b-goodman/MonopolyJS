@@ -42,9 +42,16 @@ export class Cells {
         let cell: Cell = new Cell( cellParams );
         Cells.LOCATIONS[location] = cell;
         if( Cells.PROPERTY_GROUP_SET[cell.groupID] == undefined ){
-            Cells.PROPERTY_GROUP_SET[cell.groupID] = [];
-        };
-        Cells.PROPERTY_GROUP_SET[cell.groupID].push(cell);
+            Cells.PROPERTY_GROUP_SET[cell.groupID] = [cell];
+        }else{
+            try{
+                Cells.PROPERTY_GROUP_SET[cell.groupID].push(cell);
+            }catch (error){
+                console.log(error);
+                console.log(cell);
+            }
+        }
+        // Cells.PROPERTY_GROUP_SET[cell.groupID].push(cell);
     }
 
     /**

@@ -195,7 +195,7 @@ export class LogEntry {
         this.playerID = playerID;
     }
 
-    public logEvent( keyword: EventType, actionParameters: Array<number>) {
+    public logEvent( keyword: EventType, actionParameters: Array<any>) {
         this.LOG_EVENTS.push(new Event(this.playerID, keyword, actionParameters));
     }
 
