@@ -694,7 +694,7 @@ export class Player {
             }
         }
         if (Dice.allEqual && !this.inJail && !this._exitingJail) {
-            this._logEntry.logEvent(EventType.NOTIFICATION, [name + " takes another turn"]);
+            this._logEntry.logEvent(EventType.NOTIFICATION, [this.name + " takes another turn"]);
         }
 
     }
@@ -731,14 +731,16 @@ export class Player {
         } else if (this.position < 1) {
             this.position += Object.keys(Cells.LOCATIONS).length;
         }
-        let positionInfoCost: number = Cells.get(this.position).baseValue;
+      
         let positionInfoOwnership: number = Cells.get(this.position).currentOwner;
-        let positionInfocurrentRent: number = Cells.get(this.position).getCurrentRent();
+        
 
         if (Cells.get(this.position).isOwnable) {
             if (positionInfoOwnership != null) {
+                let positionInfocurrentRent: number = Cells.get(this.position).getCurrentRent();
                 this._logEntry.logEvent(EventType.ADVANCE, [steps, this.position, Players.get(positionInfoOwnership).ID, positionInfocurrentRent]);
             } else {
+                let positionInfoCost: number = Cells.get(this.position).baseValue;
                 this._logEntry.logEvent(EventType.ADVANCE, [steps, this.position, positionInfoCost]);
             }
         } else {

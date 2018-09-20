@@ -24,12 +24,19 @@ console.log(Object.keys(Cells.LOCATIONS).length);
 
 Players.add("TEST", Token.SHOE);
 
+console.log(Players.PLAYERS);
+
+var i=0;
+do{
 _.map(Players.PLAYERS,function(value,key){value.initializeTurn()});
 _.map(Players.PLAYERS,function(value,key){value.beginTurn()});
 _.map(Players.PLAYERS,function(value,key){value.midTurn()});
 _.map(Players.PLAYERS,function(value,key){value.endTurn()});
-
 console.log(GameLog.GAME_LOG.map(log=>log.parseLogEntry()));
+i++;
+}while(i<100);
 
 //$ gulp
 //$ node ./dist/bundle.js
+
+//logging for special cells (cards, income tax etc)

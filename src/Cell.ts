@@ -252,6 +252,9 @@ export class Cell implements SpecialCell, PropertyCell, RailroadCell {
     public getOwningPlayerOwnership(): Array<Cell> {
         // ArrayList<String> returnList;
         // returnList = new ArrayList<>();
+        if(this.currentOwner == null){
+            throw new Error("Cell " + this.location + ": " + this.name + " has no current owner (" + this.currentOwner + ")" );
+        }
         return Players.PLAYERS[this.currentOwner].getOwnership()
     }
 

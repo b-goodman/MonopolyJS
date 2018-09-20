@@ -17975,6 +17975,9 @@ var Cell = /** @class */function () {
     Cell.prototype.getOwningPlayerOwnership = function () {
         // ArrayList<String> returnList;
         // returnList = new ArrayList<>();
+        if (this.currentOwner == null) {
+            throw new Error("Cell " + this.location + ": " + this.name + " has no current owner (" + this.currentOwner + ")");
+        }
         return Players_1.Players.PLAYERS[this.currentOwner].getOwnership();
     };
     /**
@@ -19605,7 +19608,7 @@ var Player = /** @class */function () {
             }
         }
         if (Dice_1.Dice.allEqual && !this.inJail && !this._exitingJail) {
-            this._logEntry.logEvent(enums_1.EventType.NOTIFICATION, [name + " takes another turn"]);
+            this._logEntry.logEvent(enums_1.EventType.NOTIFICATION, [this.name + " takes another turn"]);
         }
     };
     // /**
@@ -19639,13 +19642,13 @@ var Player = /** @class */function () {
         } else if (this.position < 1) {
             this.position += Object.keys(Cells_1.Cells.LOCATIONS).length;
         }
-        var positionInfoCost = Cells_1.Cells.get(this.position).baseValue;
         var positionInfoOwnership = Cells_1.Cells.get(this.position).currentOwner;
-        var positionInfocurrentRent = Cells_1.Cells.get(this.position).getCurrentRent();
         if (Cells_1.Cells.get(this.position).isOwnable) {
             if (positionInfoOwnership != null) {
+                var positionInfocurrentRent = Cells_1.Cells.get(this.position).getCurrentRent();
                 this._logEntry.logEvent(enums_1.EventType.ADVANCE, [steps, this.position, Players_1.Players.get(positionInfoOwnership).ID, positionInfocurrentRent]);
             } else {
+                var positionInfoCost = Cells_1.Cells.get(this.position).baseValue;
                 this._logEntry.logEvent(enums_1.EventType.ADVANCE, [steps, this.position, positionInfoCost]);
             }
         } else {
@@ -19776,7 +19779,7 @@ var Players = /** @class */function () {
      */
     Players.add = function (name, token) {
         var currentPlayersLen = Players.amount();
-        var playerIndex = currentPlayersLen + 1;
+        var playerIndex = currentPlayersLen == 0 ? 0 : currentPlayersLen + 1;
         Players._PLAYERS[playerIndex] = new Player_1.Player(playerIndex, name, token);
     };
     /**
@@ -20578,21 +20581,29 @@ new ChestCards_1.ChestCards(cardData);
 new GameLog_1.GameLog();
 console.log(Object.keys(Cells_1.Cells.LOCATIONS).length);
 Players_1.Players.add("TEST", enums_1.Token.SHOE);
-_.map(Players_1.Players.PLAYERS, function (value, key) {
-  value.initializeTurn();
-});
-_.map(Players_1.Players.PLAYERS, function (value, key) {
-  value.beginTurn();
-});
-_.map(Players_1.Players.PLAYERS, function (value, key) {
-  value.midTurn();
-});
-_.map(Players_1.Players.PLAYERS, function (value, key) {
-  value.endTurn();
-});
-console.log(GameLog_1.GameLog.GAME_LOG.map(function (log) {
-  return log.parseLogEntry();
-}));
+console.log(Players_1.Players.PLAYERS);
+var i = 0;
+do {
+    _.map(Players_1.Players.PLAYERS, function (value, key) {
+        value.initializeTurn();
+    });
+    _.map(Players_1.Players.PLAYERS, function (value, key) {
+        value.beginTurn();
+    });
+    _.map(Players_1.Players.PLAYERS, function (value, key) {
+        value.midTurn();
+    });
+    _.map(Players_1.Players.PLAYERS, function (value, key) {
+        value.endTurn();
+    });
+    console.log(GameLog_1.GameLog.GAME_LOG.map(function (log) {
+        return log.parseLogEntry();
+    }));
+    i++;
+} while (i < 100);
+//$ gulp
+//$ node ./dist/bundle.js
+//logging for special cells (cards, income tax etc)
 
 },{"../config/cardData.json":1,"../config/cellData.json":2,"./Cells":7,"./ChanceCards":8,"./ChestCards":9,"./Dice":10,"./GameLog":11,"./Players":14,"./Rules":15,"./enums":16,"lodash":4}]},{},[17])
 

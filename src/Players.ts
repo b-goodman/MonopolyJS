@@ -25,7 +25,7 @@ export class Players {
             token: Token
     ) {
         let currentPlayersLen: number = Players.amount();
-        let playerIndex: number = currentPlayersLen + 1;
+        let playerIndex: number = currentPlayersLen == 0 ? 0 : currentPlayersLen + 1;
         Players._PLAYERS[playerIndex] = new Player(playerIndex, name, token);
     }
 
